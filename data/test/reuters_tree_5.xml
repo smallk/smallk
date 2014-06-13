@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<DataSet id="7984">
+    <node id="1">
+        <level>1</level>
+        <label>0</label>
+        <parent_id>0</parent_id>
+        <parent_label>0</parent_label>
+        <left_child>true</left_child>
+        <left_child_label>0</left_child_label>
+        <right_child_label>2</right_child_label>
+        <doc_count>3731</doc_count>
+        <top_terms>
+            <term name="net"/>
+            <term name="shr"/>
+            <term name="loss"/>
+            <term name="cts"/>
+            <term name="revs"/>
+        </top_terms>
+    </node>
+    <node id="3">
+        <level>2</level>
+        <label>0</label>
+        <parent_id>1</parent_id>
+        <parent_label>0</parent_label>
+        <left_child>true</left_child>
+        <left_child_label>-1</left_child_label>
+        <right_child_label>-1</right_child_label>
+        <doc_count>1831</doc_count>
+        <top_terms>
+            <term name="loss"/>
+            <term name="profit"/>
+            <term name="oper"/>
+            <term name="revs"/>
+            <term name="shr"/>
+        </top_terms>
+    </node>
+    <node id="4">
+        <level>2</level>
+        <label>2</label>
+        <parent_id>1</parent_id>
+        <parent_label>0</parent_label>
+        <left_child>false</left_child>
+        <left_child_label>-1</left_child_label>
+        <right_child_label>-1</right_child_label>
+        <doc_count>1900</doc_count>
+        <top_terms>
+            <term name="net"/>
+            <term name="cts"/>
+            <term name="shr"/>
+            <term name="revs"/>
+            <term name="avg"/>
+        </top_terms>
+    </node>
+    <node id="2">
+        <level>1</level>
+        <label>1</label>
+        <parent_id>0</parent_id>
+        <parent_label>0</parent_label>
+        <left_child>false</left_child>
+        <left_child_label>1</left_child_label>
+        <right_child_label>3</right_child_label>
+        <doc_count>4253</doc_count>
+        <top_terms>
+            <term name="qtly"/>
+            <term name="div"/>
+            <term name="record"/>
+            <term name="pay"/>
+            <term name="prior"/>
+        </top_terms>
+    </node>
+    <node id="5">
+        <level>2</level>
+        <label>1</label>
+        <parent_id>2</parent_id>
+        <parent_label>1</parent_label>
+        <left_child>true</left_child>
+        <left_child_label>1</left_child_label>
+        <right_child_label>5</right_child_label>
+        <doc_count>3538</doc_count>
+        <top_terms>
+            <term name="pct"/>
+            <term name="shares"/>
+            <term name="stock"/>
+            <term name="u.s"/>
+            <term name="bank"/>
+        </top_terms>
+    </node>
+    <node id="7">
+        <level>3</level>
+        <label>1</label>
+        <parent_id>5</parent_id>
+        <parent_label>1</parent_label>
+        <left_child>true</left_child>
+        <left_child_label>-1</left_child_label>
+        <right_child_label>-1</right_child_label>
+        <doc_count>1641</doc_count>
+        <top_terms>
+            <term name="shares"/>
+            <term name="common"/>
+            <term name="stock"/>
+            <term name="stake"/>
+            <term name="offer"/>
+        </top_terms>
+    </node>
+    <node id="8">
+        <level>3</level>
+        <label>5</label>
+        <parent_id>5</parent_id>
+        <parent_label>1</parent_label>
+        <left_child>false</left_child>
+        <left_child_label>-1</left_child_label>
+        <right_child_label>-1</right_child_label>
+        <doc_count>1897</doc_count>
+        <top_terms>
+            <term name="trade"/>
+            <term name="u.s"/>
+            <term name="pct"/>
+            <term name="rate"/>
+            <term name="bank"/>
+        </top_terms>
+    </node>
+    <node id="6">
+        <level>2</level>
+        <label>3</label>
+        <parent_id>2</parent_id>
+        <parent_label>1</parent_label>
+        <left_child>false</left_child>
+        <left_child_label>-1</left_child_label>
+        <right_child_label>-1</right_child_label>
+        <doc_count>715</doc_count>
+        <top_terms>
+            <term name="qtly"/>
+            <term name="div"/>
+            <term name="record"/>
+            <term name="pay"/>
+            <term name="prior"/>
+        </top_terms>
+    </node>
+</DataSet>
