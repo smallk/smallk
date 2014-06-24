@@ -93,7 +93,7 @@ export ELEMVARS
 #
 ###############################################################################
 package     = libsmallk
-version     = 1.0.0
+version     = 1.1.0
 tarname     = $(package)
 distdir     = $(tarname)-$(version)
 prefix      = $(SMALLK_INSTALL_DIR)
@@ -319,8 +319,10 @@ $(distdir): FORCE
 	done
 	cp Makefile $(distdir)
 	cp README.txt $(distdir)
+	cp LICENSE-2.0.txt $(distdir)
 	cp smallk/Makefile $(distdir)/smallk
-	cp examples/* $(distdir)/examples
+	cp examples/Makefile $(distdir)/examples
+	cp examples/smallk_example.cpp $(distdir)/examples
 	cp preprocessor/Makefile $(distdir)/preprocessor
 	cp nmf/Makefile $(distdir)/nmf
 	cp hierclust/Makefile $(distdir)/hierclust

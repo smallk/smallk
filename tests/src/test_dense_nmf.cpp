@@ -296,7 +296,7 @@ bool ComparisonTest(Random& rng)
         opts.normalize   = true;
         
         NmfStats stats;
-        NmfResult result_sparse, result_dense;
+        Result result_sparse, result_dense;
 
         // run both sparse and dense NMF
         result_sparse = NmfSparse(opts, 
@@ -307,7 +307,7 @@ bool ComparisonTest(Random& rng)
                                   W.Buffer(), W.LDim(),
                                   H.Buffer(), H.LDim(),
                                   stats);
-        if (NmfResult::OK != result_sparse)
+        if (Result::OK != result_sparse)
         {
             cerr << "\tSkipping this rank-deficient problem..." << endl;
             continue;
@@ -315,7 +315,7 @@ bool ComparisonTest(Random& rng)
 
         result_dense = Nmf(opts, D.Buffer(), D.LDim(), 
                            W2.Buffer(), W2.LDim(), H2.Buffer(), H2.LDim(), stats);
-        if (NmfResult::OK != result_dense)
+        if (Result::OK != result_dense)
             cerr << "TestDenseNmf: dense nmf computation failed" << endl;
         
         std::string algorithm;

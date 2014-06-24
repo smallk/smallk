@@ -42,7 +42,7 @@ bool RunHierNmf2(const unsigned int m,
     std::vector<T> buf_w(m*clust_opts.num_clusters);
     std::vector<T> buf_h(clust_opts.num_clusters*n);
 
-    ClustResult result = ClustResult::OK;
+    Result result = Result::OK;
 
     if (A.Size() > 0)
     {
@@ -67,5 +67,5 @@ bool RunHierNmf2(const unsigned int m,
         TopTerms(clust_opts.maxterms, &buf_w[0], m, m, k, term_indices);        
     }
  
-    return (ClustResult::OK == result);
+    return (Result::OK == result);
 }

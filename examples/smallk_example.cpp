@@ -200,7 +200,7 @@ int main(int argc, char* argv[])
         smallk::HierNmf2(5);
         
         // The call to HierNmf2 will generate two output files in the current 
-        // directory: 'assignments_10.csv' and 'tree_10.json'.  The assignment 
+        // directory: 'assignments_5.csv' and 'tree_5.json'.  The assignment 
         // file contains an integer label for each of the 7984 documents in the
         // Reuters data set.  Documents that share a common label are in
         // the same cluster.  Any documents assigned the label '-1' are 

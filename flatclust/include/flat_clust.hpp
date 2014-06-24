@@ -28,19 +28,19 @@ struct FlatClustOptions
 
 bool IsValid(const FlatClustOptions& opts, bool validate_matrix = true);
 
-NmfResult FlatClust(const NmfOptions& options,
-                    double* buf_A, int ldim_A,
-                    double* buf_W, int ldim_W,
-                    double* buf_H, int ldim_H,
-                    NmfStats& stats);
+Result FlatClust(const NmfOptions& options,
+                 double* buf_A, int ldim_A,
+                 double* buf_W, int ldim_W,
+                 double* buf_H, int ldim_H,
+                 NmfStats& stats);
 
-NmfResult FlatClustSparse(const NmfOptions& options,
-                          const unsigned int height,       // height of sparse matrix
-                          const unsigned int width,        // width of sparse matrix
-                          const unsigned int nz,           // number of nonzeros
-                          const unsigned int* col_offsets,
-                          const unsigned int* row_indices,
-                          const double* data,
-                          double* buf_W, int ldim_W,
-                          double* buf_H, int ldim_H,
-                          NmfStats& stats);
+Result FlatClustSparse(const NmfOptions& options,
+                       const unsigned int height,       // height of sparse matrix
+                       const unsigned int width,        // width of sparse matrix
+                       const unsigned int nz,           // number of nonzeros
+                       const unsigned int* col_offsets,
+                       const unsigned int* row_indices,
+                       const double* data,
+                       double* buf_W, int ldim_W,
+                       double* buf_H, int ldim_H,
+                       NmfStats& stats);

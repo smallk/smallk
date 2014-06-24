@@ -14,7 +14,7 @@
 
 #pragma once
 
-enum class NmfResult
+enum Result
 {
     OK             =  0,
     NOTINITIALIZED = -1,
@@ -24,7 +24,7 @@ enum class NmfResult
     SIZE_TOO_LARGE = -5
 };
 
-enum class NmfAlgorithm
+enum NmfAlgorithm
 {
     MU,       // Lee & Seung, multiplicative updating
     HALS,     // Cichocki & Pan, hierarchical alternating least squares
@@ -33,7 +33,7 @@ enum class NmfAlgorithm
 };
 
 // progress estimation algorithms (stopping criterion)
-enum class NmfProgressAlgorithm
+enum NmfProgressAlgorithm
 {
     PG_RATIO,    // PG_i / PG_1 (ratio of the ith PG to that of iteration 1)
     DELTA_FNORM  // relative change in the Frobenius norm of W
@@ -68,25 +68,25 @@ struct NmfOptions
 };
 
 void NmfInitialize(int argc, char* argv []);
-NmfResult NmfIsInitialized();
+Result NmfIsInitialized();
 void NmfFinalize();
 
 bool IsValid(const NmfOptions& opts, bool validate_matrix = true);
 
-NmfResult Nmf(const NmfOptions& options,
-              double* buf_A, int ldim_A,
-              double* buf_W, int ldim_W,
-              double* buf_H, int ldim_H,
-              NmfStats& stats);
+Result Nmf(const NmfOptions& options,
+           double* buf_A, int ldim_A,
+           double* buf_W, int ldim_W,
+           double* buf_H, int ldim_H,
+           NmfStats& stats);
 
-NmfResult NmfSparse(const NmfOptions& options,
-                    const unsigned int height,       // height of sparse matrix
-                    const unsigned int width,        // width of sparse matrix
-                    const unsigned int nz,           // number of nonzeros
-                    const unsigned int* col_offsets,
-                    const unsigned int* row_indices,
-                    const double* data,
-                    double* buf_W, int ldim_W,
-                    double* buf_H, int ldim_H,
-                    NmfStats& stats);
+Result NmfSparse(const NmfOptions& options,
+                 const unsigned int height,       // height of sparse matrix
+                 const unsigned int width,        // width of sparse matrix
+                 const unsigned int nz,           // number of nonzeros
+                 const unsigned int* col_offsets,
+                 const unsigned int* row_indices,
+                 const double* data,
+                 double* buf_W, int ldim_W,
+                 double* buf_H, int ldim_H,
+                 NmfStats& stats);
 

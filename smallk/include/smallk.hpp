@@ -205,7 +205,7 @@ namespace smallk
     /// matrix A is \c m x \c n, matrix W is \c m x \c k, and matrix H is
     /// \c k x \c n.  Matrix A must have already been loaded by a prior 
     /// call to \c LoadMatrix.
-    bool Nmf(const unsigned int k, 
+    void Nmf(const unsigned int k, 
              const Algorithm algorithm = Algorithm::BPP,
              const std::string& initfile_w = std::string(""),
              const std::string& initfile_h = std::string(""));

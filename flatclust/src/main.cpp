@@ -235,7 +235,7 @@ int main(int argc, char* argv[])
     NmfStats stats;
     std::vector<int> assignments(n);
     std::vector<int> term_indices(opts.clust_opts.maxterms * k);
-    NmfResult result = NmfResult::OK;
+    Result result = Result::OK;
 
     if (A.Size() > 0)
     {
@@ -257,7 +257,7 @@ int main(int argc, char* argv[])
                            stats);
     }
 
-    if (NmfResult::OK != result)
+    if (Result::OK != result)
     {
         cerr << "\nNMF solver failure." << endl;
     }

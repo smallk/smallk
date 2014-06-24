@@ -251,7 +251,7 @@ int main(int argc, char* argv[])
     ClustStats stats;
     std::vector<int> assignments, assignments_flat;
     std::vector<int> term_indices(opts.clust_opts.maxterms * num_clusters);
-    ClustResult result = ClustResult::OK;
+    Result result = Result::OK;
 
     timer.Start();
 
@@ -297,7 +297,7 @@ int main(int argc, char* argv[])
     //
     //-------------------------------------------------------------------------
 
-    if (ClustResult::OK != result)
+    if (Result::OK != result)
     {
         cerr << "\nHierarchical clustering fatal error." << endl;
     }

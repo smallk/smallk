@@ -14,7 +14,7 @@
 
 #pragma once
 
-enum class FileFormat
+enum FileFormat
 {
     CSV,
     XML,

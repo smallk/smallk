@@ -295,12 +295,16 @@ void SetHierNmf2Tolerance(const double tol)
 void SetMaxIter(const unsigned int max_iterations)
 {
     max_iter = max_iterations;
+    if (0 == max_iter)
+        max_iter = 1;
 }
 
 //-----------------------------------------------------------------------------
 void SetMinIter(const unsigned int min_iterations)
 {
     min_iter = min_iterations;
+    if (0 == min_iter)
+        min_iter = 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -308,12 +312,16 @@ void SetMaxThreads(const unsigned int mt)
 {
     unsigned int hw_threads = std::thread::hardware_concurrency();
     max_threads = std::min(mt, hw_threads);
+    if (0 == max_threads)
+        max_threads = 1;
 }
 
 //-----------------------------------------------------------------------------
 void SetMaxTerms(const unsigned int max_terms)
 {
     maxterms = max_terms;
+    if (0 == maxterms)
+        maxterms = 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -326,16 +334,29 @@ unsigned int GetOutputPrecision()
 void SetOutputPrecision(const unsigned int num_digits)
 {
     outprecision = num_digits;
+
+    // adjust unreasonable inputs
+    if (0 == outprecision)
+        outprecision = 1;
+
+    if (outprecision > std::numeric_limits<double>::max_digits10)
+        outprecision = std::numeric_limits<double>::max_digits10;
 }
 
 //-----------------------------------------------------------------------------
-bool Nmf(const unsigned int kval, 
+void Nmf(const unsigned int kval, 
          const Algorithm algorithm,
          const std::string& csv_file_w,
          const std::string& csv_file_h)
 {
     if (!matrix_loaded)
         throw std::logic_error("smallk error (NMF): no matrix has been loaded.");
+
+    if (max_iter < min_iter)
+        throw std::logic_error("smallk error (NMF): min_iterations exceeds max_iterations.");
+
+    if (0 == kval)
+        throw std::logic_error("smallk error (NMF): k must be greater than 0.");
 
     // Check the sizes of matrix W(m, k) and matrix H(k, n) and make sure 
     // they don't overflow Elemental's default signed int index type.
@@ -453,7 +474,7 @@ bool Nmf(const unsigned int kval,
     PrintNmfOpts(nmf_opts);
 
     NmfStats stats;
-    NmfResult result;
+    Result result;
     if (is_sparse)
     {
         result = NmfSparse(nmf_opts, 
@@ -478,7 +499,7 @@ bool Nmf(const unsigned int kval,
     cout << ElapsedTime(stats.elapsed_us) << endl;
     cout << endl;
 
-    if (NmfResult::OK != result)
+    if (Result::OK != result)
         throw std::runtime_error("smallk error (Nmf): NMF solver failure.");
 
     // write the computed W and H factors to disk
@@ -502,8 +523,6 @@ bool Nmf(const unsigned int kval,
     
     if (!WriteDelimitedFile(&buf_h[0], ldim_h, k, n, outfile_h, outprecision))
         throw std::runtime_error("smallk error (Nmf): could not write H result.");
-
-    return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -609,6 +628,9 @@ void HierNmf2Internal(bool generate_flat,
 
     if (!dict_loaded)
         throw std::logic_error("smallk error (HierNmf2): no dictionary has been loaded.");
+
+    if (0 == num_clusters)
+        throw std::logic_error("smallk error (HierNmf2): num_clusters must be greater than 0.");
 
     HierNmf2Init(num_clusters);
 

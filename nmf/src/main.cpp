@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
     //-------------------------------------------------------------------------
 
     NmfStats stats;
-    NmfResult result = NmfResult::OK;
+    Result result = Result::OK;
 
     if (A.Size() > 0)
     {
@@ -237,7 +237,7 @@ int main(int argc, char* argv[])
     std::cout << ElapsedTime(stats.elapsed_us) << std::endl;
     std::cout << std::endl;
 
-    if (NmfResult::OK != result)
+    if (Result::OK != result)
     {
         cerr << "\nNMF solver failure." << endl;
     }

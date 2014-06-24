@@ -39,10 +39,10 @@ void NmfInitialize(int argc, char * argv[])
 }
 
 //-----------------------------------------------------------------------------
-NmfResult NmfIsInitialized()
+Result NmfIsInitialized()
 {
-    return elem::Initialized() ? NmfResult::INITIALIZED : 
-                                 NmfResult::NOTINITIALIZED;
+    return elem::Initialized() ? Result::INITIALIZED : 
+                                 Result::NOTINITIALIZED;
 }
 
 //-----------------------------------------------------------------------------
@@ -52,11 +52,11 @@ void NmfFinalize()
 }
 
 //-----------------------------------------------------------------------------
-NmfResult RunNmf(const NmfOptions& opts,
-                 const DenseMatrix<R>& A,
-                 DenseMatrix<R>& W,
-                 DenseMatrix<R>& H,
-                 NmfStats& stats)
+Result RunNmf(const NmfOptions& opts,
+              const DenseMatrix<R>& A,
+              DenseMatrix<R>& W,
+              DenseMatrix<R>& H,
+              NmfStats& stats)
 {
     bool success = false;
 
@@ -107,15 +107,15 @@ NmfResult RunNmf(const NmfOptions& opts,
         PrintNorms(A, W, H);
 
     delete progress_estimator;
-    return success ? NmfResult::OK : NmfResult::FAILURE;
+    return success ? Result::OK : Result::FAILURE;
 }
 
 //-----------------------------------------------------------------------------
-NmfResult RunNmf(const NmfOptions& opts,
-                 const SparseMatrix<R>& A,
-                 DenseMatrix<R>& W,
-                 DenseMatrix<R>& H,
-                 NmfStats& stats)
+Result RunNmf(const NmfOptions& opts,
+              const SparseMatrix<R>& A,
+              DenseMatrix<R>& W,
+              DenseMatrix<R>& H,
+              NmfStats& stats)
 {
     bool success = false;
 
@@ -166,26 +166,26 @@ NmfResult RunNmf(const NmfOptions& opts,
         PrintNorms(A, W, H);
 
     delete progress_estimator;
-    return success ? NmfResult::OK : NmfResult::FAILURE;
+    return success ? Result::OK : Result::FAILURE;
 }
 
 //-----------------------------------------------------------------------------
-NmfResult Nmf(const NmfOptions& options,
-              double *buf_a, const int ldim_a,
-              double *buf_w, const int ldim_w,
-              double *buf_h, const int ldim_h,
-              NmfStats& stats)
+Result Nmf(const NmfOptions& options,
+           double *buf_a, const int ldim_a,
+           double *buf_w, const int ldim_w,
+           double *buf_h, const int ldim_h,
+           NmfStats& stats)
 {
     if (!elem::Initialized())
     {
         cerr << "nmflib error: nmf_initialize() must be called prior to "
              << "any factorization routine\n" << endl;
-        return NmfResult::NOTINITIALIZED;
+        return Result::NOTINITIALIZED;
     }
 
     // check the params in case the user did not
     if (!IsValid(options))
-        return NmfResult::BAD_PARAM;
+        return Result::BAD_PARAM;
 
     int m = options.height;
     int n = options.width;
@@ -197,7 +197,7 @@ NmfResult Nmf(const NmfOptions& options,
     if (!FitsWithin<int>(required_size))
     {
         cerr << "W matrix size too large" << endl;
-        return NmfResult::SIZE_TOO_LARGE;
+        return Result::SIZE_TOO_LARGE;
     }
 
     // check H matrix size
@@ -206,7 +206,7 @@ NmfResult Nmf(const NmfOptions& options,
     if (!FitsWithin<int>(required_size))
     {
         cerr << "H matrix size too large" << endl;
-        return NmfResult::SIZE_TOO_LARGE;
+        return Result::SIZE_TOO_LARGE;
     }
 
     // ensure that leading dims are large enough
@@ -229,28 +229,28 @@ NmfResult Nmf(const NmfOptions& options,
 }
 
 //-----------------------------------------------------------------------------
-NmfResult NmfSparse(const NmfOptions& options,
-                    const unsigned int height,
-                    const unsigned int width,
-                    const unsigned int nz,
-                    const unsigned int* col_offsets,
-                    const unsigned int* row_indices,
-                    const double* data,              
-                    double *buf_w, const int ldim_w,
-                    double *buf_h, const int ldim_h,
-                    NmfStats& stats)
+Result NmfSparse(const NmfOptions& options,
+                 const unsigned int height,
+                 const unsigned int width,
+                 const unsigned int nz,
+                 const unsigned int* col_offsets,
+                 const unsigned int* row_indices,
+                 const double* data,              
+                 double *buf_w, const int ldim_w,
+                 double *buf_h, const int ldim_h,
+                 NmfStats& stats)
 {
 
     if (!elem::Initialized())
     {
         cerr << "nmflib error: nmf_initialize() must be called prior to "
              << "any factorization routine\n" << endl;
-        return NmfResult::NOTINITIALIZED;
+        return Result::NOTINITIALIZED;
     }
 
     // check the params in case the user did not
     if (!IsValid(options))
-        return NmfResult::BAD_PARAM;
+        return Result::BAD_PARAM;
 
     int m = options.height;
     int n = options.width;
@@ -262,7 +262,7 @@ NmfResult NmfSparse(const NmfOptions& options,
     if (!FitsWithin<int>(required_size))
     {
         cerr << "W matrix size too large" << endl;
-        return NmfResult::SIZE_TOO_LARGE;
+        return Result::SIZE_TOO_LARGE;
     }
 
     // check H matrix size
@@ -271,7 +271,7 @@ NmfResult NmfSparse(const NmfOptions& options,
     if (!FitsWithin<int>(required_size))
     {
         cerr << "H matrix size too large" << endl;
-        return NmfResult::SIZE_TOO_LARGE;
+        return Result::SIZE_TOO_LARGE;
     }
 
     // ensure that leading dims are large enough

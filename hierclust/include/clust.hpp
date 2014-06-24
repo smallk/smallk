@@ -21,16 +21,6 @@
 
 typedef double R;
 
-enum class ClustResult
-{
-    OK             =  0,
-    NOTINITIALIZED = -1,
-    INITIALIZED    = -2,
-    BAD_PARAM      = -3,
-    FAILURE        = -4,
-    SIZE_TOO_LARGE = -5
-};
-
 struct ClustStats
 {
     ClustStats() : nmf_count(0),  max_count(0) {}
@@ -56,21 +46,21 @@ struct ClustOptions
 
 bool IsValid(const ClustOptions& opts, bool validate_matrix = true);
 
-ClustResult Clust(const ClustOptions& options,
-                  R* buf_A, int ldim_A,
-                  R* buf_w, R* buf_h,
-                  std::vector<std::vector<R> >& w_initializers,
-                  std::vector<std::vector<R> >& h_initializers,
-                  std::vector<int>& assignments,
-                  Tree& tree,
-                  ClustStats& stats);
+Result Clust(const ClustOptions& options,
+             R* buf_A, int ldim_A,
+             R* buf_w, R* buf_h,
+             std::vector<std::vector<R> >& w_initializers,
+             std::vector<std::vector<R> >& h_initializers,
+             std::vector<int>& assignments,
+             Tree& tree,
+             ClustStats& stats);
 
-ClustResult ClustSparse(const ClustOptions& options,
-                        const SparseMatrix<R>& A,
-                        R* buf_w, R* buf_h,
-                        std::vector<std::vector<R> >& w_initializers,
-                        std::vector<std::vector<R> >& h_initializers,
-                        std::vector<int>& assignments,
-                        Tree& tree,
-                        ClustStats& stats);
+Result ClustSparse(const ClustOptions& options,
+                   const SparseMatrix<R>& A,
+                   R* buf_w, R* buf_h,
+                   std::vector<std::vector<R> >& w_initializers,
+                   std::vector<std::vector<R> >& h_initializers,
+                   std::vector<int>& assignments,
+                   Tree& tree,
+                   ClustStats& stats);
 

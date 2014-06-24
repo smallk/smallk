@@ -36,14 +36,14 @@ using std::endl;
 typedef double R;
 
 //-----------------------------------------------------------------------------
-ClustResult RunClust(const ClustOptions& opts,
-                     DenseMatrix<R>& A,
-                     R* buf_w, R* buf_h,
-                     std::vector<DenseMatrix<R> >& matrices_W,
-                     std::vector<DenseMatrix<R> >& matrices_H,
-                     std::vector<int>& assignments,
-                     Tree& tree,
-                     ClustStats& stats)
+Result RunClust(const ClustOptions& opts,
+                DenseMatrix<R>& A,
+                R* buf_w, R* buf_h,
+                std::vector<DenseMatrix<R> >& matrices_W,
+                std::vector<DenseMatrix<R> >& matrices_H,
+                std::vector<int>& assignments,
+                Tree& tree,
+                ClustStats& stats)
 {
     Solver_Generic_Rank2<R, DenseMatrix> solver;
 
@@ -62,7 +62,7 @@ ClustResult RunClust(const ClustOptions& opts,
                            progress_estimator, opts, tree, stats);
 
     if (!ok)
-        return ClustResult::FAILURE;
+        return Result::FAILURE;
 
     if (opts.flat)
     {
@@ -73,18 +73,18 @@ ClustResult RunClust(const ClustOptions& opts,
         }
     }
 
-    return ok ? ClustResult::OK : ClustResult::FAILURE;
+    return ok ? Result::OK : Result::FAILURE;
 }
 
 //-----------------------------------------------------------------------------
-ClustResult RunClust(const ClustOptions& opts,
-                     const SparseMatrix<R>& A,
-                     R* buf_w, R* buf_h,
-                     std::vector<DenseMatrix<R> >& matrices_W,
-                     std::vector<DenseMatrix<R> >& matrices_H,
-                     std::vector<int>& assignments,
-                     Tree& tree,
-                     ClustStats& stats)
+Result RunClust(const ClustOptions& opts,
+                const SparseMatrix<R>& A,
+                R* buf_w, R* buf_h,
+                std::vector<DenseMatrix<R> >& matrices_W,
+                std::vector<DenseMatrix<R> >& matrices_H,
+                std::vector<int>& assignments,
+                Tree& tree,
+                ClustStats& stats)
 {
     Solver_Generic_Rank2<R, SparseMatrix> solver;
 
@@ -102,7 +102,7 @@ ClustResult RunClust(const ClustOptions& opts,
                            assignments, topic_vectors, solver,
                            progress_estimator, opts, tree, stats);
     if (!ok)
-        return ClustResult::FAILURE;
+        return Result::FAILURE;
 
     if (opts.flat)
     {
@@ -113,30 +113,30 @@ ClustResult RunClust(const ClustOptions& opts,
         }
     }
     
-    return ok ? ClustResult::OK : ClustResult::FAILURE;
+    return ok ? Result::OK : Result::FAILURE;
 }
 
 //-----------------------------------------------------------------------------
-ClustResult Clust(const ClustOptions& options,
-                  R *buf_a, const int ldim_a,
-                  R* buf_w, 
-                  R* buf_h,
-                  std::vector<std::vector<R> >& w_initializers,
-                  std::vector<std::vector<R> >& h_initializers,
-                  std::vector<int>& assignments,
-                  Tree& tree,
-                  ClustStats& stats)
+Result Clust(const ClustOptions& options,
+             R *buf_a, const int ldim_a,
+             R* buf_w, 
+             R* buf_h,
+             std::vector<std::vector<R> >& w_initializers,
+             std::vector<std::vector<R> >& h_initializers,
+             std::vector<int>& assignments,
+             Tree& tree,
+             ClustStats& stats)
 {
     if (!elem::Initialized())
     {
         cerr << "clustlib error: nmf_initialize() must be called prior to "
         << "any clustering routine\n" << endl;
-        return ClustResult::NOTINITIALIZED;
+        return Result::NOTINITIALIZED;
     }
    
     // check the params in case the user did not
     if (!IsValid(options))
-        return ClustResult::BAD_PARAM;
+        return Result::BAD_PARAM;
     
     int m = options.nmf_opts.height;
     int n = options.nmf_opts.width;
@@ -150,7 +150,7 @@ ClustResult Clust(const ClustOptions& options,
     if (!FitsWithin<int>(required_size))
     {
         cerr << "W matrix size too large" << endl;
-        return ClustResult::SIZE_TOO_LARGE;
+        return Result::SIZE_TOO_LARGE;
     }
 
     // check H matrix
@@ -159,7 +159,7 @@ ClustResult Clust(const ClustOptions& options,
     if (!FitsWithin<int>(required_size))
     {
         cerr << "H matrix size too large" << endl;
-        return ClustResult::SIZE_TOO_LARGE;
+        return Result::SIZE_TOO_LARGE;
     }
     
     SetMaxThreadCount(options.nmf_opts.max_threads);
@@ -188,26 +188,26 @@ ClustResult Clust(const ClustOptions& options,
 }
 
 //-----------------------------------------------------------------------------
-ClustResult ClustSparse(const ClustOptions& options,
-                        const SparseMatrix<R>& A,
-                        R* buf_w, 
-                        R* buf_h,
-                        std::vector<std::vector<R> >& w_initializers,
-                        std::vector<std::vector<R> >& h_initializers,
-                        std::vector<int>& assignments,
-                        Tree& tree,
-                        ClustStats& stats)
+Result ClustSparse(const ClustOptions& options,
+                   const SparseMatrix<R>& A,
+                   R* buf_w, 
+                   R* buf_h,
+                   std::vector<std::vector<R> >& w_initializers,
+                   std::vector<std::vector<R> >& h_initializers,
+                   std::vector<int>& assignments,
+                   Tree& tree,
+                   ClustStats& stats)
 {
     if (!elem::Initialized())
     {
         cerr << "clustlib error: nmf_initialize() must be called prior to "
         << "any clustering routine\n" << endl;
-        return ClustResult::NOTINITIALIZED;
+        return Result::NOTINITIALIZED;
     }
     
     // check the params in case the user did not
     if (!IsValid(options))
-        return ClustResult::BAD_PARAM;
+        return Result::BAD_PARAM;
     
     int m = options.nmf_opts.height;
     int n = options.nmf_opts.width;
@@ -218,7 +218,7 @@ ClustResult ClustSparse(const ClustOptions& options,
     if (!FitsWithin<int>(required_size))
     {
         cerr << "W matrix size too large" << endl;
-        return ClustResult::SIZE_TOO_LARGE;
+        return Result::SIZE_TOO_LARGE;
     }
 
     // check H matrix
@@ -227,7 +227,7 @@ ClustResult ClustSparse(const ClustOptions& options,
     if (!FitsWithin<int>(required_size))
     {
         cerr << "H matrix size too large" << endl;
-        return ClustResult::SIZE_TOO_LARGE;
+        return Result::SIZE_TOO_LARGE;
     }
 
     SetMaxThreadCount(options.nmf_opts.max_threads);
