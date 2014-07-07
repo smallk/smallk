@@ -137,13 +137,13 @@ void Finalize()
 //-----------------------------------------------------------------------------
 unsigned int GetMajorVersion()
 {
-    return SMALLK_MAJOR_VERSION;
+    return (unsigned int)(SMALLK_MAJOR_VERSION);
 }
 
 //-----------------------------------------------------------------------------
 unsigned int GetMinorVersion()
 {
-    return SMALLK_MINOR_VERSION;
+    return (unsigned int) (SMALLK_MINOR_VERSION);
 }
 
 //-----------------------------------------------------------------------------

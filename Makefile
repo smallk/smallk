@@ -93,7 +93,7 @@ export ELEMVARS
 #
 ###############################################################################
 package     = libsmallk
-version     = 1.1.0
+version     = 1.2.0
 tarname     = $(package)
 distdir     = $(tarname)-$(version)
 prefix      = $(SMALLK_INSTALL_DIR)

@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <fstream>
 #include <iostream>
 #include "matrix_market_file.hpp"
 
