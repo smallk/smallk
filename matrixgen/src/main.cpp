@@ -92,6 +92,18 @@ int main(int argc, char* argv[])
             S.Load(c, c, rng.RandomDouble(center, radius));
         S.EndLoad();
     }
+    else if (CaseInsensitiveEquals(TYPE_IDENTITY, opts.type))
+    {
+        for (unsigned int c=0; c != n; ++c)
+        {
+            unsigned int col_offset = c*m;
+            for (unsigned int r=0; r != m; ++r)
+                A[col_offset + r] = 0.0;
+        }
+
+        for (unsigned int c=0; c != n; ++c)
+            A[c*m + c] = 1.0;
+    }
     else if (CaseInsensitiveEquals(TYPE_ONES, opts.type))
     {
         for (unsigned int c=0; c != n; ++c)
