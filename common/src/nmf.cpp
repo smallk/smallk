@@ -103,8 +103,8 @@ Result RunNmf(const NmfOptions& opts,
         throw std::runtime_error("unknown NMF algorithm");
     }
 
-    if (success && opts.verbose)
-        PrintNorms(A, W, H);
+//    if (success && opts.verbose)
+//        PrintNorms(A, W, H);
 
     delete progress_estimator;
     return success ? Result::OK : Result::FAILURE;
@@ -162,8 +162,8 @@ Result RunNmf(const NmfOptions& opts,
         throw std::runtime_error("unknown NMF algorithm");
     }
 
-    if (success && opts.verbose)
-        PrintNorms(A, W, H);
+//    if (success && opts.verbose)
+//        PrintNorms(A, W, H);
 
     delete progress_estimator;
     return success ? Result::OK : Result::FAILURE;

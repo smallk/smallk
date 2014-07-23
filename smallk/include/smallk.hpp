@@ -23,7 +23,7 @@
 #include <vector>
 
 #define SMALLK_MAJOR_VERSION 1
-#define SMALLK_MINOR_VERSION 3
+#define SMALLK_MINOR_VERSION 4
 #define SMALLK_PATCH_LEVEL   0
 
 namespace smallk
