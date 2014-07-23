@@ -25,8 +25,8 @@ template <typename T>
 inline 
 void ReportProgress(const int iter_count, const T progress_metric)
 {
-    const int START_COUNT = 20;
-    const int SKIP_COUNT  = 20;
+    const int START_COUNT = 10;
+    const int SKIP_COUNT  = 10;
 
     if ( (iter_count < START_COUNT) ||      // show the first few iterations
          (0 == (iter_count % SKIP_COUNT)))  // then periodically thereafter
