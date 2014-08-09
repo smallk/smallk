@@ -298,7 +298,7 @@ def PyLoadMatrixArray(const unsigned int matrix_height, const unsigned int matri
     return (ok, buf)
 
 def PyLoadMatrixArray(const unsigned int matrix_height, const unsigned int matrix_width, vector[double]& buf):
-    
+    pass
 
 def PyClust(opts, vector[double]& buf_a, unsigned int ldim_a,
             vector[vector[double]]& w_initializers, vector[vector[double]]& h_initializers,
