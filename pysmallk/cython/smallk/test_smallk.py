@@ -39,20 +39,20 @@ parser.add_argument('--maxthreads', action='store', required=False, metavar="max
 args = parser.parse_args()
 
 # Initialize NMF
-smallklib.PyInitialize(len(sys.argv),sys.argv)
+smallklib.py_initialize(len(sys.argv),sys.argv)
 
 # Check Initialization
-if (smallklib.PyIsInitialized() == False):
+if (smallklib.py_isInitialized() == False):
     print "Error in Initialization of NMFlib"
     exit(-1)
 else: 
     print "Initialization oK"
 
-algorithm = smallklib.GetAlgorithm(args.algorithm);
+algorithm = smallklib.get_algorithm(args.algorithm);
 k = int(args.k)
 
 #include user inputs, or defaults
-smallklib.PyLoadMatrix(args.matrixfile)
+smallklib.py_loadMatrix(args.matrixfile)
 smallklib.PySetMinIter(args.miniter)
 smallklib.PySetOutputPrecision(args.outprecision)
 smallklib.PySetMaxIter(args.maxiter)
@@ -60,10 +60,6 @@ smallklib.PySetMaxThreads(args.maxthreads)
 smallklib.PySetNmfTolerance(args.tol)
 smallklib.PySetOutputDir(args.outdir)
 
-smallklib.PyInitializeMatrix_W_File(k, args.infile_W)
-smallklib.PyInitializeMatrix_H_File(k, args.infile_H)
+smallklib.py_nmf(k, algorithm, args.infile_W, args.infile_H)
 
-smallklib.PyNmf(k, algorithm)
-smallklib.PyWriteResults()
-
-smallklib.PyFinalize()
+smallklib.py_finalize()

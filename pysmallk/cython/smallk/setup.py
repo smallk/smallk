@@ -48,7 +48,7 @@ archive_file_path = '%s/%s' %(archive_path, archive_filename)
 
 # Set the elem base, version and build mode
 elem_base = '/usr/local/elemental'
-elem_ver = '0.83'
+elem_ver = '0.84'
 elem_build_mode = 'HybridRelease'
 
 # Elemental path to include and lib
@@ -76,7 +76,7 @@ ext_modules = [
         library_dirs=library,
         extra_objects=[archive_file_path],
         language="c++",
-        extra_compile_args=["-fopenmp","-std=c++11", "-D ELEM_VER=83"],
+        extra_compile_args=["-fopenmp","-std=c++11", "-D ELEM_VER=84"],
         extra_link_args=links)
     ]
 

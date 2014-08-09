@@ -23,7 +23,6 @@ from libc.stdlib cimport malloc, free
 from libc.string cimport memcpy, memset
 from libcpp.string cimport string
 from libcpp cimport bool
-from libcpp.vector cimport vector
 
 cdef extern from "smallk.hpp" namespace "smallk":
     cdef enum Algorithm: 
@@ -48,13 +47,8 @@ cdef extern from "smallk.hpp" namespace "smallk":
     unsigned int GetPatchLevel()
     string GetVersionString()
 
-    void LoadMatrix(char* filepath)
-    void LoadMatrix(vector[double]& buffer, bool sparse, unsigned int height, unsigned int width)
+    void LoadMatrix(stdStringR filepath)
     void Nmf(int k, Algorithm algorithm, stdStringR initfile_w, stdStringR initfile_h)
-    void InitializeMatrix_W(unsigned int k, char* filepath)
-    void InitializeMatrix_H(unsigned int k, char* filepath)
-    void InitializeMatrix_W(unsigned int k, vector[double]& buffer)
-    void InitializeMatrix_H(unsigned int k, vector[double]& buffer)
 
     void SetOutputPrecision(const unsigned int num_digits)
     void SetMinIter(const unsigned int min_iterations)
@@ -62,12 +56,6 @@ cdef extern from "smallk.hpp" namespace "smallk":
     void SetMaxIter(const unsigned int max_iterations)
     void SetMaxThreads(const unsigned int mt)
     void SetOutputDir(const string& output_dir)
-
-    vector[double]& GetResult_W()
-    unsigned int GetDimensions_W()
-    vector[double]& GetResult_H()
-    unsigned int GetDimensions_H()
-    void WriteResults()
 
 #    void SetOutputFormat(const OutputFormat form)
 #    void LoadDictionary(const string& filepath)
@@ -78,7 +66,7 @@ cdef extern from "smallk.hpp" namespace "smallk":
 @cython.boundscheck(False)
 @cython.wraparound(False)
 
-def GetAlgorithm(alg_name):
+def get_algorithm(alg_name):
     if (alg_name == 'MU'):
         return MU
     elif (alg_name == 'HALS'):
@@ -88,14 +76,14 @@ def GetAlgorithm(alg_name):
     elif (alg_name == 'BPP'):
         return BPP
 
-def GetOutputFormat(form):
+def get_outputformat(form):
     if form == "XML":
         return XML
     elif form == "JSON":
         return JSON
 
 
-def PyInitialize(ac, av):
+def py_initialize(ac, av):
     cdef char **c_arr = <char**>malloc((ac+1) * sizeof(char*))
     cdef char* c_string
     cdef char* char_str
@@ -124,30 +112,13 @@ def PyInitialize(ac, av):
         free(c_arr[i])
     free(c_arr)
 
-def PyIsInitialized():
+def py_isInitialized():
     return IsInitialized();
 
-def PyLoadMatrix(char* filepath):
+def py_loadMatrix(char* filepath):
     LoadMatrix(filepath)
 
-def PyLoadMatrixFromBuffer(vector[double] &buffer, bool sparse, unsigned int m_input, unsigned int n_input):
-    LoadMatrix(buffer, sparse, m_input, n_input)
-
-
-def PyInitializeMatrix_W_File(unsigned int k, char* filepath):
-    InitializeMatrix_W(k, filepath)
-
-def PyInitializeMatrix_H_File(unsigned int k, char* filepath):
-    InitializeMatrix_H(k, filepath)
-    
-def PyInitializeMatrix_W(unsigned int k, vector[double]& buffer):
-    InitializeMatrix_W(k, buffer)
-
-def PyInitializeMatrix_H(unsigned int k, vector[double]& buffer):
-    InitializeMatrix_H(k, buffer)
-
-
-def PyNmf(k, algorithm, char* initfile_w="", char* initfile_h=""):
+def py_nmf(k, algorithm, char* initfile_w, char* initfile_h):
     '''
     Calls non-distributed NMF
       k           Rank k
@@ -159,7 +130,7 @@ def PyNmf(k, algorithm, char* initfile_w="", char* initfile_h=""):
     cdef int c_k = k
     Nmf(c_k, algorithm, initfile_w, initfile_h)
 
-def PyFinalize(): 
+def py_finalize(): 
     Finalize()
 
 def PySetOutputPrecision(const unsigned int num_digits):
@@ -179,22 +150,6 @@ def PySetMaxThreads(const unsigned int mt):
 
 def PySetOutputDir(const string& output_dir):
     SetOutputDir(output_dir)
-
-def PyWriteResults():
-    WriteResults()
-
-def PyGetResult_W():
-    return GetResult_W()
-
-def PyGetResult_H():
-    return GetResult_H()
-
-def PyGetDimensions_W():
-    return GetDimensions_W()
-
-def PyGetDimensions_H():
-    return GetDimensions_H()
-
 
 #unused for running regular nmf
 #def PySetOutputFormat(const OutputFormat form):
