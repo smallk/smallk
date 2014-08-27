@@ -85,8 +85,8 @@ int main(int argc, char* argv[])
         if (10 != smallk::GetMinIter())
             throw std::runtime_error("GetMaxIter failed");
         
-        smallk::SetMaxThreads(3);
-        if (3 != smallk::GetMaxThreads())
+        smallk::SetMaxThreads(2);
+        if (2 != smallk::GetMaxThreads())
             throw std::runtime_error("SetMaxThreads failed");
 
         smallk::SetMaxTerms(6);
