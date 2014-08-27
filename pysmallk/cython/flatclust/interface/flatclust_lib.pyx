@@ -362,7 +362,7 @@ def PyFlatClustSparse(opts, PyDoubleSparseMatrix A,
                                       &(buf_h[0]), ldim_h,
                                       dereference(stats.getThis()))
     #return (res == OK, buf_w_vec, buf_h_vec)
-    return res == OK
+    return res
 def PyFlatClust(opts, 
                 vector[double]& buf_a, vector[double]& buf_w, vector[double]& buf_h, 
                 unsigned int ldim_a, unsigned int ldim_w, unsigned int ldim_h, 

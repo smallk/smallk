@@ -92,7 +92,7 @@ print "Factor matrices H loaded initialized successfully", ok
 stats = libflatclust.PyNmfStats()
 
 if A.Size() > 0:
-    (res, buf_w, buf_h) = libflatclust.PyFlatClustSparse( opts, A, buf_w, buf_h, ldim_w, ldim_h, stats)
+    res = libflatclust.PyFlatClustSparse( opts, A, buf_w, buf_h, ldim_w, ldim_h, stats)
 else:
     (res, buf_w, buf_h) = libflatclust.PyFlatClust(opts, buf_a, buf_w, buf_h, ldim_a, ldim_w, ldim_h, stats)
 print "NMF success", res

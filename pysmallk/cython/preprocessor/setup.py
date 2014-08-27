@@ -34,7 +34,7 @@ elif 'linux' in thisPlatform:
 else:
     print "\nPlatform is not supported.", "\n"
 
-smallk_path = "../../../../libsmallk-1.4.0/"
+smallk_path = "../../../"
 
 more_sources = [smallk_path + "preprocessor/src/main.cpp",
                 smallk_path + "preprocessor/src/command_line.cpp",

@@ -35,7 +35,7 @@ elif 'linux' in thisPlatform:
 else:
     print "\nPlatform is not supported.", "\n"
 
-smallk_path = "../../../../libsmallk-1.4.0/"
+smallk_path = "../../../"
 
 
 elem_base = "/usr/local/elemental"

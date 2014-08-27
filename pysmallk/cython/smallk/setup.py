@@ -36,7 +36,7 @@ elif 'linux' in thisPlatform:
 else:
     print "\nPlatform is not supported.", "\n"
 
-smallk_path = "../../../../libsmallk-1.3.0/"
+smallk_path = "../../../"
 
 # Path to the .hpp interface file
 hpp_path = '/usr/local/smallk/include'
