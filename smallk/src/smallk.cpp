@@ -209,6 +209,132 @@ void LoadMatrix(const std::string& filepath)
 }
 
 //-----------------------------------------------------------------------------
+void LoadMatrix(const double *buffer, 
+                    const unsigned int ldim,
+                    const unsigned int height, 
+                    const unsigned int width)
+{
+
+    cout << "Loading dense matrix..." << endl;
+
+    matrix_loaded = false;
+
+    // ensure that data is valid
+    if (0 == height)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid height input.";
+        throw std::runtime_error(msg.str());
+    }
+    if (0 == width)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid width input.";
+        throw std::runtime_error(msg.str());
+    }
+
+    if (!buffer)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): empty data pointer.";
+        throw std::runtime_error(msg.str());
+    }
+    if (buf_a.size() < height*width)
+    {
+        // set the buffer to the correct size
+        buf_a.resize(height * width);
+    }
+    // either way, ldim will be set equal to height
+    ldim_a = height;
+
+    // extract the next piece of data and store 
+    for (unsigned int c=0; c != height; ++c)
+    {
+        for (unsigned int r=0; r != width; ++r)
+        {
+            buf_a[c*height+r] = buffer[c*ldim + r];
+        }
+    }
+
+    is_sparse = false;
+    m = height;
+    n = width;
+    matrix_loaded = true;
+    matrix_filepath = 'NA';
+
+}
+
+//-----------------------------------------------------------------------------
+void LoadMatrix(const unsigned int height, 
+                    const unsigned int width,
+                    const unsigned int nz, 
+                    const std::vector<double>& data,
+                    const std::vector<unsigned int>& row_indices,
+                    const std::vector<unsigned int>& col_offsets)
+{
+
+    cout << "Loading sparse matrix..." << endl;
+
+    matrix_loaded = false;
+
+    // ensure that row_indices is the same size as data
+    if (row_indices.size() != data.size())
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid input vectors.";
+        throw std::runtime_error(msg.str());
+    }
+
+    // ensure that data is valid
+    if (0 == height)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid height input.";
+        throw std::runtime_error(msg.str());
+    }
+    if (0 == width)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid width input.";
+        throw std::runtime_error(msg.str());
+    }
+    if (data.size() > height*width)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid inputs.";
+        throw std::runtime_error(msg.str());
+    }
+    if (data.empty())
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): empty data vector.";
+        throw std::runtime_error(msg.str());
+    }
+    if (row_indices.empty())
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): empty row_indices vector.";
+        throw std::runtime_error(msg.str());
+    }
+    if (col_offsets.empty())
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): empty col_offsets vector.";
+        throw std::runtime_error(msg.str());
+    }
+
+    A = SparseMatrix<double>(height, width, nz, &col_offsets[0], &row_indices[0], &data[0]);
+        
+    is_sparse = true;
+    m = height;
+    n = width;
+    nnz = nz;
+    matrix_loaded = true;
+    matrix_filepath = 'NA';
+
+}
+
+//-----------------------------------------------------------------------------
 bool IsMatrixLoaded()
 {
     return matrix_loaded;
@@ -550,7 +676,7 @@ const double* LockedBufferH(unsigned int& ldim,
 //-----------------------------------------------------------------------------
 void LoadDictionary(const std::string& filepath)
 {
-    cout << "loading dictionary..." << endl;
+    cout << "Loading dictionary..." << endl;
   
     dictionary.clear();
     dict_loaded = false;
@@ -564,6 +690,24 @@ void LoadDictionary(const std::string& filepath)
 
     dict_filepath = filepath;
     dict_loaded = true;
+}
+
+//-----------------------------------------------------------------------------
+void LoadDictionary(const std::vector<std::string>& terms)
+{
+    cout << "Loading dictionary..." << endl;
+  
+    dictionary.clear();
+
+    dict_loaded = false;
+
+    for (std::string term : terms) {
+        dictionary.push_back(term);
+    }
+
+    dict_loaded = true;
+    dict_filepath = 'NA';
+
 }
 
 //-----------------------------------------------------------------------------

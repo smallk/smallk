@@ -20,6 +20,22 @@
 SMALLK_INSTALL_DIR ?= /usr/local/smallk
 export SMALLK_INSTALL_DIR
 
+# The 'make check' and 'make distcheck' targets require the location of the 
+# xdata_data project.  Users can supply the path to this project on the make 
+# command line by defining the DATA_DIR variable.  If users did not specify 
+# the path, assume the following location:
+DATA_DIR ?= ../xdata_data
+
+###############################################################################
+#
+# The default install location for pysmallk is /usr/local/lib/python2.7/site-packages, 
+# unless SITE_PACKAGES_DIR exists, in which case smallk will be installed there.
+#
+###############################################################################
+
+SITE_PACKAGES_DIR ?= /usr/local/lib/python2.7/site-packages/
+export SITE_PACKAGES_DIR
+
 ###############################################################################
 #
 # Elemental
@@ -36,8 +52,8 @@ export SMALLK_INSTALL_DIR
 #
 ###############################################################################
 
-# default to Elemental version 0.84
-ELEMVER ?= 0.84
+# default to Elemental version 0.84-p1
+ELEMVER ?= 0.84-p1
 
 # name of the elemental config file
 ELEMVARIABLES_FILE := ElemVars
@@ -68,6 +84,11 @@ ELEMENTAL_VERSION := 0.84
 ELEM_INT_VER := 84
 endif
 
+ifeq ($(ELEMVER), 0.84-p1)
+ELEMENTAL_VERSION := 0.84-p1
+ELEM_INT_VER := 84
+endif
+
 # find the top-level Elemental install directory
 ELEMENTAL_INSTALL_DIR ?= /usr/local/elemental
 ELEMENTAL_BASE = $(ELEMENTAL_INSTALL_DIR)/$(ELEMENTAL_VERSION)
@@ -75,8 +96,12 @@ ELEMENTAL_BASE = $(ELEMENTAL_INSTALL_DIR)/$(ELEMENTAL_VERSION)
 # locate the appropriate Elemental config file based on the build type
 ifeq ($(CFG), purerelease)
 ELEMVARS := $(ELEMENTAL_BASE)/PureRelease/conf/$(ELEMVARIABLES_FILE)
+ELEM_INCLUDE := $(ELEMENTAL_BASE)/PureRelease/include
+ELEM_LIB := $(ELEMENTAL_BASE)/PureRelease/lib
 else
 ELEMVARS := $(ELEMENTAL_BASE)/HybridRelease/conf/$(ELEMVARIABLES_FILE)
+ELEM_INCLUDE := $(ELEMENTAL_BASE)/HybridRelease/include
+ELEM_LIB := $(ELEMENTAL_BASE)/HybridRelease/lib
 endif
 
 # find the file and include it; error if not found
@@ -86,6 +111,8 @@ else
 $(error Cannot find the elemvariables file)
 endif
 export ELEMVARS
+export ELEM_INCLUDE
+export ELEM_LIB
 
 ###############################################################################
 #
@@ -191,6 +218,7 @@ SMALLK_INC = \
 	-I$(includedir) \
 	-I$(ELEM_INC)
 
+export CC
 export CXX
 export CFG
 export LIBS
@@ -198,15 +226,23 @@ export LDFLAGS
 export INCLUDES
 export CXXFLAGS
 export SYSTEM_FILE
+export SP_DIR
 
 LIB_TARGET=libsmallk
 LIBNAME=$(LIB_TARGET)
 export LIBNAME
 
-all: inform libsmallk smallk_tester matrixgen preprocessor nmf hierclust flatclust tests
+# Construct a path to a data dir one level up; the distcheck target
+# might need this if the user specifies a relative path to the data directory.
+PREFIXED_DATA_DIR := $(addprefix ../,$(DATA_DIR))
+
+all: inform libsmallk smallk_tester matrixgen preprocessor nmf hierclust flatclust tests pysmallk
 
 smallk_tester: build/bin/$(LIBNAME).a
 	cd smallk && $(MAKE) smallk_bin
+
+pysmallk: inform
+	cd pysmallk && $(MAKE) all
 
 matrixgen:
 	cd matrixgen && $(MAKE) all
@@ -253,6 +289,8 @@ install: all
 	cd nmf && $(MAKE) install
 	cd hierclust && $(MAKE) install
 	cd flatclust && $(MAKE) install
+	cd pysmallk && $(MAKE) install
+
 
 uninstall:
 	@rm -f $(DESTDIR)$(includedir)/smallk.hpp
@@ -263,6 +301,7 @@ uninstall:
 	cd nmf && $(MAKE) uninstall
 	cd hierclust && $(MAKE) uninstall
 	cd flatclust && $(MAKE) uninstall
+	cd pysmallk && $(MAKE) uninstall
 
 # The -MMD switch causes several things to happen.  First, a makefile rule is
 # generated that contains the the compiler to generate dependency files for 
@@ -286,6 +325,7 @@ clean:
 	cd hierclust && $(MAKE) clean
 	cd flatclust && $(MAKE) clean
 	cd tests && $(MAKE) clean
+	cd pysmallk && $(MAKE) clean
 
 distclean: clean
 	rm -rf $(distdir)
@@ -306,9 +346,12 @@ $(distdir): FORCE
 	mkdir -p $(addprefix $(distdir)/,$(proj_inc))
 	mkdir -p $(addprefix $(distdir)/,$(proj_src))
 	mkdir -p $(distdir)/examples
-	mkdir -p $(distdir)/data/test
 	mkdir -p $(distdir)/tests/scripts
 	mkdir -p $(distdir)/doc
+	mkdir -p $(distdir)/pysmallk
+	mkdir -p $(distdir)/pysmallk/interface
+	mkdir -p $(distdir)/pysmallk/tests
+
 	for d in $(proj_inc); \
 	do \
 	cp -r $$d/ $(distdir)/$$d; \
@@ -317,6 +360,7 @@ $(distdir): FORCE
 	do \
 	cp -r $$d/ $(distdir)/$$d; \
 	done
+
 	cp Makefile $(distdir)
 	cp README.txt $(distdir)
 	cp LICENSE-2.0.txt $(distdir)
@@ -328,37 +372,24 @@ $(distdir): FORCE
 	cp hierclust/Makefile $(distdir)/hierclust
 	cp flatclust/Makefile $(distdir)/flatclust
 	cp matrixgen/Makefile $(distdir)/matrixgen
+	cp pysmallk/Makefile $(distdir)/pysmallk
+	cp pysmallk/setup.py $(distdir)/pysmallk
+	cp pysmallk/interface/smallk_lib.pyx $(distdir)/pysmallk/interface
+	cp pysmallk/tests/* $(distdir)/pysmallk/tests	
 	cp tests/Makefile $(distdir)/tests
-	cp data/matrix.mtx $(distdir)/data
-	cp data/dictionary.txt $(distdir)/data
-	cp data/documents.txt $(distdir)/data
-	cp data/test/reduced_matrix_20news.mtx $(distdir)/data/test
-	cp data/test/reduced_dictionary_20news.txt $(distdir)/data/test
-	cp data/test/reduced_documents_20news.txt $(distdir)/data/test
-	cp data/reuters.mtx $(distdir)/data
-	cp data/reuters_dictionary.txt $(distdir)/data
-	cp data/nmf_init_w.csv $(distdir)/data
-	cp data/nmf_init_h.csv $(distdir)/data
-	cp data/nmf_rank2_init_w.csv $(distdir)/data
-	cp data/nmf_rank2_init_h.csv $(distdir)/data
-	cp data/test/nmf_result_w.csv $(distdir)/data/test
-	cp data/test/nmf_result_h.csv $(distdir)/data/test
-	cp data/hierclust_init_w.csv $(distdir)/data
-	cp data/hierclust_init_h.csv $(distdir)/data
-	cp data/test/reuters_tree_5.xml $(distdir)/data/test
-	cp data/test/reuters_assignments_5.csv $(distdir)/data/test
-	cp data/rnd_256_256.csv $(distdir)/data
-	cp data/flatclust_init_w.csv $(distdir)/data
-	cp data/flatclust_init_h.csv $(distdir)/data
-	cp data/test/flatclust_rnd_clusters_16.xml $(distdir)/data/test
-	cp data/test/flatclust_rnd_assignments_16.csv $(distdir)/data/test
 	cp tests/scripts/* $(distdir)/tests/scripts
 	cp doc/smallk_readme.pdf $(distdir)/doc
 
+
+# the 'if' block invokes 'make check' with the correct path to the data dir
 distcheck: $(distdir).tar.gz
 	gzip -cd $(distdir).tar.gz | tar xvf -
 	cd $(distdir) && $(MAKE) all
-	cd $(distdir) && $(MAKE) check
+	@if [[ $(DATA_DIR) != /* ]]; then \
+	cd $(distdir) && $(MAKE) check DATA_DIR=$(PREFIXED_DATA_DIR); \
+	else \
+	cd $(distdir) && $(MAKE) check; \
+	fi
 	cd $(distdir) && $(MAKE) DESTDIR=$${PWD}/_inst install
 	cd $(distdir) && $(MAKE) DESTDIR=$${PWD}/_inst uninstall
 	@remaining="`find $${PWD}/$(distdir)/_inst -type f | wc -l`"; \
@@ -371,15 +402,29 @@ distcheck: $(distdir).tar.gz
 	@echo "The tarball $(distdir).tar.gz is ready."
 
 check:
-	sh tests/scripts/test_smallk.sh | tee smallk_test_results.txt
+	sh tests/scripts/test_smallk.sh $(DATA_DIR) | tee smallk_test_results.txt 
+	PYTHONPATH=$(shell pwd)/pysmallk \
+	sh tests/scripts/test_pysmallk.sh $(DATA_DIR) | tee pysmallk_test_results.txt 
+
 	@count="`grep -i 'failed' smallk_test_results.txt | wc -l`"; \
 	if test "$${count}" -ne 0; then \
-	echo "***** $${count} tests failed, exiting... *****"; \
+	echo "***** SmallK: $${count} tests failed, exiting... *****"; \
 	exit 1; \
 	else \
-	echo "***** All tests passed. *****"; \
+	echo "***** SmallK: All tests passed. *****"; \
 	fi
 	@rm smallk_test_results.txt
+
+	@count="`grep -i 'failed' pysmallk_test_results.txt | wc -l`"; \
+	if test "$${count}" -ne 0; then \
+	echo "***** PysmallK: $${count} tests failed, exiting... *****"; \
+	exit 1; \
+	else \
+	echo "***** PysmallK: All tests passed. *****"; \
+	fi
+
+	@rm pysmallk_test_results.txt
+
 
 FORCE:
 	-rm $(distdir).tar.gz > /dev/null 2>&1
@@ -404,4 +449,4 @@ endif
 	@echo "Build configuration: "$(CFG)
 
 .PHONY: FORCE inform all clean distclean check dist distcheck install uninstall \
-	smallk_tester matrixgen preprocessor nmf hierclust flatclust tests
+	smallk_tester matrixgen preprocessor nmf hierclust flatclust tests pysmallk

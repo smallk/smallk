@@ -75,6 +75,9 @@ public:
     // delete all data
     void Clear();
 
+    // get the element at row r and column c
+    T Get(const unsigned int r, const unsigned int c);
+
     // extract a sub-matrix of dimension height x width, starting at (r0, c0)
     void SubMatrix(SparseMatrix<T>& result,
                    const unsigned int r0,
