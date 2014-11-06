@@ -260,7 +260,7 @@ void LoadMatrix(const double *buffer,
     m = height;
     n = width;
     matrix_loaded = true;
-    matrix_filepath = 'NA';
+    matrix_filepath = "NA";
 
 }
 
@@ -330,7 +330,7 @@ void LoadMatrix(const unsigned int height,
     n = width;
     nnz = nz;
     matrix_loaded = true;
-    matrix_filepath = 'NA';
+    matrix_filepath = "NA";
 
 }
 
@@ -706,7 +706,7 @@ void LoadDictionary(const std::vector<std::string>& terms)
     }
 
     dict_loaded = true;
-    dict_filepath = 'NA';
+    dict_filepath = "NA";
 
 }
 

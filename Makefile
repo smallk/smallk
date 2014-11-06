@@ -351,6 +351,7 @@ $(distdir): FORCE
 	mkdir -p $(distdir)/pysmallk
 	mkdir -p $(distdir)/pysmallk/interface
 	mkdir -p $(distdir)/pysmallk/tests
+	mkdir -p $(distdir)/vagrant
 
 	for d in $(proj_inc); \
 	do \
@@ -379,6 +380,8 @@ $(distdir): FORCE
 	cp tests/Makefile $(distdir)/tests
 	cp tests/scripts/* $(distdir)/tests/scripts
 	cp doc/smallk_readme.pdf $(distdir)/doc
+	cp vagrant/Vagrantfile $(distdir)/vagrant
+	cp vagrant/bootstrap.sh $(distdir)/vagrant
 
 
 # the 'if' block invokes 'make check' with the correct path to the data dir
