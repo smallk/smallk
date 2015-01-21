@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
 
         MsgBox("Running NMF-HALS using k=16");
 
-        smallk::Nmf(16, smallk::HALS);
+        smallk::Nmf(16, smallk::Algorithm::HALS);
 
         ///////////////////////////////////////////////////////////////////////
         //
@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
         
         MsgBox("Running NMF-RANK2 with W and H initializers");
 
-        smallk::Nmf(2, smallk::RANK2, filepath_w, filepath_h);
+        smallk::Nmf(2, smallk::Algorithm::RANK2, filepath_w, filepath_h);
 
         ///////////////////////////////////////////////////////////////////////
         //
@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
         MsgBox("Repeating the previous run with tol = 1.0e-5");
 
         smallk::SetNmfTolerance(1.0e-5);
-        smallk::Nmf(2, smallk::RANK2, filepath_w, filepath_h);
+        smallk::Nmf(2, smallk::Algorithm::RANK2, filepath_w, filepath_h);
         
         ///////////////////////////////////////////////////////////////////////
         //
@@ -226,7 +226,7 @@ int main(int argc, char* argv[])
         MsgBox("Running HierNMF2 with 10 clusters, 12 terms, XML format");
 
         smallk::SetMaxTerms(12);
-        smallk::SetOutputFormat(smallk::XML);
+        smallk::SetOutputFormat(smallk::OutputFormat::XML);
         smallk::HierNmf2(10);
 
         // This time two more files will be generated: 'assignments_10.csv' and

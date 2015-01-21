@@ -237,7 +237,7 @@ namespace smallk
     /// \c k x \c n.  Matrix A must have already been loaded by a prior 
     /// call to \c LoadMatrix.
     void Nmf(const unsigned int k, 
-             const Algorithm algorithm = BPP,
+             const Algorithm algorithm = Algorithm::BPP,
              const std::string& initfile_w = std::string(""),
              const std::string& initfile_h = std::string(""));
 
@@ -298,7 +298,7 @@ namespace smallk
     /// \brief Sets the file format for clustering results.
     /// \param[in] format Either \c OutputFormat::XML for XML format, or 
     /// \c OutputFormat::JSON for JSON format.
-    void SetOutputFormat(const OutputFormat format = JSON);
+    void SetOutputFormat(const OutputFormat format = OutputFormat::JSON);
 
     ///
     /// \brief Returns the tolerance for the NMF subproblems solved by HierNMF2.

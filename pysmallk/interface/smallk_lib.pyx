@@ -1517,8 +1517,7 @@ cdef class Preprocessor:
     cdef vector[double] reduced_scores
     cdef vector[double] scores
     cdef Sparse A
-    cdef list dictionary, documents
-    # cdef np.ndarray dictionary, documents
+    cdef np.ndarray dictionary, documents
     cdef TFData tfdataArray
     cdef list row_indices, counts, col_offsets, term_ind, doc_ind
 
@@ -1546,13 +1545,7 @@ cdef class Preprocessor:
     # The outputs are written with the specified precision.    
     def write_output(self, matrix_filepath, dict_filepath, docs_filepath, precision=4):
         write_termfreq(self.tfm, matrix_filepath, self.scores, precision)
-        print 'about to write dictionary'
-        print len(self.dictionary)
-        print len(self.term_ind)
-        print self.height
-        print max(self.term_ind)
         write_strings(dict_filepath, self.dictionary, self.term_ind, self.height)
-        print 'about to write documents'
         write_strings(docs_filepath, self.documents, self.doc_ind, self.width)
 
 
@@ -1619,28 +1612,25 @@ cdef class Preprocessor:
     # or by providing a list of the terms, dictionary.
     def load_dictionary(self, filepath=None, dictionary=None):
         if filepath != None:
-            with open(filepath) as f:
-                self.dictionary = f.read().split('\n')
+            self.dictionary = numpy.loadtxt(filepath, dtype=str)
         else:
-            self.dictionary = dictionary
+            self.dictionary = numpy.array(dictionary, dtype=str)
 
     # Load the documents, either by providing the path to the file, filepath, 
     # or by providing a list of the documents, documents.
     def load_documents(self, filepath=None, documents=None):
         if filepath != None:
-            with open(filepath) as f:
-                self.documents = f.read().split('\n')
+            self.documents = numpy.loadtxt(filepath, dtype=str)
         else:
-            self.documents = documents
+            self.documents = numpy.array(documents, dtype=str)
 
     # Returns the pruned list of document ids.
     def get_reduced_documents(self):
-
-        return [self.documents[i] for i in self.doc_ind]
+        return self.documents[self.doc_ind]
 
     # Returns the pruned dictionary.
     def get_reduced_dictionary(self):
-        return [self.dictionary[i] for i in self.term_ind]
+        return self.dictionary[self.term_ind]
 
     # Returns the list of non-zero values in the pruned sparse matrix.
     def get_reduced_scores(self):

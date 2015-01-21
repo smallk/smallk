@@ -56,7 +56,7 @@ bin/$(TARGET) : $(OBJS)
 # and keeping them updated.
 objs/%.o: %.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) -c $(SMALLK_CXXFLAGS) $(INCLUDES) -MMD -MP -o $@ $<
+	$(CXX) -c $(CXXFLAGS) $(INCLUDES) -MMD -MP -o $@ $<
 
 clean:
 	@rm -rf bin* objs* 
