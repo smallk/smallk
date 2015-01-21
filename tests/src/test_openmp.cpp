@@ -23,7 +23,7 @@ namespace OpenMPTest
 //-----------------------------------------------------------------------------
 bool TestOpenMP()
 {
-#if defined SMALLK_HAVE_OPENMP
+#if defined _OPENMP && defined HAVE_OPENMP
     Random rng;
     rng.SeedFromTime();
     

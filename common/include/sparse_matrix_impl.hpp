@@ -259,34 +259,6 @@ void SparseMatrix<T>::Compress()
 
 //-----------------------------------------------------------------------------
 template <typename T>
-T SparseMatrix<T>::Get(const unsigned int r, const unsigned int c)
-{
-    if (r >= height_)
-        throw std::logic_error("Get: row index out of bounds.");
-    if (c >= width_)
-        throw std::logic_error("Get: col index out of bounds.");
-
-    T val = T(0);
-
-    // scan all nonzero elements for column c; if row r is present, 
-    // return the associated value, otherwise return 0
-    unsigned int start = col_offsets_[c];
-    unsigned int end   = col_offsets_[c+1];
-    for (unsigned int offset = start; offset != end; ++offset)
-    {
-        unsigned int row = row_indices_[offset];
-        if (r == row)
-        {
-            val = data_[offset];
-            break;
-        }
-    }
-
-    return val;
-}
-
-//-----------------------------------------------------------------------------
-template <typename T>
 void SparseMatrix<T>::SubMatrix(SparseMatrix<T>& result,
                                 const unsigned int r0,
                                 const unsigned int c0,

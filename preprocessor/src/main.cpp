@@ -81,21 +81,19 @@ int main(int argc, char* argv[])
     std::string indict = inputdir + std::string("dictionary.txt");
     std::string indocs = inputdir + std::string("documents.txt");
 
-    std::string outputdir, outfile, outfile_tf, outdict, outdocs;
+    std::string outputdir, outfile, outdict, outdocs;
     if (!opts.outdir.empty())
     {
         outputdir = EnsureTrailingPathSep(opts.outdir);
-        outfile    = outputdir + std::string("reduced_matrix.mtx");
-        outfile_tf = outputdir + std::string("reduced_matrix_tf.mtx");
-        outdict    = outputdir + std::string("reduced_dictionary.txt");
-        outdocs    = outputdir + std::string("reduced_documents.txt");
+        outfile = outputdir + std::string("reduced_matrix.mtx");
+        outdict = outputdir + std::string("reduced_dictionary.txt");
+        outdocs = outputdir + std::string("reduced_documents.txt");
     }
     else
     {
-        outfile    = std::string("reduced_matrix.mtx");
-        outfile_tf = std::string("reduced_matrix_tf.mtx");
-        outdict    = std::string("reduced_dictionary.txt");
-        outdocs    = std::string("reduced_documents.txt");
+        outfile = std::string("reduced_matrix.mtx");
+        outdict = std::string("reduced_dictionary.txt");
+        outdocs = std::string("reduced_documents.txt");
     }
 
     //
@@ -196,10 +194,10 @@ int main(int argc, char* argv[])
     }
 
     //
-    // write the result matrix (with tf-idf scoring) to disk
+    // write the result matrix to disk
     //
 
-    cout << "Writing output matrix '" << outfile << "'" << endl;
+    cout << "Writing output matrix " << outfile << endl;
     timer.Start();
     if (!M.WriteMtxFile(outfile, &scores[0], opts.precision))
     {
@@ -212,24 +210,9 @@ int main(int argc, char* argv[])
     cout << "Output file write time: " << elapsed_s << "s." << endl;
 
     //
-    // write the pruned term-frequency matrix to disk
-    //
-    cout << "Writing pruned term-frequency matrix '" << outfile_tf << "'" << endl;
-    timer.Start();
-    if (!M.WriteMtxFile(outfile_tf))
-    {
-        cerr << "\npreprocessor: could not write file "
-             << outfile_tf << endl;
-        return -1;
-    }
-    timer.Stop();
-    elapsed_s = static_cast<double>(timer.ReportMilliseconds() * 0.001);
-    cout << "Output term-frequency matrix write time: " << elapsed_s << "s." << endl;
-
-    //
     // write the reduced dictionary and documents to disk
     //
-    cout << "Writing dictionary file '" << outdict << "'" << endl;
+    cout << "Writing dictionary file " << outdict << endl;
     timer.Start();
     if (!WriteStringsToFile(outdict, dictionary, term_indices, M.Height()))
     {
@@ -239,7 +222,7 @@ int main(int argc, char* argv[])
     timer.Stop();
     elapsed_s = static_cast<double>(timer.ReportMilliseconds() * 0.001);
     
-    cout << "Writing documents file '" << outdocs << "'" << endl;
+    cout << "Writing documents file " << outdocs << endl;
     timer.Start();
     if (!WriteStringsToFile(outdocs, documents, doc_indices, M.Width()))
     {
