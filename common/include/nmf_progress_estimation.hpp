@@ -14,10 +14,6 @@
 
 #pragma once
 
-#include "elemental.hpp"
-#include "sparse_matrix.hpp"
-#include "relative_fnorm.hpp"
-#include "projected_gradient.hpp"
 #include "progress_estimator_generic.hpp"
 
 //-----------------------------------------------------------------------------

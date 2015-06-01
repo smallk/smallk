@@ -50,7 +50,7 @@ void HierclustJsonWriter::WriteNodeBegin(std::ofstream& outfile,
     outfile << S8 << "{" << endl;
     outfile << S12 << "\"id\": " << node_id << "," << endl;
 }
-
+/*
 //-----------------------------------------------------------------------------
 void HierclustJsonWriter::WriteLevel(std::ofstream& outfile, 
                                     const int level)
@@ -64,37 +64,37 @@ void HierclustJsonWriter::WriteLabel(std::ofstream& outfile,
 {
     outfile << S12 << "\"label\": " << label << "," << endl;
 }
-
+*/
 //-----------------------------------------------------------------------------
 void HierclustJsonWriter::WriteParentId(std::ofstream& outfile, 
                                        const int parent_id)
 {
     outfile << S12 << "\"parent_id\": " << parent_id << "," << endl;
 }
-
+/*
 //-----------------------------------------------------------------------------
 void HierclustJsonWriter::WriteParentLabel(std::ofstream& outfile, 
                                           const int parent_label)
 {
     outfile << S12 << "\"parent_label\": " << parent_label << "," << endl;
 }
-
+*/
 //-----------------------------------------------------------------------------
 void HierclustJsonWriter::WriteLeftChild(std::ofstream& outfile, 
                                         const bool is_left_child,
-                                        const int lc_label)
+                                        const int lc_id)
 {
     outfile << S12 << "\"left_child\": " 
             << (is_left_child ? "true" : "false") << "," << endl;
     
-    outfile << S12 << "\"left_child_label\": " << lc_label << "," << endl;
+    outfile << S12 << "\"left_child_id\": " << lc_id << "," << endl;
 }
 
 //-----------------------------------------------------------------------------
 void HierclustJsonWriter::WriteRightChild(std::ofstream& outfile, 
-                                         const int rc_label)
+                                         const int rc_id)
 {
-    outfile << S12 << "\"right_child_label\": " << rc_label << "," << endl;
+    outfile << S12 << "\"right_child_id\": " << rc_id << "," << endl;
 }
 
 //-----------------------------------------------------------------------------

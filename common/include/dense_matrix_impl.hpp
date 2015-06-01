@@ -264,7 +264,7 @@ DenseMatrix<T>::SubMatrixColsCompact(DenseMatrix<T>& result,
     for (unsigned int r=0; r<uh; ++r)
         new_to_old_rows[r] = r;
 
-    elem::Matrix<T> source_col, dest_col;
+    EL::Matrix<T> source_col, dest_col;
 
     // copy the columns from the source matrix to the dest matrix
     int c_dest = 0;
@@ -273,8 +273,8 @@ DenseMatrix<T>::SubMatrixColsCompact(DenseMatrix<T>& result,
         // index of the next source column
         int c = *it;
 
-        elem::LockedView(source_col, this->M,   0, c,      height, 1);
-        elem::View(dest_col,   result.M,  0, c_dest, height, 1);
+        EL::LockedView(source_col, this->M,   0, c,      height, 1);
+        EL::View(dest_col,   result.M,  0, c_dest, height, 1);
         Copy(source_col, dest_col);
     }
 }

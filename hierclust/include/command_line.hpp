@@ -24,8 +24,8 @@ struct CommandLineOptions
     ClustOptions clust_opts;
 
     std::string infile_A;
-    std::string infile_W;
-    std::string infile_H;
+    //std::string infile_W;
+    //std::string infile_H;
     std::string dictfile;
     std::string outdir;
     std::string treefile;

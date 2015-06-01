@@ -15,7 +15,6 @@
 #pragma once
 
 #include <thread>
-#include <cassert>
 #include <stdexcept>
 #include <algorithm>
 #include "openmp_pragma.hpp"
@@ -33,7 +32,7 @@ namespace ThreadUtils
 
 //-----------------------------------------------------------------------------
 inline void SetMaxThreadCount(const unsigned int max_threads)
-{
+{    
     if (0 == max_threads)
         throw std::logic_error("SetMaxThreads: thread count must be greater than zero.");
 

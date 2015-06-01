@@ -27,12 +27,12 @@
 #include "size_check.hpp"
 #include "assignments.hpp"
 #include "file_loader.hpp"
-#include "postprocess.hpp"
 #include "command_line.hpp"
 #include "sparse_matrix.hpp"
 #include "delimited_file.hpp"
 #include "matrix_generator.hpp"
 #include "flat_clust_output.hpp"
+#include "hierclust_writer_factory.hpp"
 
 using std::cout;
 using std::cerr;
@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
 
     Random rng;
     rng.SeedFromTime();
+    //rng.SeedFromInt(78);
 
     CommandLineOptions opts;
     if (!ParseCommandLine(argc, argv, opts))
@@ -132,8 +133,7 @@ int main(int argc, char* argv[])
 
     num_clusters = opts.clust_opts.num_clusters;
 
-    // The clustering code requires 2*num_clusters W and H initializer 
-    // matrices having sizes
+    // HierNMF2 requires W and H initializer matrices of dimensions
     //
     //    W: m x 2
     //    H: 2 x n
@@ -163,77 +163,14 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    unsigned int num_initializers = 2*num_clusters;
-    std::vector<std::vector<R> > w_initializers(num_initializers);
-    std::vector<std::vector<R> > h_initializers(num_initializers);
-
     opts.clust_opts.nmf_opts.height = m;
     opts.clust_opts.nmf_opts.width  = n;
     opts.clust_opts.nmf_opts.k      = 2;
 
     // leading dimensions for dense matrix A data buffer
     ldim_a = m;
-
-    //-------------------------------------------------------------------------
-    //
-    //                 load initializer matrices
-    //
-    //-------------------------------------------------------------------------
-
-    unsigned int height_w = m, width_w = 2;
-    unsigned int height_h = 2, width_h = n;
     
-    if (opts.clust_opts.verbose)
-        cout << "loading W initializers..." << endl;
-
-    if (opts.infile_W.empty())
-    {
-        // no initializer file, so use random init
-        unsigned int required_size = height_w * width_w;
-        for (unsigned int i=0; i<num_initializers; ++i)
-        {
-            w_initializers[i].resize(required_size);
-            RandomMatrix(w_initializers[i], height_w, width_w, 
-                         rng, RNG_CENTER, RNG_RADIUS);
-        }
-    }
-    else
-    {
-        // load initializer matrices from delimited file
-        if (!LoadMatrixArray(w_initializers, height_w, width_w, opts.infile_W))
-        {
-            cerr << "Load failed for file " << opts.infile_W << endl;
-            NmfFinalize();
-            return -1;
-        }
-    }
-
-    if (opts.clust_opts.verbose)
-        cout << "loading H initializers..." << endl;
-    
-    if (opts.infile_H.empty())
-    {
-        // no initializer file, so use random init
-        unsigned int required_size = height_h * width_h;
-        for (unsigned int i=0; i<num_initializers; ++i)
-        {
-            h_initializers[i].resize(required_size);
-            RandomMatrix(h_initializers[i], height_h, width_h,
-                         rng, RNG_CENTER, RNG_RADIUS);
-        }
-    }
-    else
-    {
-        // load initializer matrices from delimited file
-        if (!LoadMatrixArray(h_initializers, height_h, width_h, opts.infile_H))
-        {
-            cerr << "Load failed for file " << opts.infile_H << endl;
-            NmfFinalize();
-            return -1;
-        }
-    }
-
-    // now that all matrices are initialized, print a summary of all options
+    // print a summary of all options
     if (opts.clust_opts.verbose)
         PrintOpts(opts);
 
@@ -247,9 +184,10 @@ int main(int argc, char* argv[])
     std::vector<R> buf_w(m*num_clusters);
     std::vector<R> buf_h(num_clusters*n);
 
-    Tree tree;
+    Tree<R> tree;
     ClustStats stats;
-    std::vector<int> assignments, assignments_flat;
+    std::vector<float> probabilities;
+    std::vector<unsigned int> assignments_flat;
     std::vector<int> term_indices(opts.clust_opts.maxterms * num_clusters);
     Result result = Result::OK;
 
@@ -257,23 +195,20 @@ int main(int argc, char* argv[])
 
     if (A.Size() > 0)
     {
-        result = ClustSparse(opts.clust_opts, A, 
-                             &buf_w[0], &buf_h[0],
-                             w_initializers, h_initializers, 
-                             assignments, tree, stats);
+        result = ClustSparse(opts.clust_opts, A,
+                             &buf_w[0], &buf_h[0], tree, stats, rng);
     }
     else
     {
         result = Clust(opts.clust_opts, &buf_a[0], ldim_a,
-                       &buf_w[0], &buf_h[0],
-                       w_initializers, h_initializers,
-                       assignments, tree, stats);
+                       &buf_w[0], &buf_h[0], tree, stats, rng);
     }
     
     if (opts.clust_opts.flat)
     {
         // compute flat clustering assignments and top terms
         unsigned int k = num_clusters;
+        ComputeFuzzyAssignments(probabilities, &buf_h[0], k, k, n);
         ComputeAssignments(assignments_flat, &buf_h[0], k, k, n);
         TopTerms(opts.clust_opts.maxterms, &buf_w[0], m, m, k, term_indices);        
     }
@@ -297,7 +232,7 @@ int main(int argc, char* argv[])
     //
     //-------------------------------------------------------------------------
 
-    if (Result::OK != result)
+    if (Result::FAILURE == result)
     {
         cerr << "\nHierarchical clustering fatal error." << endl;
     }
@@ -306,21 +241,22 @@ int main(int argc, char* argv[])
         if (opts.clust_opts.verbose)
             cout << "Writing output files..." << endl;
 
-        if (!WriteAssignmentsFile(assignments, opts.assignfile))
+        if (!tree.WriteAssignments(opts.assignfile))
             cerr << "\terror writing assignments file" << endl;
 
-        if (!tree.Write(opts.treefile, opts.format, dictionary))
-            cerr << "\terror writing hierarchical results file" << endl;
+        IHierclustWriter* writer = CreateHierclustWriter(opts.format);
+        if (!tree.WriteTree(writer, opts.treefile, dictionary))
+            cerr << "\terror writing factorization file" << endl;
 
-        if (opts.clust_opts.flat)
+        if (opts.clust_opts.flat && Result::FLATCLUST_FAILURE != result)
         {
-            FlatClustWriteResults(opts.outdir,
-                                  assignments_flat,
-                                  dictionary, term_indices,
-                                  opts.format,
+            FlatClustWriteResults(opts.outdir, assignments_flat, probabilities,
+                                  dictionary, term_indices, opts.format,
                                   opts.clust_opts.maxterms, n,
                                   opts.clust_opts.num_clusters);
         }
+
+        delete writer;
     }
 
     NmfFinalize();

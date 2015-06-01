@@ -147,7 +147,7 @@ Result FlatClust(const NmfOptions& options,
                  double *buf_h, const int ldim_h,
                  NmfStats& stats)
 {
-    if (!elem::Initialized())
+    if (!EL::Initialized())
     {
         cerr << "flatclust error: nmf_initialize() must be called prior to "
              << "any factorization routine\n" << endl;
@@ -211,7 +211,7 @@ Result FlatClustSparse(const NmfOptions& options,
                        double *buf_h, const int ldim_h,
                        NmfStats& stats)
 {
-    if (!elem::Initialized())
+    if (!EL::Initialized())
     {
         cerr << "flatclust error: nmf_initialize() must be called prior to "
              << "any factorization routine\n" << endl;

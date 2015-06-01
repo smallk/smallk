@@ -36,7 +36,7 @@ bool SolveNormalEq(DenseMatrix<T>& LHS, // kxk
     {
         HPDSolve(UPPER, NORMAL, LHS, X);
     }
-    catch (elem::NonHPSDMatrixException& e)
+    catch (EL::NonHPSDMatrixException& e)
     {
         std::cerr << "Cholesky factorization failure - ";
         std::cerr << "matrix was not symmetric positive-definite." << std::endl;
@@ -95,7 +95,7 @@ bool SolveNormalEqLeft(const DenseMatrix<T>& LHS, // kxk
     {
         Cholesky(UPPER, U);
     }
-    catch (elem::NonHPSDMatrixException& e)
+    catch (EL::NonHPSDMatrixException& e)
     {
         std::cerr << "Cholesky factorization failure - ";
         std::cerr << "matrix was not symmetric positive-definite." << std::endl;

@@ -1,4 +1,3 @@
-include $(ELEMVARS)
 
 # locations of source files separated by ':'
 VPATH=src:../common/src

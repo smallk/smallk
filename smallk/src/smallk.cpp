@@ -24,7 +24,6 @@
 #include "timer.hpp"
 #include "utils.hpp"
 #include "random.hpp"
-#include "elemental.hpp"
 #include "size_check.hpp"
 #include "file_format.hpp"
 #include "file_loader.hpp"
@@ -32,6 +31,7 @@
 #include "delimited_file.hpp"
 #include "matrix_generator.hpp"
 #include "flat_clust_output.hpp"
+#include "hierclust_writer_factory.hpp"
 
 namespace smallk
 {
@@ -62,8 +62,6 @@ static OutputFormat clustfile_format;
 static std::string outdir;
 static std::string matrix_filepath, dict_filepath;
 
-std::vector<std::vector<R> > w_initializers;
-std::vector<std::vector<R> > h_initializers;
 std::vector<std::string> dictionary;
 
 static NmfOptions   nmf_opts;
@@ -117,13 +115,13 @@ void Initialize(int& argc, char**& argv)
 {
     Reset();
     rng.SeedFromTime();
-    elem::Initialize(argc, argv);
+    EL::Initialize(argc, argv);
 }
 
 //-----------------------------------------------------------------------------
 bool IsInitialized()
 {
-    return elem::Initialized();
+    return EL::Initialized();
 }
 
 //-----------------------------------------------------------------------------
@@ -131,7 +129,7 @@ void Finalize()
 {
     // any cleanup - TBD
 
-    elem::Finalize();
+    EL::Finalize();
 }
 
 //-----------------------------------------------------------------------------
@@ -206,6 +204,132 @@ void LoadMatrix(const std::string& filepath)
     
     matrix_loaded = true;
     matrix_filepath = filepath;
+}
+
+//-----------------------------------------------------------------------------
+void LoadMatrix(const double *buffer, 
+                    const unsigned int ldim,
+                    const unsigned int height, 
+                    const unsigned int width)
+{
+
+    cout << "Loading dense matrix..." << endl;
+
+    matrix_loaded = false;
+
+    // ensure that data is valid
+    if (0 == height)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid height input.";
+        throw std::runtime_error(msg.str());
+    }
+    if (0 == width)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid width input.";
+        throw std::runtime_error(msg.str());
+    }
+
+    if (!buffer)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): empty data pointer.";
+        throw std::runtime_error(msg.str());
+    }
+    if (buf_a.size() < height*width)
+    {
+        // set the buffer to the correct size
+        buf_a.resize(height * width);
+    }
+    // either way, ldim will be set equal to height
+    ldim_a = height;
+
+    // extract the next piece of data and store 
+    for (unsigned int c=0; c != height; ++c)
+    {
+        for (unsigned int r=0; r != width; ++r)
+        {
+            buf_a[c*height+r] = buffer[c*ldim + r];
+        }
+    }
+
+    is_sparse = false;
+    m = height;
+    n = width;
+    matrix_loaded = true;
+    matrix_filepath = "NA";
+
+}
+
+//-----------------------------------------------------------------------------
+void LoadMatrix(const unsigned int height, 
+                    const unsigned int width,
+                    const unsigned int nz, 
+                    const std::vector<double>& data,
+                    const std::vector<unsigned int>& row_indices,
+                    const std::vector<unsigned int>& col_offsets)
+{
+
+    cout << "Loading sparse matrix..." << endl;
+
+    matrix_loaded = false;
+
+    // ensure that row_indices is the same size as data
+    if (row_indices.size() != data.size())
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid input vectors.";
+        throw std::runtime_error(msg.str());
+    }
+
+    // ensure that data is valid
+    if (0 == height)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid height input.";
+        throw std::runtime_error(msg.str());
+    }
+    if (0 == width)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid width input.";
+        throw std::runtime_error(msg.str());
+    }
+    if (data.size() > height*width)
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): invalid inputs.";
+        throw std::runtime_error(msg.str());
+    }
+    if (data.empty())
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): empty data vector.";
+        throw std::runtime_error(msg.str());
+    }
+    if (row_indices.empty())
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): empty row_indices vector.";
+        throw std::runtime_error(msg.str());
+    }
+    if (col_offsets.empty())
+    {
+        std::ostringstream msg;
+        msg << "smallk error (LoadSparseMatrixFromBuffer): empty col_offsets vector.";
+        throw std::runtime_error(msg.str());
+    }
+
+    A = SparseMatrix<double>(height, width, nz, &col_offsets[0], &row_indices[0], &data[0]);
+        
+    is_sparse = true;
+    m = height;
+    n = width;
+    nnz = nz;
+    matrix_loaded = true;
+    matrix_filepath = "NA";
+
 }
 
 //-----------------------------------------------------------------------------
@@ -550,7 +674,7 @@ const double* LockedBufferH(unsigned int& ldim,
 //-----------------------------------------------------------------------------
 void LoadDictionary(const std::string& filepath)
 {
-    cout << "loading dictionary..." << endl;
+    cout << "Loading dictionary..." << endl;
   
     dictionary.clear();
     dict_loaded = false;
@@ -564,6 +688,24 @@ void LoadDictionary(const std::string& filepath)
 
     dict_filepath = filepath;
     dict_loaded = true;
+}
+
+//-----------------------------------------------------------------------------
+void LoadDictionary(const std::vector<std::string>& terms)
+{
+    cout << "Loading dictionary..." << endl;
+  
+    dictionary.clear();
+
+    dict_loaded = false;
+
+    for (std::string term : terms) {
+        dictionary.push_back(term);
+    }
+
+    dict_loaded = true;
+    dict_filepath = "NA";
+
 }
 
 //-----------------------------------------------------------------------------
@@ -581,41 +723,14 @@ void SetOutputFormat(const OutputFormat format)
 //-----------------------------------------------------------------------------
 void HierNmf2Init(const unsigned int num_clusters)
 {
-    // The hierclust code requires 2*num_clusters separate W and H init 
-    // matrices, each of which has size mx2 (W) or 2xn (H).  Make sure that
-    // these sizes do not overflow Elemental's default index type (int).
+    // The hierclust code requires W and H initializer matrices, each of which
+    // has size mx2 (W) or 2xn (H).  Ensure that these sizes do not overflow
+    // Elemental's default index type (int).
 
     if (!SizeCheck<int>(m, 2))
         throw std::logic_error("smallk error (HierNmf2): matrix height too large.");
     if (!SizeCheck<int>(2, n))
         throw std::logic_error("smallk error (HierNmf2): matrix width too large.");
-
-    // setup random initializers
-    unsigned int num_initializers = 2*num_clusters;
-
-    if (w_initializers.size() < num_initializers)
-        w_initializers.resize(num_initializers);
-    if (h_initializers.size() < num_initializers)
-        h_initializers.resize(num_initializers);
-
-    cout << "creating random W initializers..." << endl;
-
-    unsigned int required_size = m*2;
-    for (unsigned int i=0; i<num_initializers; ++i)
-    {
-        w_initializers[i].resize(required_size);
-        RandomMatrix(w_initializers[i], m, 2, rng);
-    }
-
-    cout << "creating random H initializers..." << endl;
-    
-    // no initializer file, so use random init
-    required_size = 2*n;
-    for (unsigned int i=0; i<num_initializers; ++i)
-    {
-        h_initializers[i].resize(required_size);
-        RandomMatrix(h_initializers[i], 2, n, rng);
-    }
 }
 
 //-----------------------------------------------------------------------------
@@ -678,21 +793,21 @@ void HierNmf2Internal(bool generate_flat,
     
     // run the hierarchical clustering code
 
-    Tree tree;
+    Tree<R> tree;
     ClustStats stats;
-    std::vector<int> assignments, assignments_flat;
+    std::vector<float> probabilities;
+    std::vector<unsigned int> assignments, assignments_flat;
     std::vector<int> term_indices(maxterms * num_clusters);
 
     Timer timer;
     timer.Start();
 
     bool ok = RunHierNmf2(m, n, A, buf_a, 
-                          w_initializers, 
-                          h_initializers,
                           assignments, 
-                          assignments_flat, 
+                          assignments_flat,
+                          probabilities,
                           term_indices, tree,
-                          stats, hierclust_opts);
+                          stats, hierclust_opts, rng);
 
     timer.Stop();
     double elapsed = timer.ReportMilliseconds();
@@ -718,16 +833,18 @@ void HierNmf2Internal(bool generate_flat,
         if (hierclust_opts.verbose)
             cout << "Writing output files..." << endl;
 
-        if (!WriteAssignmentsFile(assignments, hier_assignfile))
+        if (!tree.WriteAssignments(hier_assignfile))
             cerr << "\terror writing assignments file" << endl;
 
-        if (!tree.Write(hier_treefile, format, dictionary))
+        IHierclustWriter* writer = CreateHierclustWriter(format);
+        if (!tree.WriteTree(writer, hier_treefile, dictionary))
             cerr << "\terror writing hierarchical results file" << endl;
 
         if (hierclust_opts.flat)
         {
             FlatClustWriteResults(output_dir,
                                   assignments_flat,
+                                  probabilities,
                                   dictionary, term_indices,
                                   format,
                                   hierclust_opts.maxterms, n,

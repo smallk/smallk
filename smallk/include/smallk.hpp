@@ -23,7 +23,7 @@
 #include <vector>
 
 #define SMALLK_MAJOR_VERSION 1
-#define SMALLK_MINOR_VERSION 4
+#define SMALLK_MINOR_VERSION 6
 #define SMALLK_PATCH_LEVEL   0
 
 namespace smallk
@@ -164,7 +164,7 @@ namespace smallk
     void SeedRNG(const int seed);
 
     ///
-    /// \brief Load the matrix to be factored.
+    /// \brief Load the matrix to be factored from a file.
     /// \param[in] filepath The absolute or relative path to a matrix file.
     ///
     /// The smallk code can read matrix files in either CSV (comma separated value) 
@@ -172,6 +172,37 @@ namespace smallk
     /// matrices, i.e. the CSV files must contain an entry for each matrix element.
     /// MTX files are assumed to contain sparse matrices only.
     void LoadMatrix(const std::string& filepath);
+
+    ///
+    /// \brief Load the dense matrix to be factored from a buffer.
+    /// \param[in] buffer A pointer to the buffer containing the input matrix.
+    /// \param[in] ldim The leading dimension of the input matrix buffer.
+    /// \param[in] height The height of the input matrix.
+    /// \param[in] width The width of the input matrixe.
+    ///
+    /// The smallk code can read dense matrix files from a pointer to a buffer.
+    /// This can be used for passing in a matrix generated in python.
+    void LoadMatrix(const double *buffer, 
+                    const unsigned int ldim,
+                    const unsigned int height, 
+                    const unsigned int width);
+    ///
+    /// \brief Load the sparse matrix to be factored from a buffer.
+    /// \param[in] height The height of the input matrix.
+    /// \param[in] width The width of the input matrixe.
+    /// \param[in] nz The number of non-zero entries in the matrix.
+    /// \param[in] data A reference to the vector containing the non-zero input data.
+    /// \param[in] row_indices A reference to the row_indicies vector.
+    /// \param[in] col_offsets A reference to the col_offsets vector.
+    ///
+    /// The smallk code can read dense matrix files from a pointer to a buffer.
+    /// This can be used for passing in a matrix generated in python.
+    void LoadMatrix(const unsigned int height, 
+                    const unsigned int width,
+                    const unsigned int nz, 
+                    const std::vector<double>& data,
+                    const std::vector<unsigned int>& row_indices,
+                    const std::vector<unsigned int>& col_offsets);
 
     ///
     /// \brief Returns whether a CSV or MTX file has been successfully loaded.
@@ -206,7 +237,7 @@ namespace smallk
     /// \c k x \c n.  Matrix A must have already been loaded by a prior 
     /// call to \c LoadMatrix.
     void Nmf(const unsigned int k, 
-             const Algorithm algorithm = Algorithm::BPP,
+             const Algorithm algorithm = BPP,
              const std::string& initfile_w = std::string(""),
              const std::string& initfile_h = std::string(""));
 
@@ -243,6 +274,12 @@ namespace smallk
     void LoadDictionary(const std::string& filepath);
 
     ///
+    /// \brief Load the file containing the dictionary strings.
+    /// \param[in] terms The vector containing the dictionary terms.
+    ///
+    void LoadDictionary(const std::vector<std::string>& terms);
+
+    ///
     /// \brief Reuturns the maximum number of terms computed per node during clustering.
     /// \return The term count as an unsigned int.
     unsigned int GetMaxTerms();
@@ -261,7 +298,7 @@ namespace smallk
     /// \brief Sets the file format for clustering results.
     /// \param[in] format Either \c OutputFormat::XML for XML format, or 
     /// \c OutputFormat::JSON for JSON format.
-    void SetOutputFormat(const OutputFormat format = OutputFormat::JSON);
+    void SetOutputFormat(const OutputFormat format = JSON);
 
     ///
     /// \brief Returns the tolerance for the NMF subproblems solved by HierNMF2.

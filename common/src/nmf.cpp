@@ -35,20 +35,20 @@ typedef double R;
 //-----------------------------------------------------------------------------
 void NmfInitialize(int argc, char * argv[]) 
 {
-    elem::Initialize(argc, argv);
+    EL::Initialize(argc, argv);
 }
 
 //-----------------------------------------------------------------------------
 Result NmfIsInitialized()
 {
-    return elem::Initialized() ? Result::INITIALIZED : 
-                                 Result::NOTINITIALIZED;
+    return EL::Initialized() ? Result::INITIALIZED : 
+        Result::NOTINITIALIZED;
 }
 
 //-----------------------------------------------------------------------------
 void NmfFinalize()
 {
-    elem::Finalize();
+    EL::Finalize();
 }
 
 //-----------------------------------------------------------------------------
@@ -176,7 +176,7 @@ Result Nmf(const NmfOptions& options,
            double *buf_h, const int ldim_h,
            NmfStats& stats)
 {
-    if (!elem::Initialized())
+    if (!EL::Initialized())
     {
         cerr << "nmflib error: nmf_initialize() must be called prior to "
              << "any factorization routine\n" << endl;
@@ -241,7 +241,7 @@ Result NmfSparse(const NmfOptions& options,
                  NmfStats& stats)
 {
 
-    if (!elem::Initialized())
+    if (!EL::Initialized())
     {
         cerr << "nmflib error: nmf_initialize() must be called prior to "
              << "any factorization routine\n" << endl;

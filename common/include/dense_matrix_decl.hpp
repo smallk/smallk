@@ -19,7 +19,15 @@
 #include <stdexcept>
 #include <vector>
 #include "enums.hpp"
+
+#if ELEM_VER >= 85
+#include "El.hpp"
+namespace EL = El;
+#else
 #include "elemental.hpp"
+namespace EL = elem;
+#endif
+
 #include "openmp_pragma.hpp"
 
 //-----------------------------------------------------------------------------
@@ -91,5 +99,5 @@ public:
                    const unsigned int num_rows,
                    const unsigned int num_cols) const;
 
-    elem::Matrix<T> M;
+    EL::Matrix<T> M;
 };

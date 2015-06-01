@@ -12,6 +12,7 @@ SRC = \
 	test_sparse_gemm.cpp         \
 	test_rank2_system_solve.cpp  \
 	test_dense_nmf.cpp           \
+	test_parallel_init.cpp       \
 	nmf.cpp                      \
 	nmf_options.cpp              \
 	delimited_file.cpp           \
@@ -31,7 +32,7 @@ TARGET=tests
 INCLUDES = \
 	-Iinclude \
 	-I../common/include \
-	-I$(ELEM_INC)
+	-I$(ELEMENTAL_INCLUDES)
 
 all: tests_bin
 

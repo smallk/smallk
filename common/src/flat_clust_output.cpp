@@ -19,6 +19,7 @@
 #include <stdexcept>
 #include "utils.hpp"
 #include "assignments.hpp"
+#include "file_format.hpp"
 #include "flatclust_writer.hpp"
 #include "flat_clust_output.hpp"
 
@@ -49,8 +50,10 @@ IFlatclustWriter* CreateFlatclustWriter(const FileFormat& format)
 
 //-----------------------------------------------------------------------------
 void FlatClustWriteResults(const std::string& assignfilepath,
+                           const std::string& fuzzyfilepath,
                            const std::string& resultfilepath,
-                           const std::vector<int>& assignments,
+                           const std::vector<unsigned int>& assignments,
+                           const std::vector<float>& probabilities,
                            const std::vector<std::string>& dictionary,
                            const std::vector<int>& term_indices,
                            const FileFormat format,
@@ -87,6 +90,9 @@ void FlatClustWriteResults(const std::string& assignfilepath,
 
     if (!WriteAssignmentsFile(assignments, assignfilepath))
         cerr << "\terror writing flat assignments file" << endl;
+
+    if (!WriteFuzzyAssignmentsFile(probabilities, num_clusters, num_docs, fuzzyfilepath))
+        cerr << "\terror writing fuzzy assignments file" << endl;
     
     IFlatclustWriter* writer = CreateFlatclustWriter(format);
     if (nullptr == writer)
@@ -130,7 +136,8 @@ void FlatClustWriteResults(const std::string& assignfilepath,
 
 //-----------------------------------------------------------------------------
 void FlatClustWriteResults(const std::string& outdir,
-                           const std::vector<int>& assignments,
+                           const std::vector<unsigned int>& assignments,
+                           const std::vector<float>& probabilities,
                            const std::vector<std::string>& dictionary,
                            const std::vector<int>& term_indices,
                            const FileFormat format,
@@ -146,6 +153,12 @@ void FlatClustWriteResults(const std::string& outdir,
     assign_name << "assignments_flat_" << num_clusters;
     filename = AppendExtension(assign_name.str(), FileFormat::CSV);
     std::string flat_assignfile = output_dir + filename;
+
+    // construct fuzzy assignments file name
+    std::ostringstream fuzzy_name;
+    fuzzy_name << "assignments_fuzzy_" << num_clusters;
+    filename = AppendExtension(fuzzy_name.str(), FileFormat::CSV);
+    std::string fuzzy_assignfile = output_dir + filename;
     
     // construct flat result file name
     std::ostringstream result_name;
@@ -153,7 +166,8 @@ void FlatClustWriteResults(const std::string& outdir,
     filename = AppendExtension(result_name.str(), format);
     std::string flat_resultfile = output_dir + filename;
 
-    FlatClustWriteResults(flat_assignfile, flat_resultfile, assignments, 
+    FlatClustWriteResults(flat_assignfile, fuzzy_assignfile, flat_resultfile,
+                          assignments, probabilities,
                           dictionary, term_indices, format, maxterms, 
                           num_docs, num_clusters);
 }

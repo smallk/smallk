@@ -29,11 +29,8 @@ const std::string S16 = S4 + S12;
 void HierclustXmlWriter::WriteHeader(std::ofstream& outfile, 
                                      const int doc_count)
 {
-    std::ostringstream count_str;
-    count_str << doc_count;
-
     outfile << "<?xml version=\"1.0\"?>" << endl;
-    outfile << "<DataSet id=\"" << count_str.str() << "\">" << endl;
+    outfile << "<DataSet id=\"" << doc_count << "\">" << endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -42,7 +39,7 @@ void HierclustXmlWriter::WriteNodeBegin(std::ofstream& outfile,
 {
     outfile << S4 << "<node id=\"" << node_id << "\">" << endl;
 }
-
+/*
 //-----------------------------------------------------------------------------
 void HierclustXmlWriter::WriteLevel(std::ofstream& outfile, 
                                     const int level)
@@ -56,14 +53,14 @@ void HierclustXmlWriter::WriteLabel(std::ofstream& outfile,
 {
     outfile << S8 << "<label>" << label << "</label>" << endl;
 }
-
+*/
 //-----------------------------------------------------------------------------
 void HierclustXmlWriter::WriteParentId(std::ofstream& outfile, 
                                        const int parent_id)
 {
     outfile << S8 << "<parent_id>" << parent_id << "</parent_id>" << endl;
 }
-
+/*
 //-----------------------------------------------------------------------------
 void HierclustXmlWriter::WriteParentLabel(std::ofstream& outfile, 
                                           const int parent_label)
@@ -71,25 +68,25 @@ void HierclustXmlWriter::WriteParentLabel(std::ofstream& outfile,
     outfile << S8 << "<parent_label>" << parent_label 
             << "</parent_label>" << endl;
 }
-
+*/
 //-----------------------------------------------------------------------------
 void HierclustXmlWriter::WriteLeftChild(std::ofstream& outfile, 
                                         const bool is_left_child,
-                                        const int lc_label)
+                                        const int lc_id)
 {
     outfile << S8 << "<left_child>" << (is_left_child ? "true" : "false") 
             << "</left_child>" << endl;
 
-    outfile << S8 << "<left_child_label>" << lc_label
-            << "</left_child_label>" << endl;
+    outfile << S8 << "<left_child_id>" << lc_id
+            << "</left_child_id>" << endl;
 }
 
 //-----------------------------------------------------------------------------
 void HierclustXmlWriter::WriteRightChild(std::ofstream& outfile, 
-                                         const int rc_label)
+                                         const int rc_id)
 {
-    outfile << S8 << "<right_child_label>" << rc_label
-            << "</right_child_label>" << endl;
+    outfile << S8 << "<right_child_id>" << rc_id
+            << "</right_child_id>" << endl;
 }
 
 //-----------------------------------------------------------------------------

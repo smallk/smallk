@@ -14,10 +14,11 @@
 
 #pragma once
 
-enum FileFormat
+enum class FileFormat
 {
     CSV,
     XML,
     JSON,
+    TXT,
 };
 

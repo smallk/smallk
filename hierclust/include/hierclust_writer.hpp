@@ -27,10 +27,10 @@ public:
 
     virtual void WriteHeader     (std::ofstream& outfile, const int doc_count)    = 0;
     virtual void WriteNodeBegin  (std::ofstream& outfile, const int node_id)      = 0;
-    virtual void WriteLevel      (std::ofstream& outfile, const int level)        = 0;
-    virtual void WriteLabel      (std::ofstream& outfile, const int label)        = 0;
+//    virtual void WriteLevel      (std::ofstream& outfile, const int level)        = 0;
+//    virtual void WriteLabel      (std::ofstream& outfile, const int label)        = 0;
     virtual void WriteParentId   (std::ofstream& outfile, const int parent_id)    = 0;
-    virtual void WriteParentLabel(std::ofstream& outfile, const int parent_label) = 0;
+//    virtual void WriteParentLabel(std::ofstream& outfile, const int parent_label) = 0;
     virtual void WriteLeftChild  (std::ofstream& outfile, 
                                   const bool is_left_child, 
                                   const int lc_label)                             = 0;

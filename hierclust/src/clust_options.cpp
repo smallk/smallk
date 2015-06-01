@@ -28,81 +28,81 @@ bool IsValid(const ClustOptions& opts, bool validate_matrix)
         // m, n, k must all be > 0
         if (opts.nmf_opts.height <= 0)
         {
-            cerr << "clustlib error: matrix height must be a positive integer" << endl;
+            cerr << "error: matrix height must be a positive integer" << endl;
             return false;
         }
         if (opts.nmf_opts.width <= 0)
         {
-            cerr << "clustlib error: matrix width must be a positive integer" << endl;
+            cerr << "error: matrix width must be a positive integer" << endl;
             return false;
         }
         if (opts.nmf_opts.k <= 0)
         {
-            cerr << "clustlib error: cluster count must be a positive integer" << endl;
+            cerr << "error: cluster count must be a positive integer" << endl;
             return false;
         }
         
         // k <= n
         if (opts.nmf_opts.k > opts.nmf_opts.width)
         {
-            cerr << "clustlib error: k value cannot exceed the matrix width" << endl;
+            cerr << "error: k value cannot exceed the matrix width" << endl;
             return false;
         }
     }
 
-    // number of clusters must be > 0
-    if (opts.num_clusters <= 0)
+    // number of clusters must be >= 2 (num_clusters == 1 isn't meaningful...)
+    if (opts.num_clusters <= 1)
     {
-        cerr << "clustlib error: value for --clusters must be a positive integer" << endl;
+        cerr << "error: number of clusters must be >= 2" << endl;
         return false;
     }
 
     // 0 < tolerance < 1.0
     if ( (opts.nmf_opts.tol <= 0.0) || (opts.nmf_opts.tol >= 1.0))
     {
-        cerr << "clustlib error: tolerance must be in the interval (0.0, 1.0)" << endl;
+        cerr << "error: tolerance must be in the interval (0.0, 1.0)" << endl;
         return false;
     }
 
     // min iterations > 0
     if (opts.nmf_opts.min_iter <= 0)
     {
-        cerr << "clustlib error: miniter must be a positive integer" << endl;
+        cerr << "error: miniter must be a positive integer" << endl;
         return false;
     }
 
     // max iterations > 0
     if (opts.nmf_opts.max_iter <= 0)
     {
-        cerr << "clustlib error: maxiter must be a positive integer" << endl;
+        cerr << "error: maxiter must be a positive integer" << endl;
         return false;
     }
 
     // maxterms > 0
     if (opts.maxterms <= 0)
     {
-        cerr << "clustlib error: maxterms must be a positive integer" << endl;
+        cerr << "error: maxterms must be a positive integer" << endl;
         return false;
     }
 
     // trial_allowance for hierarchical clustering should not be negative
     if (opts.trial_allowance < 0)
     {
-        cerr << "clustlib error: trial_allowance for hierarchical clustering is negative" << endl;
+        cerr << "error: trial_allowance for hierarchical clustering is negative" << endl;
         return false;
     }
 
     // the unbalanced parameter for hierarchical clustering should be in [0, 1) interval
     if ( (opts.unbalanced < 0.0) || (opts.unbalanced >= 1.0))
     {
-        cerr << "clustlib error: the unbalanced value should be in the interval [0, 1)" << endl;
+        cerr << "error: the unbalanced value should be in the interval [0, 1)" << endl;
         return false;
     }
 
     if ( (NmfProgressAlgorithm::PG_RATIO != opts.nmf_opts.prog_est_algorithm) &&
          (NmfProgressAlgorithm::DELTA_FNORM != opts.nmf_opts.prog_est_algorithm))
     {
-        cerr << "clustlib error: unknown stopping criterion " << endl;
+        cerr << "error: unknown stopping criterion " << endl;
         return false;
     }
 

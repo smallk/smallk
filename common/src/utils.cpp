@@ -116,6 +116,9 @@ std::string AppendExtension(const std::string& filename,
     case FileFormat::JSON:
         result = filename + EXT_JSON;
         break;
+    case FileFormat::TXT:
+        result = filename + EXT_TXT;
+        break;
     default:
         throw std::logic_error("AppendExtension: unknown file format");
     }

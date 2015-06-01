@@ -233,7 +233,8 @@ int main(int argc, char* argv[])
     //-------------------------------------------------------------------------
 
     NmfStats stats;
-    std::vector<int> assignments(n);
+    std::vector<float> probabilities;
+    std::vector<unsigned int> assignments(n);
     std::vector<int> term_indices(opts.clust_opts.maxterms * k);
     Result result = Result::OK;
 
@@ -266,11 +267,13 @@ int main(int argc, char* argv[])
         Timer timer;
         timer.Start();
 
+        ComputeFuzzyAssignments(probabilities, &buf_h[0], k, k, n);
         ComputeAssignments(assignments, &buf_h[0], ldim_h, k, n);
         TopTerms(opts.clust_opts.maxterms, &buf_w[0], ldim_w, m, k, term_indices);
 
-        FlatClustWriteResults(opts.assignfile, opts.clustfile, 
-                              assignments, dictionary, term_indices, 
+        FlatClustWriteResults(opts.assignfile, opts.fuzzyfile, opts.clustfile, 
+                              assignments, probabilities,
+                              dictionary, term_indices, 
                               opts.format, opts.clust_opts.maxterms, 
                               n, opts.clust_opts.num_clusters);
 

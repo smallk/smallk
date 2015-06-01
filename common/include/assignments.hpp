@@ -19,12 +19,60 @@
 #include <fstream>
 #include <stdexcept>
 
-bool WriteAssignmentsFile(const std::vector<int>& labels, 
+bool WriteAssignmentsFile(const std::vector<unsigned int>& labels, 
                           const std::string& file_path);
+
+bool WriteFuzzyAssignmentsFile(const std::vector<float>& probabilities,
+                               const unsigned int k, // num clusters
+                               const unsigned int n, // num docs
+                               const std::string& file_path);
 
 //-----------------------------------------------------------------------------
 template <typename T>
-void ComputeAssignments(std::vector<int>& assignments, 
+void ComputeFuzzyAssignments(std::vector<float>& probabilities,
+                             const T* buf_h,            // H matrix buffer
+                             const unsigned int ldim_h, // H.LDim()
+                             const unsigned int k,      // H.Height() (num clusters)
+                             const unsigned int n)      // H.Width() (num documents)
+{
+    // Compute the probability of assignment of a given document to each
+    // cluster; store results in 'probabilities'.  The probabilities
+    // matrix has the same dimensions as the H matrix (k x n).  The
+    // probabilities of document j being assigned to each of the k clusters
+    // appear in column j.
+
+    unsigned int required_size = k*n;
+    if (probabilities.size() < required_size)
+        probabilities.resize(required_size);
+
+    // for each column (i.e. document)
+    for (unsigned int c=0; c<n; ++c)
+    {
+        unsigned int offset = c*ldim_h;
+
+        // sum the values in column c
+        T sum = T(0);
+        for (unsigned int r=0; r<k; ++r)
+            sum += buf_h[offset + r];
+
+        // The H matrix should be well-behaved...
+        T inv_sum = T(1) / sum;
+
+        // compute and store probabilities
+        for (unsigned int r=0; r<k; ++r)
+        {
+            // H(r, c)
+            T val = buf_h[offset + r];
+
+            // prob = H(r, c) / sum
+            probabilities[offset + r] = static_cast<float>(val * inv_sum);
+        }
+    }
+}                            
+
+//-----------------------------------------------------------------------------
+template <typename T>
+void ComputeAssignments(std::vector<unsigned int>& assignments, 
                         const T* buf_h,            // H.Buffer()
                         const unsigned int ldim_h, // H.LDim()
                         const unsigned int k,      // H.Height()

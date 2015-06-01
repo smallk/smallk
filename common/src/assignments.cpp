@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <iomanip>
 #include "assignments.hpp"
 
+static const char COMMA = ',';
+
 //-----------------------------------------------------------------------------
-bool WriteAssignmentsFile(const std::vector<int>& labels, 
+bool WriteAssignmentsFile(const std::vector<unsigned int>& labels, 
                           const std::string& file_path)
 {
     // Each entry in 'labels' represents a document, and the value in the 
     // column is the cluster id to which that document was assigned.
-
-    const char COMMA = ',';
 
     std::ofstream outfile(file_path);
     if (!outfile)
@@ -34,6 +35,36 @@ bool WriteAssignmentsFile(const std::vector<int>& labels,
         outfile << COMMA << labels[i];
     outfile << std::endl;
 
+    outfile.close();
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+bool WriteFuzzyAssignmentsFile(const std::vector<float>& probabilities,
+                               const unsigned int k, // num clusters
+                               const unsigned int n, // num docs
+                               const std::string& file_path)
+{
+    // use three digits of precison, to limit file size
+    const unsigned int P = 3;
+    
+    std::ofstream outfile(file_path);
+    if (!outfile)
+        return false;
+
+    for (unsigned int c=0; c<n; ++c)
+    {
+        unsigned int offset = c*k;
+        outfile << std::scientific << std::setprecision(P)
+                << probabilities[offset + 0];
+
+        for (unsigned int r=1; r<k; ++r)
+            outfile << COMMA << std::scientific << std::setprecision(P)
+                    << probabilities[offset + r];
+
+        outfile << std::endl;
+    }
+    
     outfile.close();
     return true;
 }

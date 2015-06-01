@@ -30,6 +30,7 @@ struct CommandLineOptions
     std::string outdir;
     std::string clustfile;
     std::string assignfile;
+    std::string fuzzyfile;
     FileFormat format;
 
     bool show_help;

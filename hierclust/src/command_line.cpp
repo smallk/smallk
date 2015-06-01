@@ -49,8 +49,7 @@ static option longopts[] =
     { "verbose",         required_argument,   NULL,    'k' },
     { "maxthreads",      required_argument,   NULL,    'l' },
     { "maxterms",        required_argument,   NULL,    'm' },
-    { "infile_W",        required_argument,   NULL,    'n' },
-    { "infile_H",        required_argument,   NULL,    'o' },
+    { "initdir",         required_argument,   NULL,    'n' },
     { "treefile",        required_argument,   NULL,    'q' },
     { "assignfile",      required_argument,   NULL,    'r' },
     { "flat",            required_argument,   NULL,    's' },
@@ -66,8 +65,7 @@ void PrintOpts(const CommandLineOptions& opts)
     cout << "\t            height: " << opts.clust_opts.nmf_opts.height << endl;
     cout << "\t             width: " << opts.clust_opts.nmf_opts.width << endl;
     cout << "\t        matrixfile: " << opts.infile_A << endl;
-    cout << "\t          infile_W: " << opts.infile_W << endl;
-    cout << "\t          infile_H: " << opts.infile_H << endl;
+    cout << "\t           initdir: " << opts.clust_opts.initdir << endl;
     cout << "\t          dictfile: " << opts.dictfile << endl;
     cout << "\t        assignfile: " << opts.assignfile << endl;
 
@@ -100,12 +98,8 @@ void ShowHelp(const std::string& program_name)
     cout << "for sparse." << endl;
     cout << "        --dictfile <filename>       The name of the dictionary file." << endl;
     cout << "        --clusters <integer>        The number of clusters to generate." << endl;
-    cout << "        [--infile_W  (empty)]       Dense m x (4*clusters) matrix to initialize W, CSV file."
-         << endl;
-    cout << "                                    If unspecified, W will be randomly initialized." << endl;
-    cout << "        [--infile_H  (empty)]       Dense (4*clusters) x n matrix to initialize H, CSV file. " 
-         << endl;
-    cout << "                                    If unspecified, H will be randomly initialized. " << endl;    
+    cout << "        [--initdir  (empty)]        Directory of initializers for all Rank2 factorizations." << endl;
+    cout << "                                    If unspecified, random init will be used. " << endl;    
     cout << "        [--tol  0.0001]             Tolerance value for each factorization. " << endl;
     cout << "        [--outdir  (empty)]         Output directory.  If unspecified, results will be " << endl;
     cout << "                                    written to the current directory." << endl;
@@ -153,7 +147,8 @@ bool ParseCommandLine(int argc, char* argv[], CommandLineOptions& opts)
     opts.clust_opts.nmf_opts.verbose      = false;  // nmf is silent
     opts.clust_opts.nmf_opts.normalize    = false;  // rank2 normalizes on each iter
     opts.clust_opts.nmf_opts.algorithm    = NmfAlgorithm::RANK2;
-
+    opts.clust_opts.initdir               = std::string("");
+    
     // stopping criterion is always the ratio of projected gradients
     opts.clust_opts.nmf_opts.prog_est_algorithm = 
         NmfProgressAlgorithm::PG_RATIO;
@@ -170,8 +165,6 @@ bool ParseCommandLine(int argc, char* argv[], CommandLineOptions& opts)
     
     // set command line opts defaults
     opts.infile_A    = std::string("");
-    opts.infile_W    = std::string("");
-    opts.infile_H    = std::string("");
     opts.dictfile    = std::string("");
     opts.outdir      = std::string("");
     opts.treefile    = std::string("");
@@ -182,7 +175,7 @@ bool ParseCommandLine(int argc, char* argv[], CommandLineOptions& opts)
     char c;
     int index;
     while (-1 != (c = getopt_long(argc, argv, 
-                                  ":a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t",
+                                  ":a:b:c:d:e:f:g:h:i:j:k:l:m:n:p:q:r:s:t",
                                   longopts, &index)))
     {
         switch (c)
@@ -226,11 +219,8 @@ bool ParseCommandLine(int argc, char* argv[], CommandLineOptions& opts)
         case 'm':  // maxterms
             opts.clust_opts.maxterms = atoi(optarg);
             break;
-        case 'n':  // infile_W
-            opts.infile_W = std::string(optarg);
-            break;
-        case 'o':  // infile_H
-            opts.infile_H = std::string(optarg);
+        case 'n':  // initdir
+            opts.clust_opts.initdir = std::string(optarg);
             break;
         case 'q':  // treefile
             opts.treefile = std::string(optarg);
@@ -303,6 +293,14 @@ bool ParseCommandLine(int argc, char* argv[], CommandLineOptions& opts)
     }
 
     unsigned int num_clusters = opts.clust_opts.num_clusters;
+
+    // add a trailing path separator to the initdir, if any
+    if (!opts.clust_opts.initdir.empty())
+    {
+        std::string initdir = EnsureTrailingPathSep(opts.clust_opts.initdir);
+        opts.clust_opts.initdir = initdir;
+    }
+    
     std::string output_dir = EnsureTrailingPathSep(opts.outdir);
     
     // construct the name of the assignment file if unspecified by user
@@ -341,6 +339,15 @@ bool IsValid(const CommandLineOptions& opts)
         return false;
     }
 
+    // specified initdir must exist
+    if (!opts.clust_opts.initdir.empty() && !DirectoryExists(opts.clust_opts.initdir))
+    {
+        cerr << "the specified init directory \"";
+        cerr << opts.clust_opts.initdir << "\"";
+        cerr << " does not exist" << endl;
+        return false;
+    }
+    
     // validate opts.clust_opts, but ignore the matrix checks since the 
     // matrices have yet to be loaded
     if (!IsValid(opts.clust_opts, false))

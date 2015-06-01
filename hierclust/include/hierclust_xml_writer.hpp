@@ -22,10 +22,10 @@ public:
 
     void WriteHeader     (std::ofstream& outfile, const int doc_count);
     void WriteNodeBegin  (std::ofstream& outfile, const int node_id);
-    void WriteLevel      (std::ofstream& outfile, const int level);
-    void WriteLabel      (std::ofstream& outfile, const int label);
+//    void WriteLevel      (std::ofstream& outfile, const int level);
+//    void WriteLabel      (std::ofstream& outfile, const int label);
     void WriteParentId   (std::ofstream& outfile, const int parent_id);
-    void WriteParentLabel(std::ofstream& outfile, const int parent_label);
+//    void WriteParentLabel(std::ofstream& outfile, const int parent_label);
     void WriteLeftChild  (std::ofstream& outfile, 
                           const bool is_left_child, 
                           const int lc_label);

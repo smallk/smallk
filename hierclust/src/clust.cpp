@@ -39,11 +39,9 @@ typedef double R;
 Result RunClust(const ClustOptions& opts,
                 DenseMatrix<R>& A,
                 R* buf_w, R* buf_h,
-                std::vector<DenseMatrix<R> >& matrices_W,
-                std::vector<DenseMatrix<R> >& matrices_H,
-                std::vector<int>& assignments,
-                Tree& tree,
-                ClustStats& stats)
+                Tree<R>& tree,
+                ClustStats& stats,
+                Random& rng)
 {
     Solver_Generic_Rank2<R, DenseMatrix> solver;
 
@@ -54,37 +52,31 @@ Result RunClust(const ClustOptions& opts,
     if (nullptr == progress_estimator)
         throw std::runtime_error("invalid progress estimation algorithm");
 
-    // topic vectors for all leaf nodes
-    std::vector<DenseMatrix<R> > topic_vectors(opts.num_clusters);
-
-    bool ok = ClustHier<R>(A, matrices_W, matrices_H, 
-                           assignments, topic_vectors, solver, 
-                           progress_estimator, opts, tree, stats);
+    bool ok = ClustHier<R>(A, solver, progress_estimator, opts, tree, stats, rng);
 
     if (!ok)
         return Result::FAILURE;
 
     if (opts.flat)
     {
-        ok = ClustFlat<R>(opts, topic_vectors, A, buf_w, buf_h);
+        ok = ClustFlat<R>(opts, tree, rng, A, buf_w, buf_h);
         if (!ok)
         {
             cerr << "Flat clustering failed." << endl;
+            return Result::FLATCLUST_FAILURE;
         }
     }
 
-    return ok ? Result::OK : Result::FAILURE;
+    return Result::OK;
 }
 
 //-----------------------------------------------------------------------------
 Result RunClust(const ClustOptions& opts,
                 const SparseMatrix<R>& A,
                 R* buf_w, R* buf_h,
-                std::vector<DenseMatrix<R> >& matrices_W,
-                std::vector<DenseMatrix<R> >& matrices_H,
-                std::vector<int>& assignments,
-                Tree& tree,
-                ClustStats& stats)
+                Tree<R>& tree,
+                ClustStats& stats,
+                Random& rng)
 {
     Solver_Generic_Rank2<R, SparseMatrix> solver;
 
@@ -95,25 +87,21 @@ Result RunClust(const ClustOptions& opts,
     if (nullptr == progress_estimator)
         throw std::runtime_error("invalid progress estimation algorithm");
 
-    // topic vectors for all leaf nodes
-    std::vector<DenseMatrix<R> > topic_vectors(opts.num_clusters);
-
-    bool ok = ClustHier<R>(A, matrices_W, matrices_H, 
-                           assignments, topic_vectors, solver,
-                           progress_estimator, opts, tree, stats);
+    bool ok = ClustHier<R>(A, solver, progress_estimator, opts, tree, stats, rng);
     if (!ok)
         return Result::FAILURE;
 
     if (opts.flat)
     {
-        ok = ClustFlat<R>(opts, topic_vectors, A, buf_w, buf_h);
+        ok = ClustFlat<R>(opts, tree, rng, A, buf_w, buf_h);
         if (!ok)
         {
             cerr << "Flat clustering failed." << endl;
+            return Result::FLATCLUST_FAILURE;
         }
     }
     
-    return ok ? Result::OK : Result::FAILURE;
+    return Result::OK;
 }
 
 //-----------------------------------------------------------------------------
@@ -121,13 +109,11 @@ Result Clust(const ClustOptions& options,
              R *buf_a, const int ldim_a,
              R* buf_w, 
              R* buf_h,
-             std::vector<std::vector<R> >& w_initializers,
-             std::vector<std::vector<R> >& h_initializers,
-             std::vector<int>& assignments,
-             Tree& tree,
-             ClustStats& stats)
+             Tree<R>& tree,
+             ClustStats& stats,
+             Random& rng)
 {
-    if (!elem::Initialized())
+    if (!EL::Initialized())
     {
         cerr << "clustlib error: nmf_initialize() must be called prior to "
         << "any clustering routine\n" << endl;
@@ -167,24 +153,7 @@ Result Clust(const ClustOptions& options,
     // create the dense input matrix
     DenseMatrix<R> A(m, n, buf_a, ldim_a);
 
-    // create the initializer matrices
-    unsigned int num_initializers = w_initializers.size();
-    assert(h_initializers.size() == num_initializers);
-
-    std::vector<DenseMatrix<R> > matrices_W(num_initializers);
-    std::vector<DenseMatrix<R> > matrices_H(num_initializers);
-
-    for (unsigned int i=0; i<num_initializers; ++i)
-    {
-        matrices_W[i].Attach(m, 2, &(w_initializers[i])[0], m);
-        matrices_H[i].Attach(2, n, &(h_initializers[i])[0], 2);
-    }
-
-    // one assignment label per document
-    assignments.resize(n);
-
-    return RunClust(options, A, buf_w, buf_h, 
-                    matrices_W, matrices_H, assignments, tree, stats);
+    return RunClust(options, A, buf_w, buf_h, tree, stats, rng);
 }
 
 //-----------------------------------------------------------------------------
@@ -192,13 +161,11 @@ Result ClustSparse(const ClustOptions& options,
                    const SparseMatrix<R>& A,
                    R* buf_w, 
                    R* buf_h,
-                   std::vector<std::vector<R> >& w_initializers,
-                   std::vector<std::vector<R> >& h_initializers,
-                   std::vector<int>& assignments,
-                   Tree& tree,
-                   ClustStats& stats)
+                   Tree<R>& tree,
+                   ClustStats& stats,
+                   Random& rng)
 {
-    if (!elem::Initialized())
+    if (!EL::Initialized())
     {
         cerr << "clustlib error: nmf_initialize() must be called prior to "
         << "any clustering routine\n" << endl;
@@ -232,21 +199,5 @@ Result ClustSparse(const ClustOptions& options,
 
     SetMaxThreadCount(options.nmf_opts.max_threads);
 
-    unsigned int num_initializers = w_initializers.size();
-    assert(h_initializers.size() == num_initializers);
-
-    std::vector<DenseMatrix<R> > matrices_W(num_initializers);
-    std::vector<DenseMatrix<R> > matrices_H(num_initializers);
-
-    for (unsigned int i=0; i<num_initializers; ++i)
-    {
-        matrices_W[i].Attach(m, 2, &(w_initializers[i])[0], m);
-        matrices_H[i].Attach(2, n, &(h_initializers[i])[0], 2);
-    }
-
-    // one assignment label per document
-    assignments.resize(n);
-        
-    return RunClust(options, A, buf_w, buf_h, 
-                    matrices_W, matrices_H, assignments, tree, stats);
+    return RunClust(options, A, buf_w, buf_h, tree, stats, rng);
 }

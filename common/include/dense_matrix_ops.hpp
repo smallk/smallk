@@ -24,9 +24,9 @@
 template <typename T>
 void Cholesky(const UpperOrLower uplo, DenseMatrix<T>& A)
 {
-    elem::UpperOrLower elem_uplo = 
-        (UPPER == uplo ? elem::UPPER : elem::LOWER);
-    elem::Cholesky(elem_uplo, A.M);
+    EL::UpperOrLower elem_uplo = 
+        (UPPER == uplo ? EL::UPPER : EL::LOWER);
+    EL::Cholesky(elem_uplo, A.M);
 }
 
 //-----------------------------------------------------------------------------
@@ -36,12 +36,12 @@ void SolveAfterCholesky(const UpperOrLower uplo,
                         const DenseMatrix<T>& A,
                         DenseMatrix<T>& B)
 {
-    elem::UpperOrLower elem_uplo = 
-        (UPPER == uplo ? elem::UPPER : elem::LOWER);
-    elem::Orientation elem_orientation =
-        (NORMAL == orientation ? elem::NORMAL : elem::TRANSPOSE);
+    EL::UpperOrLower elem_uplo = 
+        (UPPER == uplo ? EL::UPPER : EL::LOWER);
+    EL::Orientation elem_orientation =
+        (NORMAL == orientation ? EL::NORMAL : EL::TRANSPOSE);
 
-    elem::cholesky::SolveAfter(elem_uplo, elem_orientation, A.M, B.M);
+    EL::cholesky::SolveAfter(elem_uplo, elem_orientation, A.M, B.M);
 }
 
 //-----------------------------------------------------------------------------
@@ -51,26 +51,26 @@ void SolveAfterLU(const Orientation orientation,
                   const DenseMatrix<int>& P,
                   DenseMatrix<T>& B)
 {
-    elem::Orientation elem_orientation =
-        (NORMAL == orientation ? elem::NORMAL : elem::TRANSPOSE);
+    EL::Orientation elem_orientation =
+        (NORMAL == orientation ? EL::NORMAL : EL::TRANSPOSE);
 
-    elem::lu::SolveAfter(elem_orientation, A.M, P.M, B.M);
+    EL::lu::SolveAfter(elem_orientation, A.M, P.M, B.M);
 }
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void LU(DenseMatrix<T>& A, DenseMatrix<int>& P)
-{elem::LU(A.M, P.M);}
+{EL::LU(A.M, P.M);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void GaussianElimination(DenseMatrix<T>& A, DenseMatrix<T>& B)
-{elem::GaussianElimination(A.M, B.M);}
+{EL::GaussianElimination(A.M, B.M);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void Pseudoinverse(DenseMatrix<T>& A)
-{elem::Pseudoinverse(A.M);}
+{EL::Pseudoinverse(A.M);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
@@ -82,16 +82,16 @@ void Trsm(const LeftOrRight side,
           const DenseMatrix<T>& A,
           DenseMatrix<T>& B)
 {
-    elem::LeftOrRight elem_side = 
-        (LEFT == side ? elem::LEFT : elem::RIGHT);
-    elem::UpperOrLower elem_uplo =
-        (UPPER == uplo ? elem::UPPER : elem::LOWER);
-    elem::Orientation elem_orient =
-        (NORMAL == orientation ? elem::NORMAL : elem::TRANSPOSE);
-    elem::UnitOrNonUnit elem_diag =
-        (UNIT == diag ? elem::UNIT : elem::NON_UNIT);
+    EL::LeftOrRight elem_side = 
+        (LEFT == side ? EL::LEFT : EL::RIGHT);
+    EL::UpperOrLower elem_uplo =
+        (UPPER == uplo ? EL::UPPER : EL::LOWER);
+    EL::Orientation elem_orient =
+        (NORMAL == orientation ? EL::NORMAL : EL::TRANSPOSE);
+    EL::UnitOrNonUnit elem_diag =
+        (UNIT == diag ? EL::UNIT : EL::NON_UNIT);
 
-    elem::Trsm(elem_side, elem_uplo, elem_orient, elem_diag, alpha, A.M, B.M);
+    EL::Trsm(elem_side, elem_uplo, elem_orient, elem_diag, alpha, A.M, B.M);
 }
 
 //-----------------------------------------------------------------------------
@@ -123,16 +123,16 @@ T Norm(const DenseMatrix<T>& A,
     switch(norm_type)
     {
     case MAX_NORM:
-        return elem::Norm(A.M, elem::MAX_NORM);
+        return EL::Norm(A.M, EL::MAX_NORM);
         break;
     case ONE_NORM:
-        return elem::Norm(A.M, elem::ONE_NORM);
+        return EL::Norm(A.M, EL::ONE_NORM);
         break;
     case INFINITY_NORM:
-        return elem::Norm(A.M, elem::INFINITY_NORM);
+        return EL::Norm(A.M, EL::INFINITY_NORM);
         break;
     case FROBENIUS_NORM:
-        return elem::Norm(A.M, elem::FROBENIUS_NORM);
+        return EL::Norm(A.M, EL::FROBENIUS_NORM);
         break;
     default:
         throw std::logic_error("Norm: unknown norm type");
@@ -142,66 +142,72 @@ T Norm(const DenseMatrix<T>& A,
 //-----------------------------------------------------------------------------
 template <typename T>
 void Axpy(const T alpha, const DenseMatrix<T>& X, DenseMatrix<T>& Y)
-{elem::Axpy(alpha, X.M, Y.M);}
+{EL::Axpy(alpha, X.M, Y.M);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void View(DenseMatrix<T>& A, DenseMatrix<T>& B,
           const int i, const int j, const int height, const int width)
-{elem::View(A.M, B.M, i, j, height, width);}
+{EL::View(A.M, B.M, i, j, height, width);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void LockedView(DenseMatrix<T>& A, const DenseMatrix<T>& B,
                 const int i, const int j, const int height, const int width)
-{elem::LockedView(A.M, B.M, i, j, height, width);}
+{EL::LockedView(A.M, B.M, i, j, height, width);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 T Nrm2(const DenseMatrix<T>& X)
-{return elem::Nrm2(X.M);}
+{return EL::Nrm2(X.M);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void Scal(const T alpha, DenseMatrix<T>& X)
 {
 #if ELEM_VER >= 84
-    elem::Scale(alpha, X.M);
+    EL::Scale(alpha, X.M);
 #else
-    elem::Scal(alpha, X.M);
+    EL::Scal(alpha, X.M);
 #endif
 }
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void MakeZeros(DenseMatrix<T>& X)
-{elem::MakeZeros(X.M);}
+{
+#if ELEM_VER >= 85
+    EL::Zeros(X.M, X.M.Height(), X.M.Width());
+#else
+    EL::MakeZeros(X.M);
+#endif
+}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void MakeUniform(DenseMatrix<T>& X)
-{elem::MakeUniform(X.M);}
+{EL::MakeUniform(X.M);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 T Dot(const DenseMatrix<T>& x, const DenseMatrix<T>& y)
-{return elem::Dot(x.M, y.M);}
+{return EL::Dot(x.M, y.M);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void Copy(const DenseMatrix<T>& X, DenseMatrix<T>& Y)
-{elem::Copy(X.M, Y.M);}
+{EL::Copy(X.M, Y.M);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void Transpose(const DenseMatrix<T>& X, DenseMatrix<T>& Y)
-{elem::Transpose(X.M, Y.M);}
+{EL::Transpose(X.M, Y.M);}
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void Print(const DenseMatrix<T>& X)
 {
-    //elem::Print(X.M);
+    //EL::Print(X.M);
 
     const unsigned int height = X.M.Height();
     const unsigned int width  = X.M.Width();
@@ -223,12 +229,12 @@ void HPDSolve(const UpperOrLower uplo,
               DenseMatrix<T>& A, 
               DenseMatrix<T>& B)
 {
-    elem::UpperOrLower elem_uplo = 
-        (UPPER == uplo ? elem::UPPER : elem::LOWER);
-    elem::Orientation elem_orientation =
-        (NORMAL == orientation ? elem::NORMAL : elem::TRANSPOSE);
+    EL::UpperOrLower elem_uplo = 
+        (UPPER == uplo ? EL::UPPER : EL::LOWER);
+    EL::Orientation elem_orientation =
+        (NORMAL == orientation ? EL::NORMAL : EL::TRANSPOSE);
 
-    elem::HPDSolve(elem_uplo, elem_orientation, A.M, B.M);
+    EL::HPDSolve(elem_uplo, elem_orientation, A.M, B.M);
 }
 
 //-----------------------------------------------------------------------------
@@ -238,10 +244,10 @@ void LeastSquares(const Orientation orientation,
                   const DenseMatrix<T>& B,
                   DenseMatrix<T>& X)
 {
-    elem::Orientation elem_orientation =
-        (NORMAL == orientation ? elem::NORMAL : elem::TRANSPOSE);
+    EL::Orientation elem_orientation =
+        (NORMAL == orientation ? EL::NORMAL : EL::TRANSPOSE);
 
-    elem::LeastSquares(elem_orientation, A.M, B.M, X.M);
+    EL::LeastSquares(elem_orientation, A.M, B.M, X.M);
 }
 
 //-----------------------------------------------------------------------------
@@ -255,12 +261,12 @@ void Gemm(const Orientation orientA,
           DenseMatrix<T>& C,
           const unsigned int max_threads = 0)
 {
-    elem::Orientation orientation_A = 
-        (NORMAL == orientA ? elem::NORMAL : elem::TRANSPOSE);
-    elem::Orientation orientation_B =
-        (NORMAL == orientB ? elem::NORMAL : elem::TRANSPOSE);
+    EL::Orientation orientation_A = 
+        (NORMAL == orientA ? EL::NORMAL : EL::TRANSPOSE);
+    EL::Orientation orientation_B =
+        (NORMAL == orientB ? EL::NORMAL : EL::TRANSPOSE);
 
-    elem::Gemm(orientation_A, orientation_B, alpha, A.M, B.M, beta, C.M);
+    EL::Gemm(orientation_A, orientation_B, alpha, A.M, B.M, beta, C.M);
 }
 
 //-----------------------------------------------------------------------------
@@ -270,10 +276,10 @@ void DiagonalScale(const LeftOrRight side,
                    const DenseMatrix<T>& d,
                    DenseMatrix<T>& X)
 {
-    elem::LeftOrRight lr = (LEFT == side ? elem::LEFT : elem::RIGHT);
-    elem::Orientation orient = (NORMAL == orientation ? elem::NORMAL : elem::TRANSPOSE);
+    EL::LeftOrRight lr = (LEFT == side ? EL::LEFT : EL::RIGHT);
+    EL::Orientation orient = (NORMAL == orientation ? EL::NORMAL : EL::TRANSPOSE);
 
-    elem::DiagonalScale(lr, orient, d.M, X.M);
+    EL::DiagonalScale(lr, orient, d.M, X.M);
 }
 
 //-----------------------------------------------------------------------------
@@ -285,8 +291,8 @@ void Gemv(const Orientation orientation,
           const T beta, 
           DenseMatrix<T>& y)
 {
-    elem::Orientation orient = (NORMAL == orientation ? elem::NORMAL : elem::TRANSPOSE);
-    elem::Gemv(orient, alpha, A.M, x.M, beta, y.M);
+    EL::Orientation orient = (NORMAL == orientation ? EL::NORMAL : EL::TRANSPOSE);
+    EL::Gemv(orient, alpha, A.M, x.M, beta, y.M);
 }
 
 //-----------------------------------------------------------------------------

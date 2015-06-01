@@ -14,9 +14,7 @@
 
 #pragma once
 
-#include "clust.hpp"
 #include "file_format.hpp"
 #include "hierclust_writer.hpp"
-#include "hierclust_xml_writer.hpp"
 
 IHierclustWriter* CreateHierclustWriter(const FileFormat& format);

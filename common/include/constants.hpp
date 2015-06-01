@@ -33,3 +33,5 @@ extern const std::string DEFAULT_OUTPUT_DIR;
 extern const std::string EXT_CSV;
 extern const std::string EXT_XML;
 extern const std::string EXT_JSON;
+extern const std::string EXT_TXT;
+

@@ -61,6 +61,16 @@ void operator -= (std::vector<T>& A, const T val)
 
 //-----------------------------------------------------------------------------
 template <typename T>
+T Sum(std::vector<T>& A)
+{
+    T result = T(0);
+    for (unsigned int q=0u; q<A.size(); ++q)
+        result += A[q];
+    return result;
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
 void PrintVector(const T* data, const unsigned int N)
 {
     if (0 == N)

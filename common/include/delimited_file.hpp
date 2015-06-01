@@ -20,6 +20,7 @@
 #include <string>
 #include <vector>
 #include <cassert>
+#include <cstdint>
 #include <stdexcept>
 
 // specialization for integer data
@@ -85,6 +86,9 @@ bool LoadDelimitedFile(std::vector<T>& buffer,
     // This file reader skips blank lines and comment lines at the beginning
     // of the file.  Comment lines are identified by their first character;
     // the comment chars are found in delimited_file.cpp.
+
+    // Use this function if the size of the data is unknown.  Will resize the
+    // buffer if needed; returns the width and height of the buffer.
     
     std::ifstream infile(filename);
     if (!infile)
@@ -102,6 +106,74 @@ bool LoadDelimitedFile(std::vector<T>& buffer,
     // set the buffer to the correct size
     buffer.resize(height * width);
 
+    // clear the flags and rewind to where the data begins
+    infile.clear();
+    infile.seekg(start_pos);
+
+    char dummy;
+    unsigned int r = 0;
+    while (std::getline(infile, line))
+    {
+        if (infile.eof())
+            break;
+
+        // extract the next row of data and store in column-major order
+        std::istringstream data(line);
+        for (unsigned int c=0; c != width; ++c)
+        {
+            // write row r into the buffer; also extract delimiter
+            data >> buffer[c*height + r];
+            data >> dummy;
+        }
+
+        ++r;
+    }
+
+    assert(height == r);
+    infile.close();
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+bool LoadDelimitedFile(T* buffer,
+                       const unsigned int buf_height,
+                       const unsigned int buf_width,
+                       const std::string& filename,
+                       const char DELIM = ',')
+{
+    // This file reader skips blank lines and comment lines at the beginning
+    // of the file.  Comment lines are identified by their first character;
+    // the comment chars are found in delimited_file.cpp.
+
+    // Use this function with a pre-allocated buffer known to have suffient
+    // capacity to hold the data.
+    
+    std::ifstream infile(filename);
+    if (!infile)
+        return false;
+
+    std::string line;
+    std::streampos start_pos = SkipBlankLinesAndComments(infile, line);
+
+    // check for empty file
+    if (line.empty())
+        return false;
+
+    unsigned int height, width;
+    GetDimensions(infile, line, height, width, DELIM);
+
+    uint64_t h = height, w = width;
+    uint64_t bh = buf_height, bw = buf_width;
+    uint64_t buf_size = bh * bw;
+    uint64_t data_size = h * w;
+    if (buf_size < data_size)
+    {
+        std::cerr << "LoadDelimitedFile: buffer too small." << std::endl;
+        infile.close();
+        return false;
+    }
+    
     // clear the flags and rewind to where the data begins
     infile.clear();
     infile.seekg(start_pos);

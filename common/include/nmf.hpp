@@ -16,12 +16,13 @@
 
 enum Result
 {
-    OK             =  0,
-    NOTINITIALIZED = -1,
-    INITIALIZED    = -2,
-    BAD_PARAM      = -3,
-    FAILURE        = -4,
-    SIZE_TOO_LARGE = -5
+    OK                =  0,
+    NOTINITIALIZED    = -1,
+    INITIALIZED       = -2,
+    BAD_PARAM         = -3,
+    FAILURE           = -4,
+    SIZE_TOO_LARGE    = -5,
+    FLATCLUST_FAILURE = -6
 };
 
 enum NmfAlgorithm

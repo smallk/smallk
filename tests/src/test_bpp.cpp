@@ -77,7 +77,7 @@ bool TestNnlsBlockpivot(Random& rng, const std::string& data_dir)
 
     for (unsigned int i=0; i<2; ++i)
     {
-        cout << "Running NNLS-BPP Matlab comparison test on file: data/" 
+        cout << "Running NNLS-BPP Matlab comparison test on file " 
              << matrices[i] << ", "  << "with k = " << kvals[i] << "." << endl;
 
         unsigned int k = kvals[i];

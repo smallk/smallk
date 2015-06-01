@@ -19,7 +19,6 @@ SRC = \
 	bit_matrix.cpp            \
 	bit_matrix_ops.cpp        \
 	nnls.cpp                  \
-	postprocess.cpp           \
 	assignments.cpp           \
 	node.cpp                  \
 	clust_options.cpp         \
@@ -41,7 +40,7 @@ TARGET=hierclust
 INCLUDES = \
 	-Iinclude \
 	-I../common/include \
-	-I$(ELEM_INC)
+	-I$(ELEMENTAL_INCLUDES)
 
 all: hierclust_bin
 

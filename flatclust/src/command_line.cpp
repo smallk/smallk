@@ -53,6 +53,7 @@ static option longopts[] =
     { "clustfile",       required_argument,   NULL,    'q' },
     { "assignfile",      required_argument,   NULL,    'r' },
     { "format",          required_argument,   NULL,    's' },
+    { "fuzzyfile",       required_argument,   NULL,    't' },
     { 0, 0, 0, 0}
 };
 
@@ -68,6 +69,7 @@ void PrintOpts(const CommandLineOptions& opts)
     cout << "\t          infile_H: " << opts.infile_H << endl;
     cout << "\t          dictfile: " << opts.dictfile << endl;
     cout << "\t        assignfile: " << opts.assignfile << endl;
+    cout << "\t         fuzzyfile: " << opts.fuzzyfile << endl;
 
     std::string format = STRING_XML;
     if (FileFormat::JSON == opts.format)
@@ -148,6 +150,9 @@ void ShowHelp(const std::string& program_name)
     cout << "        [--assignfile assignments_N.csv]  Name of the file containing final assignments." << endl;
     cout << "                                          N is the number of clusters for this run." << endl;
     cout << "                                          This filename is relative to the outdir." << endl;
+    cout << "        [--fuzzyfile assignments_fuzzy_N.csv] Name of fuzzy assignment file." << endl;
+    cout << "                                              N is the number of clusters for this run." << endl;
+    cout << "                                              This filename is relative to the outdir." << endl;
     cout << endl;
 }
 
@@ -186,15 +191,16 @@ bool ParseCommandLine(int argc, char* argv[], CommandLineOptions& opts)
     opts.infile_H    = std::string("");
     opts.dictfile    = std::string("");
     opts.outdir      = std::string("");
-    opts.clustfile    = std::string("");
+    opts.clustfile   = std::string("");
     opts.assignfile  = std::string("");
+    opts.fuzzyfile   = std::string("");
     opts.show_help   = false;
     opts.format      = FileFormat::XML;
 
     char c;
     int index;
     while (-1 != (c = getopt_long(argc, argv, 
-                                  ":a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s",
+                                  ":a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:q:r:s:t",
                                   longopts, &index)))
     {
         switch (c)
@@ -256,6 +262,9 @@ bool ParseCommandLine(int argc, char* argv[], CommandLineOptions& opts)
             break;
         case 'r':  // assignfile
             opts.assignfile = std::string(optarg);
+            break;
+        case 't':  // fuzzyfile
+            opts.fuzzyfile = std::string(optarg);
             break;
         case 's':  // format
             tmp = std::string(optarg);
@@ -335,6 +344,17 @@ bool ParseCommandLine(int argc, char* argv[], CommandLineOptions& opts)
     
     opts.assignfile = output_dir + filename;
     
+    // construct the name of the fuzzy assignment file if empty
+    filename = opts.fuzzyfile;
+    if (filename.empty())
+    {
+        std::ostringstream fname;
+        fname << "assignments_fuzzy_" << num_clusters;
+        filename = AppendExtension(fname.str(), FileFormat::CSV);
+    }
+
+    opts.fuzzyfile = output_dir + filename;
+
     // construct the name of the result file if empty
     filename = opts.clustfile;
     if (opts.clustfile.empty())

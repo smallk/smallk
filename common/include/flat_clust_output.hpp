@@ -19,8 +19,10 @@
 #include "file_format.hpp"
 
 void FlatClustWriteResults(const std::string& assignfilepath,
+                           const std::string& fuzzyfilepath,
                            const std::string& resultfilepath,
-                           const std::vector<int>& assignments,
+                           const std::vector<unsigned int>& assignments,
+                           const std::vector<float>& probabilities,
                            const std::vector<std::string>& dictionary,
                            const std::vector<int>& term_indices,
                            const FileFormat format,
@@ -29,7 +31,8 @@ void FlatClustWriteResults(const std::string& assignfilepath,
                            const unsigned int num_clusters);
 
 void FlatClustWriteResults(const std::string& outdir, 
-                           const std::vector<int>& assignments,
+                           const std::vector<unsigned int>& assignments,
+                           const std::vector<float>& probabilities,
                            const std::vector<std::string>& dictionary,
                            const std::vector<int>& term_indices,
                            const FileFormat format, 

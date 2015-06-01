@@ -31,37 +31,44 @@
 template <typename T,
           template <typename> class MatrixType>
 bool ClustFlat(const ClustOptions& opts,
-               const std::vector<DenseMatrix<T> >& topic_vectors,
+               Tree<T>& tree,
+               Random& rng,
                const MatrixType<T>& A,
                T* buf_w,
                T* buf_h)
 {
+    const unsigned int MAX_ATTEMPTS = 3;
+    
     int m = opts.nmf_opts.height;
     int n = opts.nmf_opts.width;
     int k = opts.num_clusters;
     
     DenseMatrix<T> W(m, k, buf_w, m);
     
-    // load matrix W with the topic vectors
-    DenseMatrix<T> col_w;
-    for (int c=0; c<k; ++c)
+    // load matrix W with the topic vectors generated from hierclust
+    if (!tree.FlatclustInitW(W, m, k))
+        return false;
+
+    bool ok = false;
+    for (unsigned int q=0; q<MAX_ATTEMPTS; ++q)
     {
-        // create a view of the cth column of W
-        View(col_w, W, 0, c, m, 1);
+        // randomly initialize matrix H
+        RandomMatrix(buf_h, k, k, n, rng, T(0.5), T(0.5));
+        DenseMatrix<T> H(k, n, buf_h, k);
         
-        // copy the next topic vector into place
-        Copy(topic_vectors[c], col_w);
+        ok = NnlsHals(A, W, H, 
+                      opts.nmf_opts.tol, 
+                      opts.verbose,
+                      opts.nmf_opts.max_iter);
+        if (ok)
+            break;
+    }
+
+    if (!ok)
+    {
+        std::cout << "Flatclust NNLS solver failed after "
+                  << MAX_ATTEMPTS << " attempts." << std::endl;
     }
     
-    // randomly initialize matrix H
-    Random rng;
-    rng.SeedFromTime();
-    RandomMatrix(buf_h, k, k, n, rng, T(0.5), T(0.5));
-    DenseMatrix<T> H(k, n, buf_h, k);
-
-    bool ok = NnlsHals(A, W, H, 
-                       opts.nmf_opts.tol, 
-                       opts.verbose,
-                       opts.nmf_opts.max_iter);
     return ok;
 }

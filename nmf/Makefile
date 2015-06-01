@@ -29,7 +29,7 @@ TARGET=nmf
 INCLUDES = \
 	-Iinclude \
 	-I../common/include \
-	-I$(ELEM_INC)
+	-I$(ELEMENTAL_INCLUDES)
 
 all: nmf_bin
 

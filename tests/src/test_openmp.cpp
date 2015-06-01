@@ -7,7 +7,8 @@
 #include "timer.hpp"
 #include "tests.hpp"
 #include "random.hpp"
-#include "openmp_pragma.hpp"
+#include "thread_utils.hpp"
+//#include "openmp_pragma.hpp"
 
 using std::cout;
 using std::cerr;
@@ -23,7 +24,7 @@ namespace OpenMPTest
 //-----------------------------------------------------------------------------
 bool TestOpenMP()
 {
-#if defined _OPENMP && defined HAVE_OPENMP
+#if defined SMALLK_HAVE_OPENMP
     Random rng;
     rng.SeedFromTime();
     
@@ -64,7 +65,8 @@ bool ElementwiseProductTest(Random& rng)
     if (num_threads < hw_threads)
     {
         OPENMP_API_CALL(omp_set_dynamic(0));
-        OPENMP_API_CALL(omp_set_num_threads(hw_threads));
+        //OPENMP_API_CALL(omp_set_num_threads(hw_threads));
+        SetMaxThreadCount(hw_threads);
     }
 
     // count the OpenMP threads again

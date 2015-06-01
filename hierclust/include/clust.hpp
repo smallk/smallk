@@ -17,6 +17,7 @@
 #include <vector>
 #include "nmf.hpp"
 #include "tree.hpp"
+#include "random.hpp"
 #include "sparse_matrix.hpp"
 
 typedef double R;
@@ -42,6 +43,7 @@ struct ClustOptions
     int num_clusters;
     bool verbose;
     bool flat;
+    std::string initdir;
 };
 
 bool IsValid(const ClustOptions& opts, bool validate_matrix = true);
@@ -49,18 +51,14 @@ bool IsValid(const ClustOptions& opts, bool validate_matrix = true);
 Result Clust(const ClustOptions& options,
              R* buf_A, int ldim_A,
              R* buf_w, R* buf_h,
-             std::vector<std::vector<R> >& w_initializers,
-             std::vector<std::vector<R> >& h_initializers,
-             std::vector<int>& assignments,
-             Tree& tree,
-             ClustStats& stats);
+             Tree<R>& tree,
+             ClustStats& stats,
+             Random& rng);
 
 Result ClustSparse(const ClustOptions& options,
                    const SparseMatrix<R>& A,
                    R* buf_w, R* buf_h,
-                   std::vector<std::vector<R> >& w_initializers,
-                   std::vector<std::vector<R> >& h_initializers,
-                   std::vector<int>& assignments,
-                   Tree& tree,
-                   ClustStats& stats);
+                   Tree<R>& tree,
+                   ClustStats& stats,
+                   Random& rng);
 
