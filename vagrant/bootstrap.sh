@@ -85,13 +85,13 @@ ln -s /home/vagrant/jdk1.8.0_25/jre/bin/java /usr/local/bin/java
 
 
 # SmallK
-#cp /vagrant/libsmallk-1.4.0.tar.gz /home/vagrant/
-#cp /vagrant/xdata_data.zip /home/vagrant/
-#tar -zxvf /home/vagrant/libsmallk-1.4.0.tar.gz -C /home/vagrant
-#unzip /home/vagrant/xdata_data.zip -d /home/vagrant
-#cd /home/vagrant/libsmallk-1.4.0
+cp /vagrant/libsmallk-1.6.0.tar.gz /home/vagrant/
+cp /vagrant/xdata_data.zip /home/vagrant/
+tar -zxvf /home/vagrant/libsmallk-1.6.0.tar.gz -C /home/vagrant
+unzip /home/vagrant/smallk_data.zip -d /home/vagrant/smallk_data
+cd /home/vagrant/libsmallk-1.6.0
 
 #make PYSMALLK=1 JAVA=/usr/local/bin/java ANT=/usr/bin/ant
 # make SITE_PACKAGES_DIR=/usr/local/lib/python2.7/dist-packages/ install
 #make check
-#chown -R vagrant.vagrant /home/vagrant/libsmallk-1.4.0
+chown -R vagrant.vagrant /home/vagrant/libsmallk-1.6.0
