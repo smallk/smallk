@@ -86,7 +86,7 @@ ln -s /home/vagrant/jdk1.8.0_25/jre/bin/java /usr/local/bin/java
 
 # SmallK
 cp /vagrant/libsmallk-1.6.0.tar.gz /home/vagrant/
-cp /vagrant/xdata_data.zip /home/vagrant/
+cp /vagrant/smallk_data.zip /home/vagrant/
 tar -zxvf /home/vagrant/libsmallk-1.6.0.tar.gz -C /home/vagrant
 unzip /home/vagrant/smallk_data.zip -d /home/vagrant/smallk_data
 cd /home/vagrant/libsmallk-1.6.0
