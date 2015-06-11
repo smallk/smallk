@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+date
 # Make sure the package information is up-to-date
 apt-get update
 
@@ -71,7 +71,6 @@ make -j4
 make install
 chown -R vagrant.vagrant /home/vagrant/Elemental-0.84-p1
 
-
 # Java
 cp /vagrant/jdk-8u25-linux-x64.gz /home/vagrant/Downloads
 tar -zxvf /home/vagrant/Downloads/jdk-8u25-linux-x64.gz -C /home/vagrant
@@ -82,16 +81,15 @@ echo "export JAVA_HOME=/home/vagrant/jdk1.8.0_25/jre" >> .bashrc
 apt-get install -y ant
 ln -s /home/vagrant/jdk1.8.0_25/jre/bin/java /usr/local/bin/java
 
-
-
 # SmallK
 cp /vagrant/libsmallk-1.6.0.tar.gz /home/vagrant/
-cp /vagrant/smallk_data.zip /home/vagrant/
+#cp /vagrant/smallk_data.zip /home/vagrant/ ##### sink this directory with
 tar -zxvf /home/vagrant/libsmallk-1.6.0.tar.gz -C /home/vagrant
-unzip /home/vagrant/smallk_data.zip -d /home/vagrant/smallk_data
+#unzip /home/vagrant/smallk_data.zip -d /home/vagrant/smallk_data
 cd /home/vagrant/libsmallk-1.6.0
 
 #make PYSMALLK=1 JAVA=/usr/local/bin/java ANT=/usr/bin/ant
 # make SITE_PACKAGES_DIR=/usr/local/lib/python2.7/dist-packages/ install
+make all DATA_DIR=../smallk_data
 #make check
 chown -R vagrant.vagrant /home/vagrant/libsmallk-1.6.0
