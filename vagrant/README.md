@@ -7,7 +7,7 @@ The Vagrant install has been tested on Linux Ubuntu 14.04, Mac OSX Mavericks 10.
 
 **1.** Install [Vagrant](http://www.vagrantup.com/downloads.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
-**2.** ’git clone’ the [smallk_data](https://github.com/smallk/smallk_data) repository. This will be important for testing the installation and starting to work with SmallK. This directory will be synced with a directory of the same name in the VM.
+**2.** ’git clone’ the [smallk_data](https://github.com/smallk/smallk_data) repository. This will be important for testing the installation and starting to work with SmallK. This directory will be synced with a directory of the same name in the VM.
 
 _[Note: For Windows, ensure that you have a VirtualBox version >= 4.3.12. After installing Vagrant, you may need to log out and log back in to ensure that you can run vagrant commands in the command prompt.]_
 
@@ -34,7 +34,7 @@ From there, you can navigate to /home/vagrant/libsmallk-<version>, e.g., libsmal
 
 		make check DATA_DIR=../smallk_data
 		
-make check will verify your installation was successful. In case you need it, the username/password for the VM created will be vagrant/vagrant.
+make check will verify your installation was successful. In case you need it, the username/password for the VM created will be vagrant/vagrant.
 
 The command
 
