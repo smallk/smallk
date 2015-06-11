@@ -7,7 +7,7 @@ The Vagrant install has been tested on Linux Ubuntu 14.04, Mac OSX Mavericks 10.
 
 **1.** Install [Vagrant](http://www.vagrantup.com/downloads.html) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
-**2.** ’git clone’ the [smallk_data](https://github.com/smallk/smallk_data) repository. This will be important for testing the installation and starting to work with SmallK. This directory will be synced with a directory of the same name in the VM.
+**2.** ’git clone’ the [smallk_data](https://github.com/smallk/smallk_data) repository. This will be important for testing the installation and starting to work with SmallK. This directory will be synced with a directory of the same name in the VM.
 
 _[Note: For Windows, ensure that you have a VirtualBox version >= 4.3.12. After installing Vagrant, you may need to log out and log back in to ensure that you can run vagrant commands in the command prompt.]_
 
@@ -20,6 +20,7 @@ This can take as long as an hour to build the VM, which will be based on a minim
 		vb.customize ["modifyvm", :id, "--memory", "4056", "--cpus", "2"]
 
 After ‘vagrant up’ has completed, the SmallK library will have been built and the smallk_data directory, cloned as in **2.** above, will have been synced into the VM.
+<br>[--back to top--](#top)
 
 **4..** Once the VM has been built, run:
 
@@ -42,8 +43,47 @@ The command
 will install smallk to the /usr/local/smallk/bin directory. Now add this directory to the path:
 
 		export PATH=/usr/local/smallk/bin:$PATH
+[--back to top--](#top)
 
-**5.** When you are ready to shut down the VM, run one of the following:
+**5.** To test the installation at the command line, assuming the $PATH variable has been set as above, run
+
+		nmf
+
+This will produce the help out put for the nmf library function:
+
+	Usage: nmf
+        --matrixfile <filename>  Filename of the matrix to be factored.
+                                 Either CSV format for dense or MatrixMarket format for sparse.
+        --k <integer value>      The common dimension for factors W and H.
+        [--algorithm  BPP]       NMF algorithms: 
+                                     MU:    multiplicative updating 
+                                     HALS:  hierarchical alternating least squares
+                                     RANK2: rank2 with optimal active set selection
+                                     BPP:   block principal pivoting
+        [--stopping  PG_RATIO]   Stopping criterion: 
+                                     PG_RATIO: Ratio of projected gradients
+                                     DELTA:    Change in relative F-norm of W
+        [--tol  0.005]           Tolerance for the selected stopping criterion.
+        [--tolcount  1]          Tolerance count; declare convergence after this many 
+                                 iterations with metric < tolerance; default is to 
+                                 declare convergence on the first such iteration.
+        [--infile_W  (empty)]    Dense mxk matrix to initialize W; CSV file.
+                                 If unspecified, W will be randomly initialized.
+        [--infile_H  (empty)]    Dense kxn matrix to initialize H; CSV file. 
+                                 If unspecified, H will be randomly initialized. 
+        [--outfile_W  w.csv]     Filename for the W matrix result.
+        [--outfile_H  h.csv]     Filename for the H matrix result.
+        [--miniter  5]           Minimum number of iterations to perform. 
+        [--maxiter  5000]        Maximum number of iterations to perform.
+        [--outprecision  6]      Write results with this many digits of precision.
+        [--maxthreads    4]      Upper limit to thread count. 
+        [--normalize  1]         Whether to normalize W and scale H.
+                                     1 == yes, 0 == no 
+        [--verbose  1]           Whether to print updates to the screen. 
+                                     1 == print updates, 0 == silent 
+
+
+**6.** When you are ready to shut down the VM, run one of the following:
 
 		vagrant suspend # this command will save the current running state
 		vagrant halt # this command will gracefully shut down the machine
@@ -54,3 +94,4 @@ If you want to work with the VM again, from any of the above states you can run
 		vagrant up
 		
 again and the VM will be resumed or recreated.
+<br>[--back to top--](#top)
