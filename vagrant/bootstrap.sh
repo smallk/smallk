@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+echo "================= in bootstrap.sh ========================================================"
 date
 # Make sure the package information is up-to-date
 apt-get update

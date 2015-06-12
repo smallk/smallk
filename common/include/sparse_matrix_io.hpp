@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <string>
+#include <sstream>
 #include <fstream>
 #include <iostream>
 #include "matrix_market_file.hpp"
@@ -171,7 +173,6 @@ bool LoadMatrixMarketFile(const std::string& file_path,
     bool is_symmetric = mm_is_symmetric(mm_typecode);
     bool is_skew      = mm_is_skew(mm_typecode);
 
-    std::string line;
     unsigned int reserve_size = nnz;
     if (is_symmetric || is_skew)
         reserve_size *= 2;
@@ -181,82 +182,77 @@ bool LoadMatrixMarketFile(const std::string& file_path,
 
     // load num random entries of A
     A.BeginLoad();
+
+    T val;
+    std::string line;    
+    unsigned int row, col, line_count = 0;
+
+    // read the nonzero entries of the matrix, one per line
     
-    unsigned int row, col, count;
-
-    if (is_real)
+    // Note: the number of nonzero entries is NOT necessarily equal
+    // to the SUM of the nonzero entries.  We only want the number
+    // of nonzero entries, not their sum.
+    
+    while (std::getline(infile, line))
     {
-        double val;
-        for (count=0; count != nnz; ++count)
-        {
-            infile >> row; assert(row >= 1);
-            infile >> col; assert(col >= 1);
-            infile >> val;
-            
-            // convert to 0-based indexing
-            row -= 1;
-            col -= 1;
-            A.Load(row, col, val);
+        ++line_count;
+        
+        if (!infile)
+            break;
 
-            if (row != col)
-            {
-                if (is_symmetric)
-                    A.Load(col, row, val);
-                else if (is_skew)
-                    A.Load(col, row, -val);
-            }
+        if (line.empty())
+            continue;
+        
+        std::istringstream data(line);
+
+        data >> row;
+        data >> col;
+
+        // the 'pattern' format has no data value
+        if (is_real || is_int)
+        {
+            data >> val;
         }
-    }
-    else if (is_int)
-    {
-        int val;
-        for (count=0; count != nnz; ++count)
+        else
         {
-            infile >> row; assert(row >= 1);
-            infile >> col; assert(col >= 1);
-            infile >> val;
-
-            // convert to 0-based indexing
-            row -= 1;
-            col -= 1;
-            T t_val = static_cast<T>(val);
-            A.Load(row, col, t_val);
-
-            if (row != col)
-            {
-                if (is_symmetric)
-                    A.Load(col, row, t_val);
-                else if (is_skew)
-                    A.Load(col, row, -t_val);
-            }
+            val = T(1.0);
         }
-    }
-    else
-    {
-        // pattern - no value field
-        for (count=0; count != nnz; ++count)
+
+        // convert to 0-based indexing
+        if ( (row <= 0) || (col <= 0))
         {
-            infile >> row; assert(row >= 1);
-            infile >> col; assert(col >= 1);
+            std::stringstream msg;
+            msg << "\nError reading file " << file_path << std::endl;
+            msg << "Line " << line << " contains an invalid index.";
+            std::cerr << msg.str() << std::endl;
+            return false;
+        }
 
-            // convert to 0-based indexing
-            row -= 1;
-            col -= 1;
-            A.Load(row, col, T(1.0));
+        row -= 1;
+        col -= 1;
+        A.Load(row, col, val);
 
-            if (row != col)
-            {
-                if (is_symmetric)
-                    A.Load(col, row, T(1.0));
-                else if (is_skew)
-                    A.Load(col, row, -T(1.0));
-            }
+        if (row != col)
+        {
+            if (is_symmetric)
+                A.Load(col, row, val);
+            else if (is_skew)
+                A.Load(col, row, -val);
         }
     }
     
     A.EndLoad();
 
-    return (count == nnz);
+    if (line_count != nnz)
+    {
+        std::stringstream msg;
+        msg << "\nError reading file " << file_path << std::endl;
+        msg << "Found " << line_count << " nonzero entries, expected " << nnz;
+        std::cerr << msg.str() << std::endl;
+        return false;
+    }
+
+    return true;
 }
 
 
