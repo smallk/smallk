@@ -67,6 +67,8 @@ python pysmallk/tests/smallkapi_inmem.py --indir $1
 
 rm -f "$w_file"
 rm -f "$h_file"
+rm -f assignments_5.csv
+rm -f tree_5.xml
 
 echo "*****************************************************"
 echo "*             pysmallk - command line               *"
@@ -150,7 +152,7 @@ then
     rm -f "$assign_file"
 fi
 
-python pysmallk/tests/hierclust.py --matrixfile $1/reuters.mtx --dictfile $1/reuters_dictionary.txt --clusters 12 --initdir $1/test/matrices.reuters --format XML
+python pysmallk/tests/hierclust.py --matrixfile $1/reuters.mtx --dictfile $1/reuters_dictionary.txt --clusters 12 --initdir $1/test/matrices.reuters/ --format XML
 
 if cmp -s "$xml_file" $1/test/reuters_tree_12.xml; then
     echo "XML file test passed"
@@ -186,7 +188,7 @@ then
     rm -f "$assign_file"
 fi
 
-python pysmallk/tests/hierclust.py --matrixfile $1/news20.mtx --dictfile $1/news20_dictionary.txt --clusters 15 --initdir $1/test/matrices.20news --miniter 1
+python pysmallk/tests/hierclust.py --matrixfile $1/news20.mtx --dictfile $1/news20_dictionary.txt --clusters 15 --initdir $1/test/matrices.20news/ --miniter 1
 
 if cmp -s "$xml_file" $1/test/news20_tree_15.xml; then
     echo "XML file test passed"

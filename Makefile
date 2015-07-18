@@ -321,7 +321,7 @@ build/bin/$(LIBNAME).a : $(LIB_OBJS)
 	@echo "CXX = $(CXX)" >> build/$(SMALLK_CONFIGFILE)
 
 
-pysmallk: inform pysmallk_make pysmallk_check
+pysmallk: inform pysmallk_make
 
 pysmallk_make:
 	cd pysmallk && $(MAKE) all

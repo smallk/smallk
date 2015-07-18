@@ -13,10 +13,12 @@
 try:
 	import sys
 	import numpy as np #must be imported prior to use of pysmallk library
-	from pysmallk import flatclust as f
+	import pysmallk
 except ImportError:
 	print 'ImportError: flatclust test failed'
 	raise
+
+f = pysmallk.Flatclust()
 
 # This program can be used as a command line tool to run flat NMF clustering.
 # It also demonstrates how to use each of the flatclust functions, which can be 
@@ -38,7 +40,7 @@ f.cluster(args.clusters, infile_W=args.infile_W, infile_H=args.infile_H,
 # write files to system using user-provided filenames
 # assignfile and treefile should not include file extensions, e.g. 'tree_output'
 # the library will append the appropriate ending to the filename based on the 'format' parameter
-f.write_output(args.assignfile, args.treefile, outdir=args.outdir, format=args.format)
+f.write_output(args.assignfile, args.fuzzyfile, args.treefile, outdir=args.outdir, format=args.format)
 
 # always call finalize() when done with analysis; this helps clean up system variables
 f.finalize()

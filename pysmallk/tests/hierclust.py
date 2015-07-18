@@ -13,10 +13,12 @@
 try:
 	import sys
 	import numpy as np #must be imported prior to use of pysmallk library
-	from pysmallk import hierclust as h
+	import pysmallk
 except ImportError:
 	print 'ImportError: hierclust test failed'
 	raise
+
+h = pysmallk.Hierclust()
 
 # This program can be used as a command line tool to run hierarchical NMF clustering.
 # It also demonstrates how to use each of the hierclust functions, which can be 
@@ -31,7 +33,9 @@ h.load_dictionary(dictfile=args.dictfile)
 
 # use the user-provided inputs to run hierarchical clustering
 # all keyword arguments are optional 
-h.cluster(args.clusters, infile_W=args.infile_W, infile_H=args.infile_H,
+
+
+h.cluster(args.clusters, initdir=args.initdir,
 	min_iter=args.miniter, max_iter=args.maxiter, tol=args.tol,
 	verbose=args.verbose, trial_allowance=args.trial_allowance,
 	unbalanced=args.unbalanced, flat=args.flat, maxterms=args.maxterms,
@@ -40,7 +44,7 @@ h.cluster(args.clusters, infile_W=args.infile_W, infile_H=args.infile_H,
 # write files to system using user-provided filenames
 # assignfile and treefile should not include file extensions, e.g. 'tree_output'
 # the library will append the appropriate ending to the filename based on the 'format' parameter
-h.write_output(args.assignfile, args.treefile, outdir=args.outdir, format=args.format)
+h.write_output(args.assignfile, args.treefile, args.fuzzyfile, outdir=args.outdir, format=args.format)
 
 # always call finalize() when done with analysis; this helps clean up system variables
 h.finalize()

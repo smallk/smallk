@@ -11,12 +11,13 @@
 
 try:
 	import numpy as np
-	from pysmallk import flatclust as f
+	import pysmallk
 	import argparse
 except ImportError:
 	print 'ImportError: flatclust test failed'
 	raise
 
+f = pysmallk.Flatclust()
 
 # define a parser for the purpose of dynamic placement of the data_dir variable
 parser = argparse.ArgumentParser(description="Run SmallK via python binding")

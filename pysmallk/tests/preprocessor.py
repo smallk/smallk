@@ -13,7 +13,7 @@
 try:
 	import sys
 	import numpy as np #must be imported prior to use of pysmallk library
-	from pysmallk import preprocessor as p
+	import pysmallk
 except ImportError:
 	print 'ImportError: preprocessor test failed'
 	raise
@@ -27,6 +27,8 @@ except ImportError:
 infile = "matrix.mtx"
 indict = "dictionary.txt"
 indocs = "documents.txt"
+
+p = pysmallk.Preprocessor()
 
 # use the parser function to parse the command line arguments from the user
 args = p.parser()

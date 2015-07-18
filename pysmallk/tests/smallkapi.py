@@ -13,12 +13,13 @@
 try:
 	import sys
 	import numpy as np #must be imported prior to use of pysmallk library
-	from pysmallk import smallkapi as sk
+	import pysmallk
 	import argparse
 except ImportError:
 	print 'ImportError: smallkapi test failed'
 	raise
 
+sk = pysmallk.SmallkAPI()
 
 args = sk.parser()
 

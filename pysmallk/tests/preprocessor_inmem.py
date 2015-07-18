@@ -17,7 +17,7 @@ try:
 	from scipy.sparse import csc_matrix
 	from scipy.io import mmread, mmwrite
 
-	from pysmallk import preprocessor as p
+	import pysmallk
 except ImportError:
 	print 'ImportError: preprocessor test failed'
 	raise
@@ -27,6 +27,8 @@ except ImportError:
 parser = argparse.ArgumentParser(description="Run SmallK via python binding")
 parser.add_argument('--indir', action='store', required=False, metavar='data_dir', default="../xdata_data/")
 args = parser.parse_args()
+
+p = pysmallk.Preprocessor()
 
 # make output path end in "/" if necessary
 if args.indir[-1] != "/":
