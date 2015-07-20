@@ -25,7 +25,7 @@ clean:
 	@rm -f *.csv
 	@rm -f *.xml
 	@rm -rf bin* objs* build*
-	@rm interface/*.cpp
+	@rm -rf interface/*.cpp
 
 
 uninstall:
