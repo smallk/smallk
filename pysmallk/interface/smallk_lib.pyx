@@ -80,8 +80,6 @@ cdef extern from "smallk.hpp" namespace "smallk":
     void LoadMatrix(double *buffer, unsigned int ldim, unsigned int height, unsigned int width) except +
     void LoadMatrix(unsigned int height, unsigned int width, unsigned int nz, vector[double]& data,
         vector[unsigned int]& row_indices, vector[unsigned int]& col_offsets) except +
-    void LoadMatrix(SparseMatrix[double]& S, const unsigned int height, const unsigned int width, 
-        const unsigned int size) except +
     const double* LockedBufferW(unsigned int& ldim, unsigned int& height, unsigned int& width) except +
     const double* LockedBufferH(unsigned int& ldim, unsigned int& height, unsigned int& width) except +
     void HierNmf2(const unsigned int num_clusters) except +
