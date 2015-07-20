@@ -24,7 +24,9 @@ clean:
 	@rm -r -f *.so
 	@rm -f *.csv
 	@rm -f *.xml
-	@rm -rf bin* objs* 
+	@rm -rf bin* objs* build*
+	@rm interface/*.cpp
+
 
 uninstall:
 	-rm $(SITE_PACKAGES_DIR)$(TARGET) >/dev/null 2>&1
