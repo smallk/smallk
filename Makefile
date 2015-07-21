@@ -485,7 +485,6 @@ pysmallk_check:
 	else \
 	echo "***** PysmallK: All tests passed. *****"; \
 	fi
-
 	@rm pysmallk_test_results.txt
 
 

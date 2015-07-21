@@ -238,6 +238,7 @@ cdef extern from "tree.hpp":
         bool WriteTree(IHierclustWriter* writer, const string& filepath, const vector[string]& dictionary) except +
         void Print()
         bool WriteAssignments(const string& filepath) except +
+        vector[unsigned int]& Assignments()
 
 cdef extern from "sparse_matrix_ops.hpp":
     cdef cppclass RandomSparseMatrix:
@@ -412,6 +413,10 @@ cdef class TreeResults:
     def write_assignments(self, const string& filepath):
         return self.thisptr.WriteAssignments(filepath)
 
+    def get_assignments(self, vector[unsigned int]& assignments):
+        assignments = self.thisptr.Assignments()
+        return assignments
+
     cdef Tree[double]* get(self):
         return self.thisptr
 
@@ -450,19 +455,20 @@ cdef class ClusterStats:
 # Cython will not ensure that python indexing is not used.
 @cython.wraparound(False)
 
+#-------------------------------- private functions ---------------------------------#
 
-def random(const unsigned int height, const unsigned int width, Rand r, const double r_center, const double r_radius):
+def _random(const unsigned int height, const unsigned int width, Rand r, const double r_center, const double r_radius):
     cdef vector[double] buf
     cdef bool ok = RandomMatrix(buf, height, width, dereference(r.get()), r_center, r_radius)
     return buf
 
-def is_dense(string infile):
+def _is_dense(string infile):
     return IsDense(infile)
 
-def is_sparse(string infile):
+def _is_sparse(string infile):
     return IsSparse(infile)
 
-def get_alg(alg_name):
+def _get_alg(alg_name):
     if (alg_name.lower() == 'mu'):
         return 0
     elif (alg_name.lower() == 'hals'):
@@ -472,108 +478,109 @@ def get_alg(alg_name):
     elif (alg_name.lower() == 'bpp'):
         return 1
 
-def get_outputformat(form):
+def _get_outputformat(form):
     if form.lower() == "xml":
         return 1
     elif form.lower() == "json":
         return 2
 
-def write_mtx(string& filepath, Sparse S, unsigned int precision):
+def _write_mtx(string& filepath, Sparse S, unsigned int precision):
     res = WriteMatrixMarketFile(filepath, dereference(S.get()), precision)
     return res
 
-def write_delimited(vector[double] A, string& filename, unsigned int precision, unsigned int ldim, 
+def _write_delimited(vector[double] A, string& filename, unsigned int precision, unsigned int ldim, 
     unsigned int height, unsigned int width):
     res = WriteDelimitedFile(&A[0], ldim, height, width, filename, precision, ',')
     return res
 
-def write_termfreq(TermFreqMatrix M, const string& file_path, scores, const unsigned int precision):
+def _write_termfreq(TermFreqMatrix M, const string& file_path, scores, const unsigned int precision):
     cdef vector[double] cscores
     for i in range(0, len(scores)):
         cscores.push_back(scores[i])
     cdef const double *pScore0 = &cscores[0]
     return M.get().WriteMtxFile(file_path, pScore0, precision)
 
-def write_strings(filepath, stringarr, valid_indices, N):
+def _write_strings(filepath, stringarr, valid_indices, N):
     f = open(filepath, "w")
     for i in range(0, N):
         index = valid_indices[i]
         f.write(stringarr[index]+"\n")
     f.close()
 
-def load_matrix_internal(filepath="", height=0, width=0, delim="", buffer=[], nz=0, row_indices=[], 
+def _load_matrix_internal(filepath="", height=0, width=0, delim="", buffer=[], nz=0, row_indices=[], 
     col_offsets=[], matrix=[], column_major=False, sparse_matrix=None):
     if sparse_matrix != None:
-        m, h, w = load_sparse_obj(sparse_matrix, height, width)
+        m, h, w = _load_sparse_obj(sparse_matrix, height, width)
     if filepath != "":
-        sparse = is_sparse(filepath)
-        dense = is_dense(filepath)
+        sparse = _is_sparse(filepath)
+        dense = _is_dense(filepath)
 
     if filepath != "" and sparse:
-        m, h, w = load_sparse_file(filepath, Sparse())
+        m, h, w = _load_sparse_file(filepath, Sparse())
     elif height != 0 and width != 0 and filepath != "":
         if delim != "":
-            m, h, w = load_matrixarray(height, width, filepath, DELIM=delim)
+            m, h, w = _load_matrixarray(height, width, filepath, DELIM=delim)
         else:
-            m, h, w = load_matrixarray(height, width, filepath)
+            m, h, w = _load_matrixarray(height, width, filepath)
     elif len(row_indices) > 0 and len(col_offsets) > 0:
-        m, h, w = load_sparse(height, width, nz, buffer, row_indices, col_offsets, Sparse())
+        m, h, w = _load_sparse(height, width, nz, buffer, row_indices, col_offsets, Sparse())
     elif len(buffer) > 0 and height != 0 and width != 0:
         m, h, w = buffer, height, width
     elif len(matrix) > 0:
-        m, h, w = load_numpy(matrix, column_major)
+        m, h, w = _load_numpy(matrix, column_major)
     elif height != 0 and width != 0 and filepath != "":
         if delim != "":
-            m, h, w = load_delimited(height, width, filepath, DELIM=delim)
+            m, h, w = _load_delimited(height, width, filepath, DELIM=delim)
         else:
-            m, h, w = load_delimited(height, width, filepath)
+            m, h, w = _load_delimited(height, width, filepath)
     elif filepath != "" and dense:
-        m, h, w = load_dense_file(filepath)
+        m, h, w = _load_dense_file(filepath)
     return m, h, w
 
-def load_delimited(unsigned int height, unsigned int width, const string& filename, const char DELIM = ','):
+def _load_delimited(unsigned int height, unsigned int width, const string& filename, const char DELIM = ','):
     cdef vector[double] buf
     cdef bool ok = LoadDelimitedFile(buf, height, width, filename, DELIM)
     return buf, height, width
 
-def load_sparse_file(const string& file_path, Sparse A):
+def _load_sparse_file(const string& file_path, Sparse A):
     cdef unsigned int m = 0, n = 0, nnz = 0
     cdef bool ok = LoadSparseMatrix(file_path, dereference(A.get()), m, n, nnz)
     return A, m, n
 
-def load_sparse_obj(Sparse A, unsigned int height, unsigned int width):
+def _load_sparse_obj(Sparse A, unsigned int height, unsigned int width):
     return A, height, width
 
-def load_sparse(const unsigned int height, const unsigned int width, const unsigned int nz, 
+def _load_sparse(const unsigned int height, const unsigned int width, const unsigned int nz, 
     const vector[double]& data, const vector[unsigned int]& row_indices,
     const vector[unsigned int]& col_offsets, Sparse A):
     LoadSparseMatrix(height, width, nz, data, row_indices, col_offsets, dereference(A.get()))
     return A, height, width
 
-def load_dense_file(const string& file_path):
+def _load_dense_file(const string& file_path):
     cdef unsigned int m = 0, n = 0
     cdef vector[double] buf_a
     cdef bool ok = LoadDenseMatrix(file_path, buf_a, m, n)
     return buf_a, m, n
 
-def load_matrixarray(const unsigned int matrix_height, const unsigned int matrix_width, const string& filename,
+def _load_matrixarray(const unsigned int matrix_height, const unsigned int matrix_width, const string& filename,
     const char DELIM = ','):
     cdef vector[vector[double]] buf
     buf.resize(1)
     cdef bool ok = LoadMatrixArray[double](buf, matrix_height, matrix_width, filename, DELIM)
     return buf, matrix_height, matrix_width
 
-def validate_load(np.ndarray[double, ndim=2, mode="c"] matrix): # matrix is typed as numpy array of doubles
+# matrix is typed as numpy array of doubles
+def _validate_load(np.ndarray[double, ndim=2, mode="c"] matrix): 
     return matrix.reshape(1, matrix.shape[0]*matrix.shape[1])[0], matrix.shape[0], matrix.shape[1]
 
-def load_numpy(matrix, column_major):
+def _load_numpy(matrix, column_major):
     if column_major:
         matrix_column_major = matrix
     else:
         matrix_column_major = matrix.T
     while True:
         try:
-            D, height, width = validate_load(matrix_column_major) # 2, buffer numpy array; see 1. above
+            D, height, width = _validate_load(matrix_column_major)
             return D, height, width
         except ValueError:
             if not matrix_column_major.flags['C_CONTIGUOUS']:
@@ -583,7 +590,7 @@ def load_numpy(matrix, column_major):
                 print 'Array not float or double type. Rebuilding with correct type...'
                 matrix_column_major = matrix_column_major.astype(np.float)
 
-def init():
+def _init():
     av = sys.argv
     ac = len(av)
     cdef char **c_arr = <char**>malloc((ac+1) * sizeof(char*))
@@ -609,12 +616,11 @@ def init():
     NmfInitialize(ac, c_arr)
     free(c_arr)
 
-def isinit():
+def _isinit():
     return NmfIsInitialized() == INITIALIZED
 
-def finalize():
+def _finalize():
     NmfFinalize()
-
 
 #####################################################################################
 #
@@ -622,20 +628,22 @@ def finalize():
 #
 #####################################################################################
 
+#-------------------------------- public functions ---------------------------------#
+
+
 cdef class SmallkAPI:
 
-    cdef bool dictionary_loaded
+    cdef bool _dictionary_loaded
 
     def __init__(self):
-        self.init()
-        if not isinit():
+        self._init()
+        if not _isinit():
             print 'ERROR'
-        self.dictionary_loaded = False
+        self._dictionary_loaded = False
  
-    # Creates a parser that takes the same inputs and has the same defaults as the binary smallk tool.
-    # Returns a dictionary containing the command line inputs or their default values. The fields in 
-    # that dictionary are: matrixfile, kval, algorithm, tol_val, infile_W, infile_H, outdir, outprecision, 
-    # maxiter, miniter, maxthreads.
+
+    # \brief Returns the parsed arguments for the default command line application
+    # \return The dictionary containing the parsed arguments
     def parser(self):
         parser = argparse.ArgumentParser(description="Run NMF via python binding")
         parser.add_argument('--matrixfile', action='store', 
@@ -680,82 +688,71 @@ cdef class SmallkAPI:
         return args
 
 
-    def get_outputformat(self, format):
-        if format.lower() == "xml":
-            return 0
-        elif format.lower() == "json":
-            return 1
-
+    # \brief Returns the major version of SmallK
+    # \return unsigned int representing major version
     def get_major_version(self):
         return GetMajorVersion()
 
+    # \brief Returns the minor version of SmallK
+    # \return unsigned int representing minor version
     def get_minor_version(self):
         return GetMinorVersion()
 
+    # \brief Returns the patch level of SmallK
+    # \return unsigned int representing patch level
     def get_patch_level(self):
         return GetPatchLevel()
 
+    # \brief Returns a string representation of the version of SmallK
+    # \return string representing the major and minor version and patch level
     def get_version_string(self):
         return GetVersionString()
 
-
-    # Load the input matrix. Four combinations are available, which provide for 
-    # loading via a file path, direct loading of a dense matrix, direct loading 
-    # of a sparse matrix, or loading a numpy matrix. For example:
-
-    # File path: load_matrix(filepath=’/path/to/file/’)
-    # Sparse matrix: load_matrix(height=matrix_height, width=matrix_width, nz=non_zero_count, 
-    #    buffer=non_zero_elements, row_indices=rows, col_offsets=cols)
-    # Dense matrix: load_matrix(buffer=matrix_buffer, height=matrix_height, width=matrix_width)
-    # Numpy matrix (dense): load_matrix(matrix=matrix)
+    # \brief Load an input matrix
+    #
+    # To load a matrix from a file:
+    #   \param[kwarg] filepath      The path to the input matrix
+    #
+    # To load a sparse matrix from python:
+    #   \param[kwarg] height        The height of the sparse matrix
+    #   \param[kwarg] width         The width of the sparse matrix
+    #   \param[kwarg] nz            The number of non-zeros in the sparse matrix
+    #   \param[kwarg] buffer        List of doubles containing the non-zero elements of the sparse matrix
+    #   \param[kwarg] row_indices   List of integers representing the row indices of the sparse matrix
+    #   \param[kwarg] col_offsets   List of integers representing the column offsets of the sparse matrix
+    #
+    # To load a dense matrix from python:
+    #   \param[kwarg] height        The height of the dense matrix
+    #   \param[kwarg] width         The width of the dense matrix
+    #   \param[kwarg] buffer        List of doubles containing the elements of the dense matrix
+    #
+    # To load a numpy matrix from python:
+    #   \param[kwarg] matrix        The numpy matrix
+    #   \param[kwarg] column_major  Boolean for whether or not the matrix is column major (optional)
     def load_matrix(self, filepath="", height=0, width=0, delim="", buffer=[], matrix=[], 
         nz=0, row_indices=[], col_offsets=[], column_major=False, sparse_matrix=None):
         if len(row_indices) > 0 and len(col_offsets) > 0:
-            self.load_sparse_buffer(height, width, nz, buffer, row_indices, col_offsets)
+            self._load_sparse_buffer(height, width, nz, buffer, row_indices, col_offsets)
         # elif sparse_matrix != None:
         #     self.load_sparse(sparse_matrix, height, width)
         elif len(buffer) > 0 and height != 0 and width != 0:
-            self.load_dense_buffer(buffer, height, width)
+            self._load_dense_buffer(buffer, height, width)
         elif len(matrix) > 0:
-            self.load_numpy(matrix, column_major)
+            self._load_numpy(matrix, column_major)
         if filepath != "":
-            self.load_matrix_file(filepath)
+            self._load_matrix_file(filepath)
 
-    def load_matrix_file(self, char* filepath):
-        LoadMatrix(filepath)
-
-    def load_dense_buffer(self, vector[double]& buffer, unsigned int height, unsigned int width):
-        LoadMatrix(&buffer[0], height, height, width)
-      
-    def load_sparse_buffer(self, unsigned int height, unsigned int width, unsigned int nz, vector[double]& buffer,
-        vector[unsigned int]& row_indices, vector[unsigned int]& col_offsets):
-        LoadMatrix(height, width, nz, buffer, row_indices, col_offsets)
-
-    # def load_sparse(self, SparseMatrix[double]& S, unsigned int height, unsigned int width):
-    #     LoadMatrix(S, height, width, S.Size())
-
-    def validate_load(self, np.ndarray[double, ndim=2, mode="c"] matrix): # matrix is typed as numpy array of doubles
-        LoadMatrix(&matrix[0,0], matrix.shape[0], matrix.shape[0], matrix.shape[1])
-
-    def load_numpy(self, matrix, column_major):
-        if column_major:
-            matrix_column_major = matrix
-        else:
-            matrix_column_major = matrix.T
-
-        while True:
-            try:
-                self.validate_load(matrix_column_major) # 2, buffer numpy array; see 1. above
-                break
-            except ValueError:
-                if not matrix_column_major.flags['C_CONTIGUOUS']:
-                    print 'Array not C-contiguous. Rebuilding with contiguous memory allocation...'
-                    matrix_column_major = np.ascontiguousarray(matrix_column_major)
-                else:
-                    print 'Array not float or double type. Rebuilding with correct type...'
-                    matrix_column_major = matrix_column_major.astype(np.float)
-
-    # Runs NMF on the loaded matrix using the supplied algorithm and implementation details.
+    # \brief Runs NMF on the loaded matrix using the supplied algorithm and implementation details
+    # \param[in]    k           The desired number of clusters
+    # \param[in]    algorithm   The desired NMF algorithm
+    # \param[kwarg] infile_W    Initialization for W (optional)
+    # \param[kwarg] infile_H    Initialization for H (optional)
+    # \param[kwarg] precision   Precision for calcuations (optional)
+    # \param[kwarg] min_iter    Minimum number of iterations (optional)
+    # \param[kwarg] max_iter    Maximum number of iterations (optional)
+    # \param[kwarg] tol         Tolerance for determing convergence (optional)
+    # \param[kwarg] max_threads Maximum number of threads to use (optional)
+    # \param[kwarg] outdir      Output directory for files (optional)
     def nmf(self, unsigned int k, algorithm, char* infile_W="", char* infile_H="", precision=4, min_iter=5, 
         max_iter=5000, tol=0.005, max_threads=8, outdir="."):
         if self.is_matrix_loaded():
@@ -766,14 +763,14 @@ cdef class SmallkAPI:
                 SetNmfTolerance(tol)
                 SetMaxThreads(max_threads)
                 SetOutputDir(outdir)
-                Nmf(k, get_alg(algorithm), infile_W, infile_H)
+                Nmf(k, _get_alg(algorithm), infile_W, infile_H)
             except:
                 raise
         else:
             print 'Error: No matrix loaded, not running NMF.'
 
-
-    # Returns a dictionary of the supplied inputs to the nmf function.
+    # \brief Returns a dictionary of the supplied inputs to the nmf function
+    # \return The dictionary containing the supplied inputs
     def get_inputs(self):
         inputs = {}
         inputs['precision'] = GetOutputPrecision()
@@ -785,50 +782,17 @@ cdef class SmallkAPI:
         inputs['format'] = "XML" if GetOutputFormat() == 0 else "JSON"
         return inputs
 
+    # \brief Indicates whether or not a matrix has been loaded
+    # \return boolean representing if a matrix is loaded
     def is_matrix_loaded(self):
         return IsMatrixLoaded()
 
-    def init(self):
-        av = sys.argv
-        ac = len(av)
-        cdef char **c_arr = <char**>malloc((ac+1) * sizeof(char*))
-        cdef char* c_string
-        cdef char* char_str
-
-        # argv[argc] must be null terminated 
-        memset(c_arr, '\0', (ac+1)*sizeof(char*))
-        for i in xrange(0, ac):
-        #for i in xrange(ac):
-            py_string = av[i]
-            # convert to byte
-            py_byte_string = py_string.encode('ascii')
-            # convert to char*
-            char_str = py_byte_string
-            # Now allocate memory
-            data_len = len(char_str) + 1
-            c_arr[i] = <char *>malloc(data_len)
-            # Null-terminate the string
-            memset(c_arr[i], '\0', data_len*sizeof(char))
-            # Copy it
-            memcpy(c_arr[i], char_str, data_len*sizeof(char))
-
-        # Initialize
-        Initialize(ac, c_arr)
-
-        # free up all allocated memory
-        for i in xrange(ac):
-            #del(c_arr[i]) # added by bld
-            free(c_arr[i])
-        #del(c_arr) # added by bld
-        free(c_arr)
-
-    def isinit(self):
-        return IsInitialized();
-
+    # \brief Cleans up the elemental and smallk environment
     def finalize(self): 
         Finalize()
 
-    # Returns the output H matrix as a numpy array.
+    # \brief Returns the output H matrix
+    # \return Numpy array of the output H matrix
     def get_H(self):
         cdef unsigned int ldim = 0
         cdef unsigned int height = 0
@@ -840,7 +804,8 @@ cdef class SmallkAPI:
         h_all = np.array(h_all).reshape(width, height)
         return h_all.T
 
-    # Returns the output W matrix as a numpy array.
+    # \brief Returns the output W matrix
+    # \return Numpy array of the output W matrix
     def get_W(self):
         cdef unsigned int ldim = 0
         cdef unsigned int height = 0
@@ -852,41 +817,100 @@ cdef class SmallkAPI:
         w_all = np.array(w_all).reshape(width, height)
         return w_all.T
 
-    # Runs HierNMF2 on the loaded matrix, using the provided running parameters. 
-    # There are two options for loading the dictionary: passing a filepath or a 
-    # list containing the dictionary.
-        
-    # File path: hiernmf2(5, dict_filepath=’/path/to/dictionary/’)
-    # List: hiernmf2(5, dictionary=[list, containing, terms, from, dictionary])
-    def hiernmf2(self, num_clusters, format="XML", maxterms=5, 
-        hiernmf2tolerance=0.0001):
-        if self.dictionary_loaded and self.is_matrix_loaded():
-            SetHierNmf2Tolerance(hiernmf2tolerance)
+    # \brief Runs HierNMF2 on the loaded matrix
+    # \param[in]    k           The desired number of clusters
+    # \param[kwarg] format      Output format, XML or JSON (optional)
+    # \param[kwarg] maxterms    Maximum number of terms (optional)
+    # \param[kwarg] tol         Tolerance to use for determining convergence (optional)
+    def hiernmf2(self, k, format="XML", maxterms=5, tol=0.0001):
+        if self._dictionary_loaded and self.is_matrix_loaded():
+            SetHierNmf2Tolerance(tol)
             SetMaxTerms(maxterms)
-            SetOutputFormat(self.get_outputformat(format))
-            HierNmf2(num_clusters)
+            SetOutputFormat(self._get_outputformat(format))
+            HierNmf2(k)
         else:
             print 'Error: No dictionary loaded.'
 
-
+    # \brief Loads a dictionary to use for computing top terms
+    # \param[kwarg] filepath    The filepath for the dictionary
+    # OR
+    # \param[kwarg] dictionary  List containing the dictionary strings
     def load_dictionary(self, filepath="", dictionary=[]):
         if filepath != "":
-            self.load_dictionary_from_file(filepath)
-            self.dictionary_loaded = True
+            self._load_dictionary_from_file(filepath)
         elif len(dictionary) > 0:
-            self.load_dictionary_from_buffer(dictionary)
-            self.dictionary_loaded = True
+            self._load_dictionary_from_buffer(dictionary)
         else:
             print 'Error: Invalid dictionary arguments.'
 
+#-------------------------------- private functions ---------------------------------#
 
-    def load_dictionary_from_file(self, const string filepath):
+    def _load_matrix_file(self, char* filepath):
+        LoadMatrix(filepath)
+
+    def _load_dense_buffer(self, vector[double]& buffer, unsigned int height, unsigned int width):
+        LoadMatrix(&buffer[0], height, height, width)
+      
+    def _load_sparse_buffer(self, unsigned int height, unsigned int width, unsigned int nz, vector[double]& buffer,
+        vector[unsigned int]& row_indices, vector[unsigned int]& col_offsets):
+        LoadMatrix(height, width, nz, buffer, row_indices, col_offsets)
+
+    def _get_outputformat(self, format):
+        if format.lower() == "xml":
+            return 0
+        elif format.lower() == "json":
+            return 1
+
+    def _validate_load(self, np.ndarray[double, ndim=2, mode="c"] matrix):
+        LoadMatrix(&matrix[0,0], matrix.shape[0], matrix.shape[0], matrix.shape[1])
+
+    def _load_numpy(self, matrix, column_major):
+        if column_major:
+            matrix_column_major = matrix
+        else:
+            matrix_column_major = matrix.T
+
+        while True:
+            try:
+                self._validate_load(matrix_column_major)
+                break
+            except ValueError:
+                if not matrix_column_major.flags['C_CONTIGUOUS']:
+                    print 'Array not C-contiguous. Rebuilding with contiguous memory allocation...'
+                    matrix_column_major = np.ascontiguousarray(matrix_column_major)
+                else:
+                    print 'Array not float or double type. Rebuilding with correct type...'
+                    matrix_column_major = matrix_column_major.astype(np.float)
+    def _init(self):
+        av = sys.argv
+        ac = len(av)
+        cdef char **c_arr = <char**>malloc((ac+1) * sizeof(char*))
+        cdef char* c_string
+        cdef char* char_str
+        memset(c_arr, '\0', (ac+1)*sizeof(char*))
+        for i in xrange(0, ac):
+            py_string = av[i]
+            py_byte_string = py_string.encode('ascii')
+            char_str = py_byte_string
+            data_len = len(char_str) + 1
+            c_arr[i] = <char *>malloc(data_len)
+            memset(c_arr[i], '\0', data_len*sizeof(char))
+            memcpy(c_arr[i], char_str, data_len*sizeof(char))
+        Initialize(ac, c_arr)
+        for i in xrange(ac):
+            free(c_arr[i])
+        free(c_arr)
+
+    def _isinit(self):
+        return IsInitialized();
+
+    def _load_dictionary_from_file(self, const string filepath):
         LoadDictionary(filepath)
-        self.dictionary_loaded = True
+        self._dictionary_loaded = True
 
-    def load_dictionary_from_buffer(self, vector[string]& dictionary):
+    def _load_dictionary_from_buffer(self, vector[string]& dictionary):
         LoadDictionary(dictionary)
-        self.dictionary_loaded = True
+        self._dictionary_loaded = True
 
 
 #####################################################################################
@@ -894,6 +918,8 @@ cdef class SmallkAPI:
 #                         Python common clustering functions
 #
 #####################################################################################
+
+#-------------------------------- public functions ---------------------------------#
 
 cdef class Clustering:
 
@@ -915,53 +941,63 @@ cdef class Clustering:
     cdef vector[double] w, h
     cdef np.ndarray dictionary
     cdef unsigned int maxterms
-    cdef bool sparse
+    cdef bool _sparse
     cdef string initdir
 
     def __init__(self):
-        init()
-        if not isinit():
+        _init()
+        if not _isinit():
             print 'ERROR'
 
-
-    def get_alg(self, alg_name):
-        if (alg_name.lower() == 'mu'):
-            return 0
-        elif (alg_name.lower() == 'hals'):
-            return 1
-        elif (alg_name.lower() == 'rank2'):
-            return 2
-        elif (alg_name.lower() == 'bpp'):
-            return 3
-
+    # \brief Cleans up the elemental and smallk environment
     def finalize(self):
-        finalize()
+        _finalize()
 
-    # Load the input matrix. Four combinations are available, which provide for 
-    # loading via a file path, direct loading of a dense matrix, direct loading 
-    # of a sparse matrix, or loading a numpy matrix. For example:
-
-    # File path: load_matrix(filepath=’/path/to/file/’)
-    # Sparse matrix: load_matrix(height=matrix_height, width=matrix_width, nz=non_zero_count, buffer=non_zero_elements, row_indices=rows, col_offsets=cols)
-    # Dense matrix: load_matrix(buffer=matrix_buffer, height=matrix_height, width=matrix_width)
-    # Numpy matrix: load_matrix(matrix=matrix)
+    # \brief Load an input matrix
+    #
+    # To load a matrix from a file:
+    #   \param[kwarg] filepath      The path to the input matrix
+    #
+    # To load a sparse matrix from python:
+    #   \param[kwarg] height        The height of the sparse matrix
+    #   \param[kwarg] width         The width of the sparse matrix
+    #   \param[kwarg] nz            The number of non-zeros in the sparse matrix
+    #   \param[kwarg] buffer        List of doubles containing the non-zero elements of the sparse matrix
+    #   \param[kwarg] row_indices   List of integers representing the row indices of the sparse matrix
+    #   \param[kwarg] col_offsets   List of integers representing the column offsets of the sparse matrix
+    #
+    # To load a sparse matrix from Matrixgen:
+    #   \param[kwarg] height        The height of the sparse matrix
+    #   \param[kwarg] width         The width of the sparse matrix
+    #   \param[kwarg] sparse_matrix The sparse matrix returned from Matrixgen
+    #
+    # To load a dense matrix from python:
+    #   \param[kwarg] height        The height of the dense matrix
+    #   \param[kwarg] width         The width of the dense matrix
+    #   \param[kwarg] buffer        List of doubles containing the elements of the dense matrix
+    #
+    # To load a numpy matrix from python:
+    #   \param[kwarg] matrix        The numpy matrix
+    #   \param[kwarg] column_major  Boolean for whether or not the matrix is column major (optional)
     def load_matrix(self, **kwargs):
-        #assuming is sparse for now
         if 'filepath' in kwargs:
-            if is_sparse(kwargs['filepath']):
-                self.matrix, self.height, self.width = load_matrix_internal(filepath=kwargs['filepath'])
-                self.sparse = True
+            if _is_sparse(kwargs['filepath']):
+                self.matrix, self.height, self.width = _load_matrix_internal(filepath=kwargs['filepath'])
+                self._sparse = True
             else:
-                self.dense_matrix, self.height, self.width = load_matrix_internal(filepath=kwargs['filepath'])
+                self.dense_matrix, self.height, self.width = _load_matrix_internal(filepath=kwargs['filepath'])
         else:
             if 'row_indices' in kwargs or 'sparse_matrix' in kwargs:
-                self.sparse = True
-                self.matrix, self.height, self.width = load_matrix_internal(**kwargs)
+                self._sparse = True
+                self.matrix, self.height, self.width = _load_matrix_internal(**kwargs)
             else:
-                self.sparse = False
-                self.dense_matrix, self.height, self.width = load_matrix_internal(**kwargs)
+                self._sparse = False
+                self.dense_matrix, self.height, self.width = _load_matrix_internal(**kwargs)
 
-    # Load the dictionary by providing the path to the file, filepath.
+    # \brief Loads a dictionary to use for computing top terms
+    # \param[kwarg] filepath    The filepath for the dictionary
+    # OR
+    # \param[kwarg] dictionary  List containing the dictionary strings
     def load_dictionary(self, filepath='', dictionary=[]):
         if filepath != '':
             with open(filepath) as dictionary:
@@ -973,51 +1009,74 @@ cdef class Clustering:
         else:
             print 'Error: Invalid dictionary.'
 
-    def compute_flat_assignments(self, vector[unsigned int]& flat):
-        ComputeAssignments[double](flat, &(self.h[0]), self.k, self.k, self.width)
-        return flat
-
-    def compute_fuzzy_assignments(self, vector[float]& probabilities):
-        ComputeFuzzyAssignments[double](probabilities, &(self.h[0]), self.k, self.k, self.width)
-        return probabilities
-
-    def topterms(self):
-        cdef vector[int] temp_indices
-        temp_indices.resize(self.maxterms*self.k)
-        TopTerms(self.maxterms, &(self.w[0]), self.height, self.height, self.k, temp_indices)
-        self.term_indices = temp_indices
-
-    def write_flatclust(self, string& assignfile, string& fuzzyfile, string& resultfile, 
-        vector[unsigned int]& assignments,  vector[float]& probabilities, vector[string]& dictionary, 
-        vector[int]& term_indices, unsigned int n, const FileFormat form):
-        FlatClustWriteResults(assignfile, fuzzyfile, resultfile, assignments, probabilities, dictionary, 
-            term_indices, form, self.maxterms, n, self.k)
-
-    # Return the top term indices for each cluster. The length of the returned array is maxterms*k, 
-    # with the first maxterms elements belonging to the first cluster, the second maxterms elements 
-    # belonging to the second cluster, etc.  
-    def get_flat_top_terms(self):
+    # \brief Return the top term indices for each cluster
+    #
+    # The length of the returned array is maxterms*k, with the first maxterms elements belonging 
+    # to the first cluster, the second maxterms elements belonging to the second cluster, etc.
+    #
+    # \return List of the term_indices
+    def get_top_indices(self):
         return self.term_indices
 
-    # Return the list of cluster assignments for each document.
+    # \brief Return the list of cluster assignments for each document
+    # \return List of the assignments
     def get_assignments(self):
         return self.assignments_flat
 
+    # \brief Return the top terms for each cluster
+    #
+    # The length of the returned array is maxterms*k, with the first maxterms elements belonging 
+    # to the first cluster, the second maxterms elements belonging to the second cluster, etc.
+    #
+    # \return List of the top terms
     def get_top_terms(self, filepath="", dictionary=[]):
         if filepath != "":
             with open(filepath) as dictionary:
                 dictionary = dictionary.read().split("\n")
                 dictionary.pop()
-        terms_indices = self.get_flat_top_terms()
+        terms_indices = self.get_flat_top_indices()
         if len(terms_indices) > 0:
             return [x for i, x in enumerate(dictionary) if i == idx for idx in terms_indices]
 
+#-------------------------------- private functions ---------------------------------#
+
+    def _get_alg(self, alg_name):
+        if (alg_name.lower() == 'mu'):
+            return 0
+        elif (alg_name.lower() == 'hals'):
+            return 1
+        elif (alg_name.lower() == 'rank2'):
+            return 2
+        elif (alg_name.lower() == 'bpp'):
+            return 3
+
+    def _compute_assignments(self, vector[unsigned int]& flat):
+        ComputeAssignments[double](flat, &(self.h[0]), self.k, self.k, self.width)
+        return flat
+
+    def _compute_fuzzy_assignments(self, vector[float]& probabilities):
+        ComputeFuzzyAssignments[double](probabilities, &(self.h[0]), self.k, self.k, self.width)
+        return probabilities
+
+    def _topterms(self):
+        cdef vector[int] temp_indices
+        temp_indices.resize(self.maxterms*self.k)
+        TopTerms(self.maxterms, &(self.w[0]), self.height, self.height, self.k, temp_indices)
+        self.term_indices = temp_indices
+
+    def _write_flatclust(self, string& assignfile, string& fuzzyfile, string& resultfile, 
+        vector[unsigned int]& assignments,  vector[float]& probabilities, vector[string]& dictionary, 
+        vector[int]& term_indices, unsigned int width, const FileFormat form):
+        FlatClustWriteResults(assignfile, fuzzyfile, resultfile, assignments, probabilities, dictionary, 
+            term_indices, form, self.maxterms, width, self.k)
 
 #####################################################################################
 #
 #                            Python flatclust functions
 #
 #####################################################################################
+
+#-------------------------------- public functions ---------------------------------#
 
 cdef class Flatclust(Clustering):
 
@@ -1026,10 +1085,11 @@ cdef class Flatclust(Clustering):
         self.nmfstats = Stats()
         self.tree = TreeResults()
 
-    # Creates a parser that takes the same inputs and has the same defaults as the binary smallk tool.
-    # Returns a dictionary containing the command line inputs or their default values. The fields in 
-    # that dictionary are: matrixfile, dictfile, clusters, algorithm, tol, infile_W, infile_H, outdir, 
-    # maxterms, verbose, format, assignfile, treefile, maxiter, miniter, maxthreads.
+    # \brief Returns the parsed arguments for the default command line application
+    #
+    # The command line arguemnts are the same as those for the C++ binary application flatclust
+    #
+    # \return The dictionary containing the parsed arguments
     def parser(self):
         parser = argparse.ArgumentParser()
         parser.add_argument("--matrixfile", action="store", 
@@ -1069,7 +1129,17 @@ cdef class Flatclust(Clustering):
         args = parser.parse_args()
         return args
 
-    # Run flat clustering on the loaded matrix, using the provided input options
+    # \brief Runs NMF on the loaded matrix using the supplied algorithm and implementation details
+    # \param[in]    k           The desired number of clusters
+    # \param[kwarg] infile_W    Initialization for W (optional)
+    # \param[kwarg] infile_H    Initialization for H (optional)
+    # \param[kwarg] algorithm   The desired NMF algorithm (optional)
+    # \param[kwarg] maxterms    Maximum number of terms per cluster (optional)
+    # \param[kwarg] verbose     Boolean for whether or not to be verbose (optional)
+    # \param[kwarg] min_iter    Minimum number of iterations (optional)
+    # \param[kwarg] max_iter    Maximum number of iterations (optional)
+    # \param[kwarg] max_threads Maximum number of threads to use (optional)
+    # \param[kwarg] tol         Tolerance for determing convergence (optional)
     def cluster(self, k, infile_W='', infile_H='', algorithm="BPP", maxterms=5, verbose=True, min_iter=5,
         max_iter=5000, max_threads=8, tol=0.0001):
         self.k = k
@@ -1079,19 +1149,19 @@ cdef class Flatclust(Clustering):
         RNG_CENTER = 0.5
         RNG_RADIUS = 0.5
         if not infile_W:
-            w_init = random(self.height, k, rng, RNG_CENTER, RNG_RADIUS)
+            w_init = _random(self.height, k, rng, RNG_CENTER, RNG_RADIUS)
         else:
-            w, height, width = load_matrix_internal(height=self.height, width=k, filepath=infile_W)
+            w, height, width = _load_matrix_internal(height=self.height, width=k, filepath=infile_W)
             w_init = w[0]
 
         if not infile_H:
-            h_init = random(k, self.width, rng, RNG_CENTER, RNG_RADIUS)
+            h_init = _random(k, self.width, rng, RNG_CENTER, RNG_RADIUS)
         else:
-            h, height, width = load_matrix_internal(height=k, width=self.width, filepath=infile_H) 
+            h, height, width = _load_matrix_internal(height=k, width=self.width, filepath=infile_H) 
             h_init = h[0]
         cdef NmfOptions nmf_opts
         nmf_opts.tol = tol
-        nmf_opts.algorithm = self.get_alg(algorithm)
+        nmf_opts.algorithm = self._get_alg(algorithm)
         nmf_opts.prog_est_algorithm = PG_RATIO
         nmf_opts.height = self.height
         nmf_opts.width = self.width
@@ -1106,28 +1176,22 @@ cdef class Flatclust(Clustering):
         nmf_opts.verbose = verbose
         nmf_opts.normalize = True
 
-        if self.sparse:
-            self.w, self.h = self.flatclust_sparse(nmf_opts, self.matrix, w_init, h_init, self.height, self.k, 
+        if self._sparse:
+            self.w, self.h = self._flatclust_sparse(nmf_opts, self.matrix, w_init, h_init, self.height, self.k, 
                 self.nmfstats)
         else:
-            self.w, self.h = self.flatclust(nmf_opts, self.dense_matrix, w_init, h_init, self.height, self.height, 
+            self.w, self.h = self._flatclust(nmf_opts, self.dense_matrix, w_init, h_init, self.height, self.height, 
                 self.k, self.nmfstats)
-        self.assignments_flat = self.compute_flat_assignments(self.assignments_flat)
-        self.probabilities = self.compute_fuzzy_assignments(self.probabilities)
-        self.topterms()
+        self.assignments_flat = self._compute_assignments(self.assignments_flat)
+        self.probabilities = self._compute_fuzzy_assignments(self.probabilities)
+        self._topterms()
 
-    def flatclust_sparse(self, nmf_opts, Sparse A, vector[double]& buf_w, vector[double]& buf_h, unsigned int ldim_w, 
-        unsigned int ldim_h, Stats stats): 
-        FlatClustSparse(nmf_opts, A.Height(), A.Width(), A.Size(), A.LockedColBuffer(), A.LockedRowBuffer(),
-            A.LockedDataBuffer(), &(buf_w[0]), ldim_w, &(buf_h[0]), ldim_h, dereference(stats.get()))
-        return buf_w, buf_h
-
-    def flatclust(self, nmf_opts, vector[double]& buf_a, vector[double]& buf_w, vector[double]& buf_h, 
-                unsigned int ldim_a, unsigned int ldim_w, unsigned int ldim_h, Stats stats):
-        FlatClust(nmf_opts, &(buf_a[0]), ldim_a, &(buf_w[0]), ldim_w, &(buf_h[0]), ldim_h, dereference(stats.get()))
-        return buf_w, buf_h
-
-    # Writes the assignment file and treefile in the provided format and to the provided output directory.
+    # \brief Writes the flatclust results to files
+    # \param[in]        assignfile     The filepath for writing assignments
+    # \param[in]        fuzzyfile      The filepath for writing fuzzy assignments
+    # \param[in]        treefile       The filepath for the tree results
+    # \param[kwargs]    outdir         The output directory for the output files (optional)
+    # \param[kwargs]    format         The output format JSON or XML (optional)
     def write_output(self, assignfile, fuzzyfile, treefile, outdir='./', format='XML'):
         print 'Writing output files...'
         if format == "XML":
@@ -1149,10 +1213,21 @@ cdef class Flatclust(Clustering):
             fuzzy = outdir + fuzzyfile 
         else:
             fuzzy = outdir + fuzzyfile + "_" + str(self.k) + '.csv'
-        self.write_flatclust(assign, fuzzy, tree, self.assignments_flat, self.probabilities, self.dictionary, 
-            self.term_indices, self.width, get_outputformat(format))
+        self._write_flatclust(assign, fuzzy, tree, self.assignments_flat, self.probabilities, self.dictionary, 
+            self.term_indices, self.width, _get_outputformat(format))
 
+#-------------------------------- private functions ---------------------------------#
 
+    def _flatclust_sparse(self, nmf_opts, Sparse A, vector[double]& buf_w, vector[double]& buf_h, unsigned int ldim_w, 
+        unsigned int ldim_h, Stats stats): 
+        FlatClustSparse(nmf_opts, A.Height(), A.Width(), A.Size(), A.LockedColBuffer(), A.LockedRowBuffer(),
+            A.LockedDataBuffer(), &(buf_w[0]), ldim_w, &(buf_h[0]), ldim_h, dereference(stats.get()))
+        return buf_w, buf_h
+
+    def _flatclust(self, nmf_opts, vector[double]& buf_a, vector[double]& buf_w, vector[double]& buf_h, 
+                unsigned int ldim_a, unsigned int ldim_w, unsigned int ldim_h, Stats stats):
+        FlatClust(nmf_opts, &(buf_a[0]), ldim_a, &(buf_w[0]), ldim_w, &(buf_h[0]), ldim_h, dereference(stats.get()))
+        return buf_w, buf_h
 
 #####################################################################################
 #
@@ -1160,6 +1235,7 @@ cdef class Flatclust(Clustering):
 #
 #####################################################################################
 
+#-------------------------------- public functions ---------------------------------#
 
 cdef class Hierclust(Clustering):
     cdef FileFormat format
@@ -1170,10 +1246,11 @@ cdef class Hierclust(Clustering):
         self.stats = ClusterStats()
         self.tree = TreeResults()
 
-    # Creates a parser that takes the same inputs and has the same defaults as the binary smallk tool.
-    # Returns a dictionary containing the command line inputs or their default values. The fields in 
-    # that dictionary are: matrixfile, dictfile, clusters, tol, infile_W, infile_H, outdir, maxterms, 
-    # verbose, format, assignfile, treefile, maxiter, miniter, maxthreads, unbalanced, trial_allowance, flat.
+    # \brief Returns the parsed arguments for the default command line application
+    #
+    # The command line arguemnts are the same as those for the C++ binary application hierclust
+    #
+    # \return The dictionary containing the parsed arguments
     def parser(self):
         parser = argparse.ArgumentParser()
         parser.add_argument("--matrixfile", action="store", 
@@ -1215,7 +1292,18 @@ cdef class Hierclust(Clustering):
         args = parser.parse_args()
         return args
 
-    # Run hierarchical clustering on the loaded matrix, using the provided input options.
+    # \brief Runs HierNMF2 on the loaded matrix using the supplied algorithm and implementation details
+    # \param[in]    k               The desired number of clusters
+    # \param[kwarg] initdir         Initialization matrices (optional)
+    # \param[kwarg] maxterms        Maximum number of terms per cluster (optional)
+    # \param[kwarg] unbalanced      Unbalanced parameter (optional)
+    # \param[kwarg] trial_allowance Number of trials to use (optional)
+    # \param[kwarg] verbose         Boolean for whether or not to be verbose (optional)
+    # \param[kwarg] flat            Whether or not to flatten the results (optional)
+    # \param[kwarg] min_iter        Minimum number of iterations (optional)
+    # \param[kwarg] max_iter        Maximum number of iterations (optional)
+    # \param[kwarg] max_threads     Maximum number of threads to use (optional)
+    # \param[kwarg] tol             Tolerance for determing convergence (optional)
     def cluster(self, k, initdir='', maxterms=5, unbalanced=0.1, trial_allowance=3, verbose=True, flat=0,
         min_iter=5, max_iter=5000, max_threads=8, tol=0.0001):
         self.k = k
@@ -1227,7 +1315,6 @@ cdef class Hierclust(Clustering):
         RNG_RADIUS = 0.5
         required_size = self.height*2
 
-        #set opts
         self.clust_opts.maxterms                      = int(maxterms)
         self.clust_opts.initdir                       = initdir
         self.clust_opts.unbalanced                    = float(unbalanced)
@@ -1248,51 +1335,36 @@ cdef class Hierclust(Clustering):
         self.clust_opts.nmf_opts.verbose              = verbose
         self.clust_opts.nmf_opts.normalize            = False
 
-        if self.sparse:
-            self.w, self.h = self.clust_sparse(self.matrix, self.tree, self.stats, self.height, self.width, 
+        if self._sparse:
+            self.w, self.h = self._clust_sparse(self.matrix, self.tree, self.stats, self.height, self.width, 
                 k, rng, initdir)
         else:
-            self.w, self.h, self.assignments = self.clust_dense(self.dense_matrix, self.height, self.tree, 
+            self.w, self.h, self.assignments = self._clust_dense(self.dense_matrix, self.height, self.tree, 
                 self.stats, self.height, self.width, k, rng)
         if self.flat == 1:
-            self.assignments_flat = self.compute_flat_assignments(self.assignments_flat)
-            self.probabilities = self.compute_fuzzy_assignments(self.probabilities)
-            self.topterms()
+            self.assignments_flat = self._compute_assignments(self.assignments_flat)
+            self.probabilities = self._compute_fuzzy_assignments(self.probabilities)
+            self._topterms()
 
-    # Return the top term indices for each cluster. The length of the returned array is maxterms*k, 
-    # with the first maxterms elements belonging to the first cluster, the second maxterms elements 
-    # belonging to the second cluster, etc.  
-    def get_flat_top_terms(self):
+    # \brief Return the top term indices for each cluster
+    #
+    # The length of the returned array is maxterms*k, with the first maxterms elements belonging 
+    # to the first cluster, the second maxterms elements belonging to the second cluster, etc.
+    #
+    # \return List of the term_indices
+    def get_top_indices(self):
         if self.flat == 1:
             return self.term_indices
         else:
             print 'ERROR: To get top terms indices, rerun hierarchical clusting with flat=1'
             return []
 
-    def clust_dense(self, vector[double]& buf_a, unsigned int ldim_a, TreeResults tree, ClusterStats stats,
-            unsigned int m, unsigned int n, unsigned int num_clusters, Rand rng):
-        self.buf_w.resize(m*num_clusters)
-        self.buf_h.resize(n*num_clusters)
-        # cdef vector[int] assignments
-
-        # cdef Result res = Clust(clust_opts, &(buf_a[0]), ldim_a, &(buf_w[0]), &(buf_h[0]),
-        Clust(self.clust_opts, &(buf_a[0]), ldim_a, &(self.buf_w[0]), &(self.buf_h[0]), 
-                                dereference(tree.get()), dereference(stats.get()), dereference(rng.get()))
-        return self.buf_w, self.buf_h, self.assignments
-
-    def clust_sparse(self, Sparse A, 
-                  TreeResults tree, ClusterStats stats,
-                  unsigned int m, unsigned int n, unsigned int num_clusters, Rand rng, string initdir):
-        # print 'TYPE:',type(self.clust_opts.initdir)
-        # self.clust_opts.initdir = initdir
-        # print 'done setting initdir'
-        self.buf_w.resize(m*num_clusters)
-        self.buf_h.resize(n*num_clusters)
-        res = ClustSparse(self.clust_opts, dereference(A.get()), &(self.buf_w[0]), &(self.buf_h[0]), 
-                                      dereference(tree.get()), dereference(stats.get()), dereference(rng.get()))
-        return self.buf_w, self.buf_h
-
-    # Writes the assignment file and treefile in the provided format and to the provided output directory.
+    # \brief Writes the flatclust results to files
+    # \param[in]        assignfile     The filepath for writing assignments
+    # \param[in]        fuzzyfile      The filepath for writing fuzzy assignments
+    # \param[in]        treefile       The filepath for the tree results
+    # \param[kwargs]    outdir         The output directory for the output files (optional)
+    # \param[kwargs]    format         The output format JSON or XML (optional)
     def write_output(self, assignfile, treefile, fuzzyfile, outdir='./', format='XML'):
         print 'Writing output files...'
         if format == "XML":
@@ -1316,26 +1388,54 @@ cdef class Hierclust(Clustering):
         else:
             fuzzy = outdir + fuzzyfile + "_" + str(self.k) + '.csv'
         self.tree.write_assignments(assign)
-        self.tree.write(tree, self.dictionary, get_outputformat(format))
+        self.tree.write(tree, self.dictionary, _get_outputformat(format))
         if self.flat == 1:
-            self.write_flatclust(assign, fuzzy, tree, self.assignments_flat, self.probabilities, self.dictionary, 
-                self.term_indices, self.width, get_outputformat(format))
+            self._write_flatclust(assign, fuzzy, tree, self.assignments_flat, self.probabilities, self.dictionary, 
+                self.term_indices, self.width, _get_outputformat(format))
 
-    def write_assignments(self, vector[unsigned int]& labels, const string& filepath):
-        return WriteAssignmentsFile(labels, filepath)
-
+    # \brief Return the list of cluster assignments for each document
+    # \return List of the assignments
     def get_assignments(self):
+        cdef vector[unsigned int] assignments
+        cdef list assignments_python
+        assignments_python = []
         if self.flat:
             return self.assignments_flat
         else:
-            print 'ERROR: To get assignments, rerun with flat=1'
-            return None
+            for each in self.tree.get_assignments(assignments):
+                if each == 4294967295:
+                    each = -1
+                assignments_python.append(each)
+            return assignments_python
+
+#-------------------------------- private functions ---------------------------------#
+
+    def _write_assignments(self, vector[unsigned int]& labels, const string& filepath):
+        return WriteAssignmentsFile(labels, filepath)
+
+    def _clust_dense(self, vector[double]& buf_a, unsigned int ldim_a, TreeResults tree, ClusterStats stats,
+            unsigned int m, unsigned int n, unsigned int num_clusters, Rand rng):
+        self.buf_w.resize(m*num_clusters)
+        self.buf_h.resize(n*num_clusters)
+        Clust(self.clust_opts, &(buf_a[0]), ldim_a, &(self.buf_w[0]), &(self.buf_h[0]), 
+                                dereference(tree.get()), dereference(stats.get()), dereference(rng.get()))
+        return self.buf_w, self.buf_h, self.assignments
+
+    def _clust_sparse(self, Sparse A, TreeResults tree, ClusterStats stats, unsigned int m, unsigned int n, 
+        unsigned int num_clusters, Rand rng, string initdir):
+        self.buf_w.resize(m*num_clusters)
+        self.buf_h.resize(n*num_clusters)
+        res = ClustSparse(self.clust_opts, dereference(A.get()), &(self.buf_w[0]), &(self.buf_h[0]), 
+            dereference(tree.get()), dereference(stats.get()), dereference(rng.get()))
+        return self.buf_w, self.buf_h
 
 #####################################################################################
 #
 #                            Python matrixgen functions
 #
 #####################################################################################
+
+#-------------------------------- public functions ---------------------------------#
 
 cdef class Matrixgen:
     cdef Rand rng
@@ -1350,9 +1450,11 @@ cdef class Matrixgen:
         self.rng.seed_from_time()
         self.is_sparse = False
 
-    # Creates a parser that takes the same inputs and has the same defaults as the binary matrixgen tool.
-    # Returns a dictionary containing the command line inputs or their default values. The fields in 
-    # that dictionary are: height, width, filename, type, rng_center, rng_radius, precision, and nz_per_col.
+    # \brief Returns the parsed arguments for the default command line application
+    #
+    # The command line arguments are the same as those for the C++ binary application matrixgen
+    #
+    # \return The dictionary containing the parsed arguments
     def parser(self):
         parser = argparse.ArgumentParser()
         parser.add_argument("--height",         action="store", 
@@ -1375,20 +1477,27 @@ cdef class Matrixgen:
         args = parser.parse_args()
         return args
 
-    # Writes the generated matrix to the filename with the specified precision.
+    # \brief Writes the generated matrix to file
+    # \param[in]        filename     The filepath for writing the matrix
+    # \param[kwarg]     precision    The precision with which to write the matrix
     def write_output(self, filename, precision=6):
         if self.is_sparse:
-            if not write_mtx(filename, self.S, precision):
+            if not _write_mtx(filename, self.S, precision):
                 print 'Matrixgen error - sparse matrix file write failed.'
             else:
                 print 'Matrix succesfully written.'
         else:
-            if not write_delimited(self.A, filename, precision, self.height, self.height, self.width):
+            if not _write_delimited(self.A, filename, precision, self.height, self.height, self.width):
                 print 'Matrixgen error - file write failed.'
             else: 
                 print 'Matrix succesfully written.'
 
-    # Generates a uniform matrix of height m and width n with the RNG attributes of center and radius.
+    # \brief Generates a uniform matrix
+    # \param[in]        m       The desired height
+    # \param[in]        n       The desired width
+    # \param[kwarg]     center  Center with which to initialize the RNG 
+    # \param[kwarg]     radius  Radius with which to initialize the RNG 
+    # \return A tuple of the list of values, the height, and the width
     def uniform(self, unsigned int m, unsigned int n, double center=0.5, double radius=0.5):
         cdef unsigned int c = 0
         cdef vector[double] A
@@ -1404,7 +1513,12 @@ cdef class Matrixgen:
         self.A = A
         return A, m, n
     
-    # Generates a dense diagonal matrix of height m and width n with the RNG attributes of center and radius.
+    # \brief Generates a dense diagonal matrix
+    # \param[in]        m       The desired height
+    # \param[in]        n       The desired width
+    # \param[kwarg]     center  Center with which to initialize the RNG 
+    # \param[kwarg]     radius  Radius with which to initialize the RNG 
+    # \return A tuple of the list of values, the height, and the width
     def densediag(self, unsigned int m, unsigned int n, double center=0.5, double radius=0.5):
         cdef unsigned int c = 0
         cdef vector[double] A
@@ -1424,7 +1538,10 @@ cdef class Matrixgen:
         self.A = A
         return A, m, n
 
-    # Generates an identify matrix of height m and width n.
+    # \brief Generates an identify matrix of height m and width n.
+    # \param[in]        m       The desired height
+    # \param[in]        n       The desired width
+    # \return A tuple of the list of values, the height, and the width
     def identity(self, unsigned int m, unsigned int n):
         cdef unsigned int c = 0
         cdef vector[double] A
@@ -1444,7 +1561,11 @@ cdef class Matrixgen:
         self.A = A
         return A, m, n
     
-    # Generates a sparse diagonal matrix of width n with the RNG attributes of center and radius.  
+    # \brief Generates a sparse diagonal matrix of width n with the RNG attributes of center and radius
+    # \param[in]        n       The desired width
+    # \param[kwarg]     center  Center with which to initialize the RNG 
+    # \param[kwarg]     radius  Radius with which to initialize the RNG 
+    # \return A tuple of the list of values, the height, and the width
     def sparsediag(self, unsigned int n, double center=0.5, double radius=0.5):
         S = Sparse()
         self.is_sparse = True
@@ -1459,7 +1580,10 @@ cdef class Matrixgen:
         self.S = S
         return S, n, n
 
-    # Generates an ones matrix of height m and width n.
+    # \brief Generates a matrix of ones of height m and width n
+    # \param[in]        m       The desired height
+    # \param[in]        n       The desired width
+    # \return A tuple of the list of values, the height, and the width
     def ones(self, unsigned int m, unsigned int n):
         cdef unsigned int c = 0
         cdef unsigned int r
@@ -1475,7 +1599,10 @@ cdef class Matrixgen:
         self.A = A
         return A, m, n
 
-    # Generates a zeros matrix of height m and width n.
+    # \brief Generates a matrix of zeros of height m and width n
+    # \param[in]        m       The desired height
+    # \param[in]        n       The desired width
+    # \return A tuple of the list of values, the height, and the width
     def zeros(self, unsigned int m, unsigned int n):
         cdef unsigned int c = 0
         cdef unsigned int r
@@ -1491,7 +1618,11 @@ cdef class Matrixgen:
         self.A = A
         return A, m, n
 
-    # Generates an identify matrix of height m and width n and nz non-zero elements.
+    # \brief Generates a random sparse matrix
+    # \param[in]        m       The desired height
+    # \param[in]        n       The desired width
+    # \param[in]        nz      The desired non-zeros
+    # \return A tuple of the list of values, the height, and the width
     def sparse(self, unsigned int m, unsigned int n, unsigned int nz):
         self.is_sparse = True
         self.height = m
@@ -1501,12 +1632,13 @@ cdef class Matrixgen:
         self.S = S
         return S, m, n
 
-
 #####################################################################################
 #
 #                            Python preprocessor functions
 #
 #####################################################################################
+
+#-------------------------------- public functions ---------------------------------#
 
 cdef class Preprocessor:
     cdef unsigned int maxiter, docsperterm, termsperdoc, precision, boolean_mode
@@ -1525,10 +1657,11 @@ cdef class Preprocessor:
     def __init__(self):
         pass
 
-    # Creates a parser that takes the same inputs and has the same defaults as the binary 
-    # preprocessor tool.Returns a dictionary containing the command line inputs or their 
-    # default values. The fields in that dictionary are: indir, outdir, docs_per_term, 
-    # terms_per_doc, maxiter, precision, boolean_mode.
+    # \brief Returns the parsed arguments for the default command line application
+    #
+    # The command line arguemnts are the same as those for the C++ binary application preprocessor
+    #
+    # \return The dictionary containing the parsed arguments
     def parser(self):
         parser = argparse.ArgumentParser()
         parser.add_argument("--indir",         action="store", 
@@ -1548,15 +1681,22 @@ cdef class Preprocessor:
         args = parser.parse_args()
         return args
 
-    # Writes the results of the preprocessing to the filesystem. The matrix is written 
-    # to matrix_filepath, the dictionary to dict_filepath, and the documents to docs_filepath. 
-    # The outputs are written with the specified precision.    
+    # \brief Writes the preprocessor results to files
+    # \param[in]        matrix_filepath     The filepath for writing the matrix
+    # \param[in]        dict_filepath       The filepath for writing the dictionary
+    # \param[in]        docs_filepath       The filepath for the documents
+    # \param[kwargs]    precision           The precision with which to write the outputs (optional)
     def write_output(self, matrix_filepath, dict_filepath, docs_filepath, precision=4):
-        write_termfreq(self.tfm, matrix_filepath, self.scores, precision)
-        write_strings(dict_filepath, self.dictionary, self.term_ind, self.height)
-        write_strings(docs_filepath, self.documents, self.doc_ind, self.width)
+        _write_termfreq(self.tfm, matrix_filepath, self.scores, precision)
+        _write_strings(dict_filepath, self.dictionary, self.term_ind, self.height)
+        _write_strings(docs_filepath, self.documents, self.doc_ind, self.width)
 
-    # Preprocesses the matrix, dictionary, and documents provided.
+    # \brief Preprocesses the matrix
+    # \param[kwarg] maxiter      The maximum number of iterations (optional)
+    # \param[kwarg] docsperterm  The number of documents required per term (optional)
+    # \param[kwarg] termsperdoc  The number of terms requried per document (optional)
+    # \param[kwarg] boolean_mode All nonzero matrix elements will be treated as if they had 
+    #                            the value 1.0  (optional)
     def preprocess(self, maxiter=1000, docsperterm=3, termsperdoc=5, boolean_mode=0):
         self.tfm = TermFreqMatrix(self.A, boolean_mode)
         cdef vector[unsigned int] term_indices
@@ -1593,17 +1733,35 @@ cdef class Preprocessor:
     # Load the input matrix. Two combinations are available, which provide for loading via a file path
     # or direct loading of a dense matrix. For example:
 
-    # File path: load_inputmatrix(filepath=’/path/to/file/’)
-    # Dense matrix: load_inputmatrix(height=matrix_height, width=matrix_width, nz=non_zero_count, 
-    #     buffer=non_zero_elements, row_indices=rows, col_offsets=cols)
-    def load_inputmatrix(self, filepath="", height=0, width=0, nz=0, buffer=[], row_indices=[], col_offsets=[]):
+    # \brief Load an input matrix
+    #
+    # To load a matrix from a file:
+    #   \param[kwarg] filepath      The path to the input matrix
+    #
+    # To load a sparse matrix from Matrixgen:
+    #   \param[kwarg] height        The height of the sparse matrix
+    #   \param[kwarg] width         The width of the sparse matrix
+    #   \param[kwarg] sparse_matrix The sparse matrix returned from Matrixgen
+    #
+    # To load a sparse matrix from python:
+    #   \param[kwarg] height        The height of the sparse matrix
+    #   \param[kwarg] width         The width of the sparse matrix
+    #   \param[kwarg] nz            The number of non-zeros in the sparse matrix
+    #   \param[kwarg] buffer        List of doubles containing the non-zero elements of the sparse matrix
+    #   \param[kwarg] row_indices   List of integers representing the row indices of the sparse matrix
+    #   \param[kwarg] col_offsets   List of integers representing the column offsets of the sparse matrix
+    def load_matrix(self, filepath="", height=0, width=0, nz=0, buffer=[], row_indices=[], 
+        col_offsets=[], sparse_matrix=None):
         if filepath != "":
-            self.A, self.height, self.width = load_matrix_internal(filepath=filepath)
+            self.A, self.height, self.width = _load_matrix_internal(filepath=filepath)
         elif len(row_indices) > 0:
-            self.A, self.height, self.width = load_matrix_internal(height=height, width=width, nz=nz, buffer=buffer, row_indices=row_indices, col_offsets=col_offsets)
+            self.A, self.height, self.width = _load_matrix_internal(height=height, width=width, 
+                nz=nz, buffer=buffer, row_indices=row_indices, col_offsets=col_offsets)
 
-    # Load the dictionary, either by providing the path to the file, filepath, 
-    # or by providing a list of the terms, dictionary.
+    # \brief Loads a dictionary
+    # \param[kwarg] filepath    The filepath for the dictionary
+    # OR
+    # \param[kwarg] dictionary  List containing the dictionary strings
     def load_dictionary(self, filepath="", dictionary=[]):
         if filepath != "":
             with open(filepath) as f:
@@ -1611,36 +1769,47 @@ cdef class Preprocessor:
         else:
             self.dictionary = dictionary
 
-    # Load the documents, either by providing the path to the file, filepath, 
-    # or by providing a list of the documents, documents.
+    # \brief Loads the documents file
+    # \param[kwarg] filepath    The filepath for the documents
+    # OR
+    # \param[kwarg] documents   List containing the docuemnts strings
     def load_documents(self, filepath="", documents=[]):
         if filepath != "":
             with open(filepath) as f:
                 self.documents = f.read().split('\n')
         else:
             self.documents = documents
-
-    # Returns the pruned list of document ids.
+ 
+    # \brief Returns the reduced documents
+    # \return The documents in a list
     def get_reduced_documents(self):
         return [self.documents[i] for i in self.doc_ind]
 
-    # Returns the pruned dictionary.
+    # \brief Returns the reduced dictionary
+    # \return The dictionary in a list
     def get_reduced_dictionary(self):
         return [self.dictionary[i] for i in self.term_ind]
 
-    # Returns the list of non-zero values in the pruned sparse matrix.
+    # \brief Returns the non-zero scores from the reduced matrix
+    # \return The scores in a list
     def get_reduced_scores(self):
         return self.scores
 
-    # Returns the list of row_indices for the pruned sparse matrix.
+    # \brief Returns the row indices for the reduced matrix
+    # \return The row indices in a list 
     def get_reduced_row_indices(self):
         return self.row_indices
 
-    # Returns the list of row_indices for the pruned sparse matrix.
+    # \brief Returns the column offsets for the reduced matrix
+    # \return The column offsets in a list
     def get_reduced_col_offsets(self):
         return self.col_offsets
 
-    def get_reduced_file(self, filepath="", values=[]):
+    # \brief Loads the additional field file
+    # \param[kwarg] filepath    The filepath for the field
+    # OR
+    # \param[kwarg] values      List containing the field strings
+    def get_reduced_field(self, filepath="", values=[]):
         if filepath != "":
             with open(filepath) as f:
                 values = f.read().split('\n')

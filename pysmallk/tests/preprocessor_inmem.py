@@ -82,7 +82,7 @@ boolean_mode = 0
 
 
 # load datasets
-p.load_inputmatrix(height=height, width=width, nz=nz, buffer=data, row_indices=row_indices, col_offsets=col_offsets)
+p.load_matrix(height=height, width=width, nz=nz, buffer=data, row_indices=row_indices, col_offsets=col_offsets)
 p.load_dictionary(dictionary=terms)
 p.load_documents(documents=docids)
 

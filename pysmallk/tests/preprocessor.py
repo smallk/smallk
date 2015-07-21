@@ -50,7 +50,7 @@ outdocs = args.outdir+"reduced_documents.txt"
 
 
 # load in the user-specified matrix, dictionary, and documents files
-p.load_inputmatrix(filepath=pathtofile)
+p.load_matrix(filepath=pathtofile)
 p.load_dictionary(pathtodict)
 p.load_documents(pathtodocs)
 

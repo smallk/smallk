@@ -53,7 +53,6 @@ h.load_dictionary(filepath=pathtodict)
 h.cluster(12, initdir=pathtoinit)
 
 assign = h.get_assignments()
-print assign
 
 # if flat==1:
 
@@ -66,7 +65,7 @@ print assign
 
 # 	terms = [[x for i, x in enumerate(dictionary) if i == idx] for idx in terms_indices]
 
-assign_test = np.genfromtxt(pathtoassign, delimiter=',')
+assign_test = np.genfromtxt(pathtoassign, delimiter=',', skip_footer=1)
 
 string = 'assignment file test passed'
 for i in range(len(assign)):
