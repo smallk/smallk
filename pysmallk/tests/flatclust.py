@@ -29,7 +29,7 @@ args = f.parser()
 
 # load in the user-specified matrix and dictionary
 f.load_matrix(filepath=args.matrixfile)
-f.load_dictionary(dictfile=args.dictfile)
+f.load_dictionary(filepath=args.dictfile)
 
 # use the user-provided inputs to run flat clustering
 # all keyword arguments are optional 

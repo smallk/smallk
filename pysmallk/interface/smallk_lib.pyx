@@ -643,7 +643,7 @@ cdef class SmallkAPI:
         parser.add_argument('--k', action='store', 
             required=True, type=int, metavar='k')
         parser.add_argument('--dictfile', action='store', 
-            required=False, metavar='dictfile')
+            required=False, metavar='dictfile', default="")
         parser.add_argument('--hiernmf2', action='store', 
             required=False, metavar='hiernmf2', default=0, choices=[0,1])
         parser.add_argument('--algorithm', action='store', 

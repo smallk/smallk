@@ -24,9 +24,12 @@ sk = pysmallk.SmallkAPI()
 args = sk.parser()
 
 sk.load_matrix(filepath=args.matrixfile)
+print args.dictfile
+if args.dictfile != "":
+	sk.load_dictionary(filepath=args.dictfile)
 
 if args.hiernmf2:
-	sk.hiernmf2(args.k, dict_filepath=args.dictfile, format=args.format, 
+	sk.hiernmf2(args.k, format=args.format, 
 		maxterms=args.maxterms, hiernmf2tolerance=args.tol)
 else:
 	sk.nmf(args.k, args.algorithm, min_iter=args.miniter, precision=args.outprecision, 

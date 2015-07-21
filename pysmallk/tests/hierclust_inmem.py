@@ -48,7 +48,7 @@ col_offsets = matrix.indptr
 
 h.load_matrix(buffer=data, row_indices=row_indices, col_offsets=col_offsets,
 	height=matrix.shape[0], width=matrix.shape[1], nz=len(data))
-h.load_dictionary(dictfile=pathtodict)
+h.load_dictionary(filepath=pathtodict)
 
 h.cluster(12, initdir=pathtoinit)
 

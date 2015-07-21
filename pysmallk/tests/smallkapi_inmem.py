@@ -62,7 +62,7 @@ col_offsets = matrix.indptr
 
 try:
 	# verify input values
-	sk.load_matrix(filepath=args.matrixfile)
+	sk.load_matrix(filepath=pathtofile)
 	assert(sk.is_matrix_loaded())
 	sk.nmf(8, 'BPP', precision=2, min_iter=10,
 		max_iter=10000, tol=0.000001, max_threads=3)
@@ -114,7 +114,8 @@ with open(pathtodict) as dictionary:
     terms.pop()
 
 # sk.hiernmf2(16, dict_filepath=pathtodict)
-sk.hiernmf2(5, dictionary=terms)
+sk.load_dictionary(dictionary=terms)
+sk.hiernmf2(5)
 
 sk.finalize()
 

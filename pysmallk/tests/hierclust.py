@@ -29,7 +29,7 @@ args = h.parser()
 
 # load in the user-specified matrix and dictionary
 h.load_matrix(filepath=args.matrixfile)
-h.load_dictionary(dictfile=args.dictfile)
+h.load_dictionary(filepath=args.dictfile)
 
 # use the user-provided inputs to run hierarchical clustering
 # all keyword arguments are optional 
