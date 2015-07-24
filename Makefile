@@ -41,13 +41,13 @@ export DATA_DIR
 ###############################################################################
 
 # Note: pysmallk is disabled for the RC3 release
-PYSMALLK := 0
-#ifeq ($(PYSMALLK), 1)
-#PYSMALLK_TARGET := pysmallk
-#endif
+PYSMALLK ?= 0
+ifeq ($(PYSMALLK), 1)
+PYSMALLK_TARGET := pysmallk
+endif
 
-SITE_PACKAGES_DIR ?= /usr/local/lib/python2.7/site-packages/
-export SITE_PACKAGES_DIR
+INSTALLATION_DIR ?= /usr/local/lib/python2.7/site-packages/
+export INSTALLATION_DIR
 
 ###############################################################################
 #
@@ -320,12 +320,10 @@ build/bin/$(LIBNAME).a : $(LIB_OBJS)
 	@echo "CC = $(CC)" >> build/$(SMALLK_CONFIGFILE)
 	@echo "CXX = $(CXX)" >> build/$(SMALLK_CONFIGFILE)
 
-
 pysmallk: inform pysmallk_make
 
 pysmallk_make:
 	cd pysmallk && $(MAKE) all
-
 
 install: all
 	@echo "SMALLK_INC = $(SMALLK_INC)" >> build/$(SMALLK_CONFIGFILE)
@@ -344,8 +342,9 @@ install: all
 	cd nmf && $(MAKE) install
 	cd hierclust && $(MAKE) install
 	cd flatclust && $(MAKE) install
-	cd pysmallk && $(MAKE) install
-
+	if [[ $(PYSMALLK) != 0 ]]; then \
+	cd pysmallk && $(MAKE) install;\
+	fi
 
 uninstall:
 	@rm -f $(DESTDIR)$(includedir)/smallk.hpp
@@ -356,7 +355,9 @@ uninstall:
 	cd nmf && $(MAKE) uninstall
 	cd hierclust && $(MAKE) uninstall
 	cd flatclust && $(MAKE) uninstall
-	cd pysmallk && $(MAKE) uninstall
+	if [[ $(PYSMALLK) != 0 ]]; then \
+	cd pysmallk && $(MAKE) uninstall;\
+	fi
 
 # The -MMD switch causes several things to happen.  First, a makefile rule is
 # generated that contains the the compiler to generate dependency files for 

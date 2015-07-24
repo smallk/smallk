@@ -93,7 +93,8 @@ sk.load_matrix(buffer=reduced_scores, row_indices=reduced_row_indices, col_offse
 	height=reduced_height, width=reduced_width, nz=len(reduced_scores))
 
 #run hierarchical nmf on the preprocessed dataset
-sk.hiernmf2(5, dictionary=reduced_dict)
+sk.load_dictionary(dictionary=reduced_dict)
+sk.hiernmf2(5)
 
 sk.finalize()
 
@@ -119,7 +120,7 @@ f = pysmallk.Flatclust()
 f.load_matrix(matrix=a)
 f.load_dictionary(dictionary=terms)
 f.cluster(16, algorithm='HALS')
-f.write_output('assignments', 'tree')
+f.write_output('assignments', 'fuzzy', 'tree')
 
 f.finalize()
 
