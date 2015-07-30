@@ -91,6 +91,6 @@ cd /home/vagrant/libsmallk-1.6.0
 
 #make PYSMALLK=1 JAVA=/usr/local/bin/java ANT=/usr/bin/ant
 # make SITE_PACKAGES_DIR=/usr/local/lib/python2.7/dist-packages/ install
-make all DATA_DIR=../smallk_data
+make all PYSMALLK=1
 #make check
 chown -R vagrant.vagrant /home/vagrant/libsmallk-1.6.0

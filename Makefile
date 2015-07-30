@@ -342,7 +342,7 @@ install: all
 	cd nmf && $(MAKE) install
 	cd hierclust && $(MAKE) install
 	cd flatclust && $(MAKE) install
-	if [[ $(PYSMALLK) != 0 ]]; then \
+	if [ $(PYSMALLK) != 0 ]; then \
 	cd pysmallk && $(MAKE) install;\
 	fi
 
@@ -355,7 +355,7 @@ uninstall:
 	cd nmf && $(MAKE) uninstall
 	cd hierclust && $(MAKE) uninstall
 	cd flatclust && $(MAKE) uninstall
-	if [[ $(PYSMALLK) != 0 ]]; then \
+	if [ $(PYSMALLK) != 0 ]; then \
 	cd pysmallk && $(MAKE) uninstall;\
 	fi
 
