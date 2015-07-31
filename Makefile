@@ -424,6 +424,7 @@ $(distdir): FORCE
 	cp smallk/Makefile $(distdir)/smallk
 	cp examples/Makefile $(distdir)/examples
 	cp examples/smallk_example.cpp $(distdir)/examples
+	cp examples/pysmallk_example.py $(distdir)/examples
 	cp preprocessor/Makefile $(distdir)/preprocessor
 	cp nmf/Makefile $(distdir)/nmf
 	cp hierclust/Makefile $(distdir)/hierclust

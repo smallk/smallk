@@ -98,8 +98,8 @@ setup(
     ext_modules = ext_modules,
     version=0.01,
     description="smallk.github.io",
-    author="Barry L. Drake, Daniel C. Lee, Jason A. Poovey",
-    author_email="barry.drake@gtri.gatech.edu, daniel.lee@gtri.gatech.edu, jason.poovey@gtri.gatech.edu",
+    author="Barry L. Drake, Daniel C. Lee, Jason A. Poovey, Ashley Scripka Beavers",
+    author_email="barry.drake@gtri.gatech.edu, daniel.lee@gtri.gatech.edu, jason.poovey@gtri.gatech.edu, ashley.beavers@gtri.gatech.edu",
     packages="libsmallk_cython"
     )
 
