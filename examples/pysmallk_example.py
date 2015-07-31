@@ -9,12 +9,9 @@
 # KIND, either express or implied.  See the License for the specific language
 # governing permissions and limitations under the License.
 
-import sys
 # must import numpy before importing the .so files
 import numpy as np
-from scipy.sparse import csc_matrix
 import argparse
-from scipy.io import mmread, mmwrite
 import pysmallk
 
 # define a parser for the purpose of dynamic placement of the data_dir variable
@@ -76,11 +73,12 @@ sk.load_matrix(buffer=reduced_scores, row_indices=reduced_row_indices, col_offse
 # load the dictionary into smallk
 sk.load_dictionary(dictionary=reduced_dict)
 
-# run hierarchical nmf on the dataset and write the results to the filesystem
+# run nmf and write the results to the filesystem
+sk.nmf(5, 'BPP')
+
+# using the dataset already loaded, run hierarchical nmf and write the results to the filesystem
 sk.hiernmf2(5)
 
-# using the dataset already loaded, run nmf and write the results to the filesystem
-sk.nmf(5, 'BPP')
 
 print "*****************************************************"
 print "*                                                   *"
@@ -95,7 +93,6 @@ a = np.random.random((256, 256))
 pathtodict = args.indir + 'reuters_dictionary.txt'
 with open(pathtodict) as dictionary:
     terms = dictionary.read().split("\n")
-    terms.pop()
 
 # instantiate a Flatclust object
 f = pysmallk.Flatclust()
