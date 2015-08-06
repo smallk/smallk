@@ -82,7 +82,7 @@ ext_modules = [
     Extension(
         name="pysmallk",
         sources=["interface/smallk_lib.pyx"] + more_sources,
-        include_dirs = ["/usr/local/include", "/usr/include", smallk_path + "common/include", smallk_path + "flatclust/include", smallk_path + "hierclust/include", smallk_path + "matrixgen/include", smallk_path + "preprocessor/include", hpp_path,elem_include, numpy.get_include()],
+        include_dirs = ["/usr/local/include", smallk_path + "common/include", smallk_path + "flatclust/include", smallk_path + "hierclust/include", smallk_path + "matrixgen/include", smallk_path + "preprocessor/include", hpp_path,elem_include, numpy.get_include()],
         libraries=["mpi_cxx","mpi","m", "elemental"],
         library_dirs=[archive_path,"/usr/local/lib/", elem_lib],
         extra_objects=[archive_file_path],
