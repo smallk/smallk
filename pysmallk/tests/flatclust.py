@@ -18,6 +18,10 @@ except ImportError:
 	print 'ImportError: flatclust test failed'
 	raise
 
+import time
+
+start = time.time()
+
 f = pysmallk.Flatclust()
 
 # This program can be used as a command line tool to run flat NMF clustering.
@@ -44,3 +48,6 @@ f.write_output(args.assignfile, args.fuzzyfile, args.treefile, outdir=args.outdi
 
 # always call finalize() when done with analysis; this helps clean up system variables
 f.finalize()
+
+end = time.time()
+print 'Elapsed wall clock time: %.3f sec' % (end - start)

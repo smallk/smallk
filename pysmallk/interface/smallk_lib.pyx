@@ -1082,8 +1082,6 @@ cdef class Flatclust(Clustering):
 
     def __init__(self):
         super(Flatclust, self).__init__()
-        self.nmfstats = Stats()
-        self.tree = TreeResults()
 
     # \brief Returns the parsed arguments for the default command line application
     #
@@ -1142,6 +1140,8 @@ cdef class Flatclust(Clustering):
     # \param[kwarg] tol         Tolerance for determing convergence (optional)
     def cluster(self, k, infile_W='', infile_H='', algorithm="BPP", maxterms=5, verbose=True, min_iter=5,
         max_iter=5000, max_threads=8, tol=0.0001):
+        self.nmfstats = Stats()
+        self.tree = TreeResults()
         self.k = k
         self.maxterms = maxterms
         rng = Rand()
@@ -1243,8 +1243,6 @@ cdef class Hierclust(Clustering):
 
     def __init__(self):
         super(Hierclust, self).__init__()
-        self.stats = ClusterStats()
-        self.tree = TreeResults()
 
     # \brief Returns the parsed arguments for the default command line application
     #
@@ -1306,6 +1304,8 @@ cdef class Hierclust(Clustering):
     # \param[kwarg] tol             Tolerance for determing convergence (optional)
     def cluster(self, k, initdir='', maxterms=5, unbalanced=0.1, trial_allowance=3, verbose=True, flat=0,
         min_iter=5, max_iter=5000, max_threads=8, tol=0.0001):
+        self.stats = ClusterStats()
+        self.tree = TreeResults()
         self.k = k
         self.flat = flat
         self.maxterms = maxterms
