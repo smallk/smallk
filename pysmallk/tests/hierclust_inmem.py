@@ -11,7 +11,7 @@
 
 try:
 	import numpy as np
-	from pysmallk import hierclust as h
+	import pysmallk
 	from scipy.sparse import csc_matrix
 	from scipy.io import mmread, mmwrite
 	import argparse
@@ -19,6 +19,7 @@ except ImportError:
 	print 'ImportError: hierclust test failed'
 	raise
 
+h = pysmallk.Hierclust()
 
 # define a parser for the purpose of dynamic placement of the data_dir variable
 parser = argparse.ArgumentParser(description="Run SmallK via python binding")
@@ -26,20 +27,18 @@ parser.add_argument('--indir', action='store', required=False, metavar='data_dir
 args = parser.parse_args()
 
 infile = 'reuters.mtx'
-w_file = 'hierclust_init_w.csv'
-h_file = 'hierclust_init_h.csv'
 indict = 'reuters_dictionary.txt'
-assign_truth = '/test/reuters_assignments_5.csv'
+assign_truth = '/test/reuters_assignments_12.csv'
+initdir = 'test/matrices.reuters/'
 
 # make output path end in "/" if necessary
 if args.indir[-1] != "/":
     args.indir += "/"
 
 pathtofile = args.indir+infile
-pathtoW = args.indir + w_file
-pathtoH = args.indir + h_file
 pathtodict = args.indir + indict
 pathtoassign = args.indir + assign_truth
+pathtoinit = args.indir + initdir
 
 matrix = csc_matrix(mmread(pathtofile))
 data = matrix.data
@@ -49,26 +48,24 @@ col_offsets = matrix.indptr
 
 h.load_matrix(buffer=data, row_indices=row_indices, col_offsets=col_offsets,
 	height=matrix.shape[0], width=matrix.shape[1], nz=len(data))
-h.load_dictionary(dictfile=pathtodict)
+h.load_dictionary(filepath=pathtodict)
 
-h.cluster(5, infile_W=pathtoW, infile_H=pathtoH)
+h.cluster(12, initdir=pathtoinit)
 
 assign = h.get_assignments()
 
 # if flat==1:
 
-# terms_indices = h.get_flat_top_terms()
-# print terms_indices
+# 	terms_indices = h.get_flat_top_terms()
+# 	print terms_indices
 
-# with open(pathtodict) as dictionary:
-#     dictionary = dictionary.read().split("\n")
-#     dictionary.pop()
+# 	with open(pathtodict) as dictionary:
+# 	    dictionary = dictionary.read().split("\n")
+# 	    dictionary.pop()
 
-# terms = [[x for i, x in enumerate(dictionary) if i == idx] for idx in terms_indices]
+# 	terms = [[x for i, x in enumerate(dictionary) if i == idx] for idx in terms_indices]
 
-h.write_output("assign", "tree", outdir=args.indir, format="JSON")
-
-assign_test = np.genfromtxt(pathtoassign, delimiter=',')
+assign_test = np.genfromtxt(pathtoassign, delimiter=',', skip_footer=1)
 
 string = 'assignment file test passed'
 for i in range(len(assign)):

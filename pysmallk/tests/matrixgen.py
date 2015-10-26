@@ -13,11 +13,13 @@
 
 import sys
 import numpy as np #must be imported prior to use of pysmallk library
-from pysmallk import matrixgen as m
+import pysmallk 
 
 # This program can be used as a command line tool to generate matrices.
 # It also demonstrates how to use each of the matrixgen functions, which
 # can be integrated into other code.
+
+m = pysmallk.Matrixgen()
 
 # use the parser function to parse the command line arguments from the user
 args = m.parser()

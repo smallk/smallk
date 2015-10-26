@@ -11,12 +11,13 @@
 
 try:
 	import numpy as np
-	from pysmallk import flatclust as f
+	import pysmallk
 	import argparse
 except ImportError:
 	print 'ImportError: flatclust test failed'
 	raise
 
+f = pysmallk.Flatclust()
 
 # define a parser for the purpose of dynamic placement of the data_dir variable
 parser = argparse.ArgumentParser(description="Run SmallK via python binding")
@@ -42,7 +43,7 @@ pathtoassign = args.indir + assign_truth
 matrix = np.loadtxt(pathtofile, delimiter=',', dtype=float)
 
 f.load_matrix(matrix=matrix, column_major=False)
-f.load_dictionary(dictfile=pathtodict)
+f.load_dictionary(filepath=pathtodict)
 
 
 f.cluster(16, infile_W=pathtoW, infile_H=pathtoH, algorithm='HALS', min_iter=1, max_iter=5000)

@@ -15,7 +15,7 @@ pysmallk:
 	$(PY) $(SRC) $(PFLAGS)
 
 install: 
-	cp $(TARGET) $(SITE_PACKAGES_DIR)
+	cp $(TARGET) $(INSTALLATION_DIR)
 
 check:
 	sh ../tests/scripts/test_pysmallk.sh
@@ -24,9 +24,11 @@ clean:
 	@rm -r -f *.so
 	@rm -f *.csv
 	@rm -f *.xml
-	@rm -rf bin* objs* 
+	@rm -rf bin* objs* build*
+	@rm -rf interface/*.cpp
+
 
 uninstall:
-	-rm $(SITE_PACKAGES_DIR)$(TARGET) >/dev/null 2>&1
+	rm -f $(INSTALLATION_DIR)$(TARGET) >/dev/null 2>&1
 
 .PHONY: all clean check uninstall

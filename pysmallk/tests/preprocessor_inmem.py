@@ -17,7 +17,7 @@ try:
 	from scipy.sparse import csc_matrix
 	from scipy.io import mmread, mmwrite
 
-	from pysmallk import preprocessor as p
+	import pysmallk
 except ImportError:
 	print 'ImportError: preprocessor test failed'
 	raise
@@ -27,6 +27,8 @@ except ImportError:
 parser = argparse.ArgumentParser(description="Run SmallK via python binding")
 parser.add_argument('--indir', action='store', required=False, metavar='data_dir', default="../xdata_data/")
 args = parser.parse_args()
+
+p = pysmallk.Preprocessor()
 
 # make output path end in "/" if necessary
 if args.indir[-1] != "/":
@@ -80,7 +82,7 @@ boolean_mode = 0
 
 
 # load datasets
-p.load_inputmatrix(height=height, width=width, nz=nz, buffer=data, row_indices=row_indices, col_offsets=col_offsets)
+p.load_matrix(height=height, width=width, nz=nz, buffer=data, row_indices=row_indices, col_offsets=col_offsets)
 p.load_dictionary(dictionary=terms)
 p.load_documents(documents=docids)
 

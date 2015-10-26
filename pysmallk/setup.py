@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2013,2014 Georgia Institute of Technology.
+# Copyright 2013,2014,2015 Georgia Institute of Technology.
 #
 # Licensed under the Apache License, Version 2.0 (the “License”); you may not use
 # this file except in compliance with the License. You may obtain a copy of the
@@ -82,7 +82,7 @@ ext_modules = [
     Extension(
         name="pysmallk",
         sources=["interface/smallk_lib.pyx"] + more_sources,
-        include_dirs = ["/usr/local/include", "/usr/include", smallk_path + "common/include", smallk_path + "flatclust/include", smallk_path + "hierclust/include", smallk_path + "matrixgen/include", smallk_path + "preprocessor/include", hpp_path,elem_include, numpy.get_include()],
+        include_dirs = ["/usr/local/include", smallk_path + "common/include", smallk_path + "flatclust/include", smallk_path + "hierclust/include", smallk_path + "matrixgen/include", smallk_path + "preprocessor/include", hpp_path,elem_include, numpy.get_include()],
         libraries=["mpi_cxx","mpi","m", "elemental"],
         library_dirs=[archive_path,"/usr/local/lib/", elem_lib],
         extra_objects=[archive_file_path],
@@ -98,8 +98,8 @@ setup(
     ext_modules = ext_modules,
     version=0.01,
     description="smallk.github.io",
-    author="Barry L. Drake, Daniel C. Lee, Jason A. Poovey",
-    author_email="barry.drake@gtri.gatech.edu, daniel.lee@gtri.gatech.edu, jason.poovey@gtri.gatech.edu",
+    author="Barry L. Drake, Daniel C. Lee, Jason A. Poovey, Ashley Scripka Beavers",
+    author_email="barry.drake@gtri.gatech.edu, daniel.lee@gtri.gatech.edu, jason.poovey@gtri.gatech.edu, ashley.beavers@gtri.gatech.edu",
     packages="libsmallk_cython"
     )
 
