@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
 # Copyright 2013,2014,2015 Georgia Institute of Technology.
 #
 # Licensed under the Apache License, Version 2.0 (the “License”); you may not use
@@ -10,6 +9,7 @@
 # KIND, either express or implied.  See the License for the specific language
 # governing permissions and limitations under the License.
 
+"""
 Created on Tue Jan 13 13:24:07 2015
 
 The function computes varies kinds of information-based clustering quality measures.
