@@ -15,7 +15,7 @@ apt-get install -y python-dev
 apt-get install -y python-pip
 pip install numpy
 apt-get install -y python-scipy
-pip install cython
+pip install cython==0.22.1
 
 # OpenMPI
 mkdir /home/vagrant/Downloads
