@@ -13,7 +13,7 @@ apt-get install -y unzip
 
 apt-get install -y python-dev
 apt-get install -y python-pip
-pip install numpy
+pip install numpy==1.9.1
 apt-get install -y python-scipy
 pip install cython==0.22.1
 
