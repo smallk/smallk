@@ -24,7 +24,7 @@
 
 #define SMALLK_MAJOR_VERSION 1
 #define SMALLK_MINOR_VERSION 6
-#define SMALLK_PATCH_LEVEL   0
+#define SMALLK_PATCH_LEVEL   2
 
 namespace smallk
 {
