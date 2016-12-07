@@ -1,6 +1,4 @@
-Notes for the smallk_gt release:
+Notes for the smallk release:
 
-      The cython interface (pysmallk) is currently broken.
-
-      These will be updated in a future release.
-
+      The cython interface (pysmallk) is working.
+      All code compiled with gcc 6.2.0 and mpich MPI tools.
