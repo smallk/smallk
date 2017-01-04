@@ -1,0 +1,6 @@
+*.pyc
+bin.*
+deps.*
+objs.*
+.DS_Store
+
