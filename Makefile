@@ -65,7 +65,7 @@ export SITE_PACKAGES_DIR
 ###############################################################################
 
 # default to Elemental version 0.85
-ELEMVER ?= 0.84-p1
+ELEMVER ?= 0.85
 
 # override if command-line arg 'ELEMVER' has been specified
 ifeq ($(ELEMVER), 0.81)
