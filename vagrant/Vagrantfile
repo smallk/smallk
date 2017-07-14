@@ -10,7 +10,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/xenial64"
+  #"bento/xenial64"
+  #note on the above line that "ubuntu/xenial64" may seem canonical, but has
+  #several unresolved problems https://bugs.launchpad.net/cloud-images/+bug/1569237
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -53,8 +56,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   vb.gui = true
   #
   #   # Use VBoxManage to customize the VM. For example to change memory:
-     vb.customize ["modifyvm", :id, "--memory", "2048"]
-     vb.customize ["modifyvm", :id, "--cpus", "4"]
+     #vb.customize ["modifyvm", :id, "--memory", "2048"]
+     #vb.customize ["modifyvm", :id, "--cpus", "4"]
+    vb.memory = 4096
+	vb.cpus = 4
   #   vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   #   vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   end
