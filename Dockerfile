@@ -58,13 +58,15 @@ RUN make install
 
 RUN ln -s /usr/local/elemental/0.85/HybridRelease/lib/*.so /usr/lib/
 
-ENV ELEMENTAL_INSTALL_DIR=/usr/local
+ENV ELEMENTAL_INSTALL_DIR=/usr/local/elemental
 
 # Build and install smallk
 
 WORKDIR $SMALLK_SRC
 RUN make all PYSMALLK=1 ELEMVER=0.85
 RUN make install PYSMALLK=1 ELEMVER=0.85
+
+RUN chown -R 1000:1000 $SMALLK_SRC
 
 # Set up a standard user with the same UID/GID as the standard user on the host
 RUN mkdir -p /home/docker
@@ -81,4 +83,4 @@ RUN echo 'docker ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/docker
 USER 1000
 WORKDIR /home/docker
 
-ENTRYPOINT ["smallk"]
+CMD ["/bin/bash"]
