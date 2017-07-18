@@ -1,0 +1,6 @@
+[submodule "modules/libelemental"]
+	path = modules/libelemental
+	url = https://github.com/elemental/Elemental.git
+[submodule "modules/libflame"]
+	path = modules/libflame
+	url = https://github.com/flame/libflame.git
