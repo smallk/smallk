@@ -10,8 +10,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu/xenial64"
-  #"bento/xenial64"
+  config.vm.box = "bento/ubuntu-16.04"
+  #"ubuntu/xenial64"
   #note on the above line that "ubuntu/xenial64" may seem canonical, but has
   #several unresolved problems https://bugs.launchpad.net/cloud-images/+bug/1569237
 

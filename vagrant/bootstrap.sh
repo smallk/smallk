@@ -4,8 +4,6 @@ date
 # Make sure the package information is up-to-date
 apt-get update
 
-mkdir -p /home/ubuntu/Downloads
-
 # Compilers
 apt-get install -y gcc-5
 apt-get install -y g++-5
@@ -25,28 +23,36 @@ apt-get install -y mpich
 
 # Source control
 apt-get install -y git
+git config --global core.autocrlf input
 
 # Configuration
 apt-get install -y cmake
 
+echo "----------------------------- libflame -----------------------------"
+
 # libflame
-git clone https://github.com/flame/libflame.git /home/ubuntu/libflame
-cd /home/ubuntu/libflame
+git clone https://github.com/flame/libflame.git /home/vagrant/libflame
+cd /home/vagrant/libflame
 ./configure --prefix=/usr/local/flame --with-cc=/usr/bin/gcc-5 --with-ranlib=/usr/bin/gcc-ranlib-5 CFLAGS=-fPIC CXXFLAGS=-fPIC --enable-shared
 make -j4
 make install
-chown -R ubuntu /home/ubuntu/libflame
+chown -R vagrant.vagrant /home/vagrant/libflame
+
+echo "----------------------------- OpenBLas and LAPACK -----------------------------"
 
 # OpenBLAS and LAPACK
 apt-get install -y libopenblas-dev
 apt-get install -y libatlas-dev liblapack-dev
 
+echo "----------------------------- Elemental -----------------------------"
+
 # Elemental
 mkdir /usr/local/elemental
 export ELEMENTAL_INSTALL_DIR=/usr/local/elemental
-wget -O /home/ubuntu/Downloads/Elemental-0.85.tgz http://libelemental.org/pub/releases/Elemental-0.85.tgz
-tar -zxvf /home/ubuntu/Downloads/Elemental-0.85.tgz -C /home/ubuntu
-cd /home/ubuntu/Elemental-0.85
+mkdir -p /home/vagrant/Downloads
+wget -O /home/vagrant/Downloads/Elemental-0.85.tgz http://libelemental.org/pub/releases/Elemental-0.85.tgz
+tar -zxvf /home/vagrant/Downloads/Elemental-0.85.tgz -C /home/vagrant
+cd /home/vagrant/Elemental-0.85
 
 #Version 0.85 of Elemental has an error in one of its cmake files. The file is: 
 #	Elemental-0.85/cmake/tests/CXX.cmake
@@ -65,19 +71,21 @@ cmake -D CMAKE_INSTALL_PREFIX=/usr/local/elemental/0.85/PureRelease -D CMAKE_BUI
 make -j4
 make install
 
-chown -R ubuntu /home/ubuntu/Elemental-0.85
+chown -R vagrant.vagrant /home/vagrant/Elemental-0.85
 
 ln -s /usr/local/elemental/0.85/HybridRelease/lib/*.so /usr/lib/
 
+echo "----------------------------- SmallK -----------------------------"
+
 # SmallK
 apt-get install -y libmetis-dev
-cd /home/ubuntu
+cd /home/vagrant
 git clone https://github.com/smallk/smallk_data.git
-cp /vagrant/libsmallk-1.6.2.tar.gz /home/ubuntu/
+cp /vagrant/libsmallk-1.6.2.tar.gz /home/vagrant/
 #cp /vagrant/smallk_data.zip /home/vagrant/ ##### sink this directory with
-tar -zxvf /home/ubuntu/libsmallk-1.6.2.tar.gz -C /home/ubuntu
+tar -zxvf /home/vagrant/libsmallk-1.6.2.tar.gz -C /home/vagrant
 #unzip /home/vagrant/smallk_data.zip -d /home/vagrant/smallk_data
-cd /home/ubuntu/libsmallk-1.6.2
+cd /home/vagrant/libsmallk-1.6.2
 
 # make SITE_PACKAGES_DIR=/usr/local/lib/python2.7/dist-packages/ install
 
@@ -90,10 +98,9 @@ make install PYSMALLK=1 ELEMVER=0.85
 #add pysmallk.so to the path
 #this replaces something like: 
 #ln -s /usr/local/lib/python2.7/site-packages/pysmallk.so  /usr/lib/python2.7/lib-dynload/pysmallk.so
-echo "export PYTHONPATH=/usr/local/lib/python2.7/site-packages" >> /home/ubuntu/.bashrc
+echo "export PYTHONPATH=/usr/local/lib/python2.7/site-packages" >> /home/vagrant/.bashrc
 
-chown -R ubuntu /home/ubuntu/libsmallk-1.6.2
-
+chown -R vagrant.vagrant /home/vagrant/libsmallk-1.6.2
 
 #run tests
 make check PYSMALLK=1 ELEMVER=0.85 DATA_DIR=../smallk_data
