@@ -1,12 +1,6 @@
 FROM ubuntu:16.04
 
-ENV SMALLK_SRC=/usr/local/src/smallk
-
-# Switch to Leaseweb mirrors
-RUN sed -i 's|archive.ubuntu.com/ubuntu|mirror.us.leaseweb.net/ubuntu|g' /etc/apt/sources.list
-
-# Touch this file for a complete APT re-update
-ADD docker/apt-reupdate /tmp
+ENV SMALLK_SRC=/home/docker/smallk
 
 # Apt updates and core utils
 RUN apt-get update && apt-get upgrade -y
@@ -61,7 +55,6 @@ RUN ln -s /usr/local/elemental/0.85/HybridRelease/lib/*.so /usr/lib/
 ENV ELEMENTAL_INSTALL_DIR=/usr/local/elemental
 
 # Build and install smallk
-
 WORKDIR $SMALLK_SRC
 RUN make all PYSMALLK=1 ELEMVER=0.85
 RUN make install PYSMALLK=1 ELEMVER=0.85
@@ -81,6 +74,6 @@ RUN echo 'docker:x:1000:' >> /etc/group
 RUN echo 'docker ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/docker
 
 USER 1000
-WORKDIR /home/docker
+WORKDIR /home/docker/smallk
 
 CMD ["/bin/bash"]
