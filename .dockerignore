@@ -1,0 +1,6 @@
+.git/
+vagrant/
+
+.gitmodules
+Dockerfile
+*.swp
