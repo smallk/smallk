@@ -1,4 +1,4 @@
-Notes for the smallk release:
+Notes for smallk release 2017/07/21:
 
       1. All code compiled with gcc 7.1.0.
       2. Vagrant installation upgraded.
