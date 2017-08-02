@@ -99,11 +99,12 @@ make install PYSMALLK=1 ELEMVER=0.85
 #this replaces something like: 
 #ln -s /usr/local/lib/python2.7/site-packages/pysmallk.so  /usr/lib/python2.7/lib-dynload/pysmallk.so
 echo "export PYTHONPATH=/usr/local/lib/python2.7/site-packages" >> /home/vagrant/.bashrc
-
-chown -R vagrant.vagrant /home/vagrant/libsmallk-1.6.2
+echo "export PATH=/usr/local/smallk/bin:$PATH" >> home/vagrant/.bashrc
 
 #run tests
 make check PYSMALLK=1 ELEMVER=0.85 DATA_DIR=../smallk_data
+
+chown -R vagrant.vagrant /home/vagrant/libsmallk-1.6.2
 
 #verify paths
 #python -c "import sys; print '\n'.join(sys.path)"
