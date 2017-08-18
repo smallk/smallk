@@ -16,6 +16,7 @@ import sys
 import os
 import sphinx_rtd_theme
 
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -211,10 +212,10 @@ htmlhelp_basename = 'SmallKdoc'
 
 #https://tex.stackexchange.com/questions/24494/sphinx-in-line-math-equation-alignment
 #r'\usepackage[active]{preview}
-pngmath_latex_preamble='\\newcommand{\\matr}[1]{\\bm{#1}} ' # + other custom stuff for inline math, such as non-default math fonts etc.
+#pngmath_latex_preamble='\\newcommand{\\matr}[1]{\\bm{#1}} ' # + other custom stuff for inline math, such as non-default math fonts etc.
 pngmath_use_preview=True
 
-imgmath_latex_preamble='\\newcommand{\\matr}[1]{\\bm{#1}} ' # + other custom stuff for inline math, such as non-default math fonts etc.
+#imgmath_latex_preamble='\\newcommand{\\matr}[1]{\\bm{#1}} ' # + other custom stuff for inline math, such as non-default math fonts etc.
 imgmath_use_preview=True
 
 latex_elements = {
@@ -225,11 +226,37 @@ latex_elements = {
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-'preamble': '\\newcommand{\\matr}[1]{\\bm{#1}}',
+#'preamble': '\\newcommand{\\matr}[1]{\\bm{#1}}',
 
 # Latex figure (float) alignment
 #'figure_align': 'htbp',
 }
+
+#-------------------------------------------- define preamble for latex --------------------------------------------
+#https://stackoverflow.com/questions/9728292/creating-latex-math-macros-within-sphinx
+try:
+    pngmath_latex_preamble  # check whether this is already defined
+except NameError:
+    pngmath_latex_preamble = ""
+
+try:
+    imgmath_latex_preamble  # check whether this is already defined
+except NameError:
+    imgmath_latex_preamble = ""
+
+if 'preamble' not in latex_elements:
+    latex_elements['preamble'] = ''
+
+f_preamble = open('latex_preamble.sty','r')
+for macro in f_preamble:
+    # used when building latex and pdf versions
+    latex_elements['preamble'] += macro 
+    # used when building html version
+    pngmath_latex_preamble += macro 
+    imgmath_latex_preamble += macro 
+f_preamble.close()
+
+#--------------------------------------------
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,

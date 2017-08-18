@@ -24,16 +24,12 @@ SmallK Overview
 
 The SmallK library provides routines for low rank matrix approximation via nonnegative matrix factorization (NMF). The term “nonnegative matrices” means that for a given matrix all of it's elements are greater than or equal to zero, which we express as :math:`\geq 0`.
 
-Given a nonnegative matrix :math:`\matr{A}`, the SmallK software computes nonnegative matrices :math:`\matr{W}` and :math:`\matr{H}` such that
-
-.. TODO: Figure out how to center the below
- 
-:math:`\bm{A} \cong \bm{W} \bm{H}`
+Given a nonnegative matrix :math:`\matr{A}`, the SmallK software computes nonnegative matrices :math:`\matr{W}` and :math:`\matr{H}` such that :math:`\matr{A} \cong \matr{W} \matr{H}`
 
 
-The matrix :math:`\bm{A}` has m rows and n columns and can be either sparse or dense. :math:`\bm{W}` has m rows and k columns, and :math:`\bm{H}` has k rows and n columns. The value of k is an input parameter to the approximation routines; typically k :math:`\ll` m and k :math:`\ll` n. Where k is the reduced rank of the low rank approximation and, in applications, it represents, for example, the reduced dimension in dimension reduction, number of clusters for clustering various data sets, or the number of topics in topic discovery.
+The matrix :math:`\matr{A}` has m rows and n columns and can be either sparse or dense. :math:`\matr{W}` has m rows and k columns, and :math:`\matr{H}` has k rows and n columns. The value of k is an input parameter to the approximation routines; typically k :math:`\ll` m and k :math:`\ll` n. Where k is the reduced rank of the low rank approximation and, in applications, it represents, for example, the reduced dimension in dimension reduction, number of clusters for clustering various data sets, or the number of topics in topic discovery.
 
-NMF algorithms seek to approximate a matrix :math:`\bm{A}` by the product of two much smaller matrices :math:`\bm{W}` and :math:`\bm{H}`. The idea is to choose the smallest value of k (width of :math:`\bm{W}` and height of :math:`\bm{H}`) that gives an acceptable approximation error. Due to the nonconvex nature of the optimization problem associated with finding :math:`\bm{W}` and :math:`\bm{H}`, they can only be approximated after an NMF algorithm satisfies a convergence criterion to a local minimum. Thus, the minimization of the objective function proceeds iteratively, attempting to reach a stationary point, which is the best possible solution. As the iterations proceed, the SmallK code computes a metric that estimates the progress and, when the metric falls below a user-specified tolerance, the iterations stop and convergence is declared [see `[Publications [2] <http://smallk.github.io/publications/>`_] for a detailed discussion].
+NMF algorithms seek to approximate a matrix :math:`\matr{A}` by the product of two much smaller matrices :math:`\matr{W}` and :math:`\matr{H}`. The idea is to choose the smallest value of k (width of :math:`\matr{W}` and height of :math:`\matr{H}`) that gives an acceptable approximation error. Due to the nonconvex nature of the optimization problem associated with finding :math:`\matr{W}` and :math:`\matr{H}`, they can only be approximated after an NMF algorithm satisfies a convergence criterion to a local minimum. Thus, the minimization of the objective function proceeds iteratively, attempting to reach a stationary point, which is the best possible solution. As the iterations proceed, the SmallK code computes a metric that estimates the progress and, when the metric falls below a user-specified tolerance, the iterations stop and convergence is declared [see `[Publications [2] <http://smallk.github.io/publications/>`_] for a detailed discussion].
 
 The SmallK library provides implementations of several different NMF algorithms.  These algorithms are:
 
