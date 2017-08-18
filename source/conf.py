@@ -210,8 +210,12 @@ htmlhelp_basename = 'SmallKdoc'
 # -- Options for LaTeX output ---------------------------------------------
 
 #https://tex.stackexchange.com/questions/24494/sphinx-in-line-math-equation-alignment
-pngmath_latex_preamble=r'\usepackage[active]{preview}' # + other custom stuff for inline math, such as non-default math fonts etc.
+#r'\usepackage[active]{preview}
+pngmath_latex_preamble='\\newcommand{\\matr}[1]{\\bm{#1}} ' # + other custom stuff for inline math, such as non-default math fonts etc.
 pngmath_use_preview=True
+
+imgmath_latex_preamble='\\newcommand{\\matr}[1]{\\bm{#1}} ' # + other custom stuff for inline math, such as non-default math fonts etc.
+imgmath_use_preview=True
 
 latex_elements = {
 # The paper size ('letterpaper' or 'a4paper').
@@ -221,7 +225,7 @@ latex_elements = {
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-#'preamble': '',
+'preamble': '\\newcommand{\\matr}[1]{\\bm{#1}}',
 
 # Latex figure (float) alignment
 #'figure_align': 'htbp',
