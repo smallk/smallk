@@ -33,40 +33,41 @@ NMF algorithms seek to approximate a matrix :math:`\matr{A}` by the product of t
 
 The SmallK library provides implementations of several different NMF algorithms.  These algorithms are:
 
-		1. Multiplicative Updating (NMF-MU)
-		2. Hierarchical Alternating Least Squares (NMF-HALS)
-		3. Block Principal Pivoting (NMF-BPP)
-		4. Rank2 Specialization (NMF-RANK2)
+	1. Multiplicative Updating (NMF-MU)
+	2. Hierarchical Alternating Least Squares (NMF-HALS)
+	3. Block Principal Pivoting (NMF-BPP)
+	4. Rank2 Specialization (NMF-RANK2)
 
 SmallK also provides implementations of hierarchical and flat clustering.  These routines are:
 
-		1. Hierarchical Clustering via NMF-RANK2
-		2. Flat Clustering via NMF-RANK2
-		3. Flat Clustering via NMF-BPP or NMF-HALS
+	1. Hierarchical Clustering via NMF-RANK2
+	2. Flat Clustering via NMF-RANK2
+	3. Flat Clustering via NMF-BPP or NMF-HALS
 
 The suite of SmallK implementations of NMF algorithms are suitable in many applications such as image processing, interactive visual analytics, speckle removal from SAR images, recommender systems, information fusion, outlier detection, chemometrics, and many more.
 
-The SmallK library requires either MacOSX or Linux.  A Windows version via a Vagrant installation is also available.
+The SmallK library requires either MacOSX or Linux. A Windows version via a Vagrant installation is also available.
 
 Prerequisites
 -------------
 The following list is the software packages/libraries required to build the SmallK NMF library code:
 
-* A modern, C++11-compliant compiler, such as g++ 4.9 or later
-* [Elemental](http://libelemental.org/), a high-performance library for dense, distributed linear algebra, which requires:
-  * An MPI installation, such as [OpenMPI](http://www.open-mpi.org/software/ompi/v1.6/) or [mpich](http://http://www.mpich.org/)
-  * BLAS implementation, hopefully optimized/tuned for the local system
-  * [libFLAME](http://www.cs.utexas.edu/~flame/web/libFLAME.html): a high-performance library for dense numerical linear algebra
-  * CMake
+- A modern, C++11-compliant compiler, such as g++ 4.9 or later
+- `Elemental <http://libelemental.org/>`_, a high-performance library for dense, distributed linear algebra, which requires:
 
-* Python 2.7 (optional), including the following libraries (required to build the Python interface to SmallK, which is optional):
+	- An MPI installation, such as `OpenMPI <http://www.open-mpi.org/software/ompi/v1.6/>`_ or `mpich <http://http://www.mpich.org/>`_
+	- BLAS implementation, hopefully optimized/tuned for the local system
+	- `libFLAME <http://www.cs.utexas.edu/~flame/web/libFLAME.html>`_: a high-performance library for dense numerical linear algebra
+	- CMake
 
-	* numpy
-	* scipy
-	* cython
+- Python 2.7 (optional), including the following libraries (required to build the Python interface to SmallK, which is optional):
+
+	- numpy
+	- scipy
+	- cython
 
 Elemental can make use of OpenMP or mpich  parallelization if available, which is generally advantageous for large problems.  The SmallK code is also internally parallelized to take full advantage of multiple CPU cores for maximum performance.  SmallK does not currently support distributed computation, but this is planned for future updates.
 
-<b>The SmallK software supports the latest stable release of Elemental, version 0.85</b>.
+**The SmallK software supports the latest stable release of Elemental, version 0.85**
 
-Check the documentation links on this page for additional detailed instructions for installation of the SmallK library software and dependencies. If desired, installation instructions for Elemental can be found [here](http://libelemental.org/documentation/).
+Check the documentation links on this page for additional detailed instructions for installation of the SmallK library software and dependencies. If desired, please see also the `installation instructions for Elemental <http://libelemental.org/documentation/>`_.

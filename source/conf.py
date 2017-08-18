@@ -209,9 +209,9 @@ html_static_path = ['_static']
 htmlhelp_basename = 'SmallKdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
+imgmath_image_format='svg'
 
 #https://tex.stackexchange.com/questions/24494/sphinx-in-line-math-equation-alignment
-#r'\usepackage[active]{preview}
 #pngmath_latex_preamble='\\newcommand{\\matr}[1]{\\bm{#1}} ' # + other custom stuff for inline math, such as non-default math fonts etc.
 pngmath_use_preview=True
 
@@ -232,7 +232,7 @@ latex_elements = {
 #'figure_align': 'htbp',
 }
 
-#-------------------------------------------- define preamble for latex --------------------------------------------
+#-- define preamble for latex --------------------------------------------
 #https://stackoverflow.com/questions/9728292/creating-latex-math-macros-within-sphinx
 try:
     pngmath_latex_preamble  # check whether this is already defined
@@ -247,14 +247,15 @@ except NameError:
 if 'preamble' not in latex_elements:
     latex_elements['preamble'] = ''
 
-f_preamble = open('latex_preamble.sty','r')
-for macro in f_preamble:
-    # used when building latex and pdf versions
-    latex_elements['preamble'] += macro 
-    # used when building html version
-    pngmath_latex_preamble += macro 
-    imgmath_latex_preamble += macro 
-f_preamble.close()
+#f_preamble = open('latex_preamble.sty','r')
+with open('latex_preamble.sty','r') as f_preamble:
+    for macro in f_preamble:
+        # used when building latex and pdf versions
+        latex_elements['preamble'] += macro 
+        # used when building html version
+        pngmath_latex_preamble += macro 
+        imgmath_latex_preamble += macro 
+#f_preamble.close()
 
 #--------------------------------------------
 
