@@ -251,11 +251,13 @@ if 'preamble' not in latex_elements:
 with open('latex_preamble.sty','r') as f_preamble:
     for macro in f_preamble:
         # used when building latex and pdf versions
-        latex_elements['preamble'] += macro 
+        latex_elements['preamble'] += macro + '\n'
         # used when building html version
-        pngmath_latex_preamble += macro 
-        imgmath_latex_preamble += macro 
+        pngmath_latex_preamble += macro + '\n'
+        imgmath_latex_preamble += macro + '\n'
 #f_preamble.close()
+
+print(latex_elements['preamble'])
 
 #--------------------------------------------
 
