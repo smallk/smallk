@@ -14,6 +14,7 @@
 
 import sys
 import os
+import sphinx_rtd_theme
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -30,6 +31,8 @@ import os
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.imgmath',
+#    'sphinx.ext.githubpages'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -48,7 +51,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'SmallK'
-copyright = u'2017, Barry Drake'
+copyright = u'2017, Georgia Institute of Technology'
 author = u'Barry Drake'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -109,7 +112,8 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'alabaster'
+#html_theme = 'alabaster'
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -204,6 +208,10 @@ html_static_path = ['_static']
 htmlhelp_basename = 'SmallKdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
+
+#https://tex.stackexchange.com/questions/24494/sphinx-in-line-math-equation-alignment
+pngmath_latex_preamble=r'\usepackage[active]{preview}' # + other custom stuff for inline math, such as non-default math fonts etc.
+pngmath_use_preview=True
 
 latex_elements = {
 # The paper size ('letterpaper' or 'a4paper').
