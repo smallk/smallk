@@ -639,7 +639,7 @@ Note: set this variable to point to either the HybridRelease or the PureRelease 
 
 This completes the two builds of Elemental.
 
-To test the installation, follow Elemental’s `test instructions <http://libelemental.org/documentation/\<version\>/build.html>`_ for the SVD test to verify that Elemental is working correctly.
+To test the installation, follow Elemental’s `test instructions <http://libelemental.org/documentation/VERSION/build.html>`_ for the SVD test to verify that Elemental is working correctly.
 
 
 Installation of Python libraries
