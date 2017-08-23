@@ -9,8 +9,9 @@ Contents
 .. toctree::
    :maxdepth: 8
 
+*********************
 Examples of API Usage
-=====================
+*********************
 
 In the examples folder you will find a file called smallk_example.cpp. This file contains several examples of how to use the SmallK library.  Also included in the examples folder is a makefile that you can customize for your use.  Note that the SmallK library must first be installed before the example project can be built.
 
@@ -320,8 +321,9 @@ Note: the output will be *similar* to the following not identical since some pro
 
 The output files are written to the default directory or the directory specified on the command line.
 
+**********
 SmallK API
-==========
+**********
 
 The SmallK API is an extremely simplistic API for basic NMF and clustering.  Users who require more control over the factorization or clustering algorithms can instead run one of the command-line applications in the SmallK distribution.
 
@@ -338,7 +340,7 @@ The smallk library maintains a set of state variables that are used to control t
 All computations with the smallk library are performed in double precision.
 
 Enumerations
-------------
+============
 
 The SmallK API provides two enumerated types, one for the supported NMF algorithms and one for the clustering file output format.  These are::
 
@@ -361,10 +363,10 @@ The default NMF algorithm is BPP.  The Rank2 algorithm is optimized for two-colu
 	};
 
 API functions
--------------
+=============
 
 Initialization and cleanup
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 :: 
 
 	void Initialize(int& argc,     // in
@@ -383,7 +385,7 @@ Call this function last, after all others in the API; performs cleanup for Eleme
 	void Finalize()
 
 Versioning
-^^^^^^^^^^
+----------
 :: 
 
 	unsigned int GetMajorVersion()
@@ -406,7 +408,7 @@ Returns the patch version number of the library as an unsigned integer.
 Returns the version of the library as a string, formatted as major.minor.patch.
 
 Common functions
-^^^^^^^^^^^^^^^^
+----------------
 :: 
 
 	unsigned int GetOutputPrecision()
@@ -479,7 +481,7 @@ Returns a string indicating the directory into which output files will be writte
 Sets the directory into which output files should be written. The ‘outdir’ argument can either be an absolute or relative path.  The default is the current directory.
 
 NMF functions
-^^^^^^^^^^^^^
+-------------
 :: 
 
 	void Nmf(const unsigned int k, 

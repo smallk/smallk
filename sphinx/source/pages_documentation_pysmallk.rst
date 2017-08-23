@@ -9,16 +9,19 @@ Contents
 .. toctree::
    :maxdepth: 8
 
+************
 Introduction
-============
+************
+
 Why Python? Although it’s perfectly fine to run SmallK from the command line, Python provides a great deal more flexibility that augments the C++ code with other tasks that are much more easily accomplished with a very high level language. Python distributions can be easily extended with open source libraries from third party sources as well, two examples being numpy and scipy, well-known standards for scientific computing in the Python community. There are numerous packages available that extend these scientific libraries into the data analytics domain as well, such as `scikit-learn <http://scikit-learn.org/stable/index.html>`_.
 
 For using scientific Python, we strongly recommend the Anaconda Python distribution provided by `Continuum Analytics <http://continuum.io/>`_. Download and installation instructions for all platforms can be found `here <https://store.continuum.io/cshop/anaconda/>`_. Anaconda includes many if not most of the commonly used scientific and data analytics packages available and a very easy to use package manager and updating system. After installing Anaconda there will be available at the command line both a standard Python interpreter (type ‘python’) and an iPython interpreter (type ‘ipython’). We recommend using the iPython interpreter. In addition to the command line interfaces to Python, Anaconda includes the Spyder visual development environment featuring a very well thought out interface that makes developing Python code almost “too easy”. Spyder has many features found in the Matlab™ editor and a similar look and feel.
 
 Anaconda also includes the Cython package, which is used by SmallK to integrate the Python and C++ code. `Cython <http://cython.org/>`_ includes support for most of the C++ standard and supports the latest GNU C++ compilers. Most if not all the standard libraries are supported and the latest version (20.2) has support for the standard template library (STL) as well.
 
+**************************
 Examples of Pysmallk Usage
-==========================
+**************************
 
 Pysmallk has five classes, each of which represents one of the SmallK tools: SmallkAPI (the simplistic Smallk API), Flatclust, Hierclust, Matrixgen, and Preprocessor. These tools can be strung together into various kind of applications. Examples of such applications can be found in `examples/pysmallk_example.py` and in the `pysmallk/tests/` subdirectory.
 
@@ -103,8 +106,10 @@ When we are finished, we should clean up the environment before exiting::
 	f.finalize()
 
 
+******************
 Pysmallk Functions
-==================
+******************
+
 Pysmallk has five classes, each of which represents one of the SmallK tools: SmallkAPI (the simplistic Smallk API), Flatclust, Hierclust, Matrixgen, and Preprocessor. Each of these classes can be imported as follows::
 
 	from pysmallk import SmallkAPI
@@ -116,7 +121,7 @@ Pysmallk has five classes, each of which represents one of the SmallK tools: Sma
 Each class’s primary functions are documented in the sections below. The parameters are either marked [in] or [kwarg] which represent, respectively, positional and keyword arguments.
 
 Preprocessor
-------------
+============
 :: 
 
 	def parser()
@@ -210,7 +215,7 @@ Writes the preprocessor results to files.
 * precision:           The precision with which to write the outputs (optional)
 
 Matrixgen
----------
+=========
 ::
 
 	def parser()
@@ -295,7 +300,7 @@ Writes the generated matrix to file.
 * precision:    The precision with which to write the matrix
 
 SmallkAPI
----------
+=========
 ::
 
 	def parser()
@@ -416,7 +421,7 @@ Runs HierNMF2 on the loaded matrix.
 Cleans up the elemental and smallk environment.
 
 Flatclust
----------
+=========
 ::
 
 	def parser()
@@ -517,7 +522,7 @@ Writes the flatclust results to files.
 Cleans up the elemental and smallk environment.
 
 Heirclust
----------
+=========
 ::
 
 	def parser()
