@@ -29,20 +29,5 @@ Contact Info
 
 For comments, questions, bug reports, suggestions, etc., contact:
 
-Barry Drake 
-Research Scientist 
-Information and Communications Laboratory (ICL) 
-Information and Cyber Sciences Directorate (ICSD) 
-Georgia Tech Research Institute (GTRI) 
-75 5TH St. NW STE 900 
-ATLANTA, GA 30308-1018
-`barry.drake@gtri.gatech.edu <mailto:barry.drake@gtri.gatech.edu>`_
+.. include:: contact.inc
 
-Stephen Lee-Urban 
-Research Scientist
-Information and Communications Laboratory (ICL)
-Information and Cyber Sciences Directorate (ICSD)
-Georgia Tech Research Institute (GTRI) 
-75 5TH St. NW STE 900 
-ATLANTA, GA 30308-1018
-`stephen.lee-urban@gtri.gatech.edu <stephen.lee-urban@gtri.gatech.edu>`_

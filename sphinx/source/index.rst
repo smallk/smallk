@@ -23,6 +23,8 @@ SmallK
    self
    pages_about
    pages_documentation
+   pages_publications
+   pages_software_repo
 
 ..
    *****
