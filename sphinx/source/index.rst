@@ -19,6 +19,7 @@ SmallK
 .. toctree::
    :maxdepth: 8
    :numbered:
+   :hidden:
 
    self
    pages_about
@@ -48,16 +49,6 @@ SmallK
       :numbered:
    
       pages_documentation
-
-************
-Publications
-************
-todo
-
-*******************
-Software Repository
-*******************
-todo
 
 
 **********************
@@ -90,7 +81,7 @@ Please visit `dblp ground truth data <https://github.com/smallk/smallk_data/tree
 Acknowledgements
 ****************
 
-This work was funded in part by the DARPA XDATA program under contract FA8750-12-2-0309. Our DARPA program manager is `Mr. Wade Shen <http://www.darpa.mil/staff/mr-wade-shen>`_ and our XDATA Principal Investigator is `Prof. Haesun Park <http://www.cc.gatech.edu/%7Ehpark/">`_ of the Georgia Institute of Technology.
+This work was funded in part by the DARPA XDATA program under contract FA8750-12-2-0309. Our DARPA program manager is `Mr. Wade Shen <http://www.darpa.mil/staff/mr-wade-shen>`_ and our XDATA Principal Investigator is `Prof. Haesun Park <http://www.cc.gatech.edu/~hpark/>`_ of the Georgia Institute of Technology. Also, special thanks to Dr. Richard Boyd, Dr. Da Kuang, and Ashley Scripka-Beavers for their contributions to previous versions of this documentation and significant technical contributions.
 
 ******************************
 Copyright and Software License

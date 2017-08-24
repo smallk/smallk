@@ -2,12 +2,7 @@
 Pysmallk
 ########
 
-********
-Contents
-********
-
-.. toctree::
-   :maxdepth: 8
+.. contents:: :local:
 
 ************
 Introduction

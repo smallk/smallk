@@ -2,12 +2,7 @@
 SmallkAPI
 #########
 
-********
-Contents
-********
-
-.. toctree::
-   :maxdepth: 8
+.. contents:: :local:
 
 *********************
 Examples of API Usage
