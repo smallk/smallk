@@ -94,7 +94,7 @@ This will produce the help output for the nmf library function::
 
 **5.** To test the installation of pysmallk, attempt to import numpy and pysmallk; numpy must be imported BEFORE pysmallk is imported. Running the following command from the command line should produce no output::
 
-		python –c "import numpy; import pysmallk"
+		python -c "import numpy; import pysmallk"
 		
 If there is no import error, pysmallk was installed correctly and is globally available.
 
@@ -292,13 +292,13 @@ To obtain the latest version of the FLAME library, clone the FLAME git repositor
 
 Run the configure script in the top-level FLAME directory as follows (assuming the install path is ``/usr/local/flame``)::
 
-	./configure –-prefix=/usr/local/flame –-with-cc=/usr/local/bin/gcc-6 –-with-ranlib=/usr/local/bin/gcc-ranlib-6
+	./configure --prefix=/usr/local/flame --with-cc=/usr/local/bin/gcc-6 --with-ranlib=/usr/local/bin/gcc-ranlib-6
 
-A complete list of configuration options can be obtained by running ``./configure –-help``.
+A complete list of configuration options can be obtained by running ``./configure --help``.
 
 After the configuration process completes, build the FLAME library as follows::
 
-		make –j4
+		make -j4
 
 The ``-j4`` option tells Make to use four processes to perform the build.  This number can be increased if you have a more capable system. Libflame will be installed with the following command::
 
@@ -335,15 +335,15 @@ Use the following CMake command for the HybridRelease build, substituting 0.85 f
 	-D CMAKE_C_COMPILER=/usr/local/bin/gcc-7 
 	-D CMAKE_Fortran_COMPILER=/usr/local/bin/gfortran-7 
 	-D MATH_LIBS="/usr/local/flame/lib/libflame.a;-framework Accelerate" 
-	–D ELEM_EXAMPLES=ON –D ELEM_TESTS=ON  ..
+	-D ELEM_EXAMPLES=ON -D ELEM_TESTS=ON  ..
 
 Note that we have installed g++-7 into ``/usr/local/bin`` and libFLAME into ``/usr/local/flame``. Alter these paths, if necessary, to match the installation location on your system.
 
 Once the CMake configuration step completes, you can build Elemental from the generated Makefiles with the following command::
 
-		make –j4
+		make -j4
 
-The –j4 option tells Make to use four processes to perform the build. This number can be increased if you have a more capable system.
+The -j4 option tells Make to use four processes to perform the build. This number can be increased if you have a more capable system.
 
 After the build completes, install elemental as follows::
 
@@ -379,7 +379,7 @@ Then repeat the CMake configuration process, this time with the following comman
 	-D CMAKE_C_COMPILER=/usr/local/bin/gcc-7 
 	-D CMAKE_Fortran_COMPILER=/usr/local/bin/gfortran-7 
 	-D MATH_LIBS="/usr/local/flame/lib/libflame.a;-framework Accelerate"  
-	–D ELEM_EXAMPLES=ON –D ELEM_TESTS=ON ..
+	-D ELEM_EXAMPLES=ON -D ELEM_TESTS=ON ..
 
 Repeat the build commands and install this build of Elemental. 
 
@@ -441,7 +441,7 @@ Run the configure script in the top-level FLAME folder as follows (assuming you 
 
 A complete list of configuration options can be obtained by running::
 
-		./configure –-help
+		./configure --help
 
 Then build and install the code as follows::
 
@@ -557,8 +557,8 @@ Use the following CMake command for the HybridRelease build::
 	-D CMAKE_BUILD_TYPE=HybridRelease -D CMAKE_CXX_COMPILER=/usr/local/bin/g++-6
 	-D CMAKE_C_COMPILER=/usr/local/bin/gcc-6
 	-D CMAKE_Fortran_COMPILER=/usr/local/bin/gfortran-6
-	-D MATH_LIBS="/usr/local/flame/lib/libflame.a;-L/usr/local/openblas/0.2.19/ –lopenblas –lm"
-	–D ELEM_EXAMPLES=ON –D ELEM_TESTS=ON  ..
+	-D MATH_LIBS="/usr/local/flame/lib/libflame.a;-L/usr/local/openblas/0.2.19/ -lopenblas -lm"
+	-D ELEM_EXAMPLES=ON -D ELEM_TESTS=ON  ..
 
 Note that we have installed g++-6 into ``/usr/local/bin`` and libFLAME into ``/usr/local/flame``. Alter these paths, if necessary, to match the installation location on your system.
 
@@ -580,9 +580,9 @@ since FindCXXFeatures is now a directory. After this change, Elemental should Ma
 
 Once the CMake configuration step completes, you can build Elemental from the generated Makefiles with the following command::
 
-		make –j4
+		make -j4
 
-The –j4 option tells Make to use four processes to perform the build. This number can be increased if you have a more capable system.
+The -j4 option tells Make to use four processes to perform the build. This number can be increased if you have a more capable system.
 
 After the build completes, install elemental as follows::
 
@@ -607,8 +607,8 @@ Then repeat the CMake configuration process, this time with the following comman
 	-D CMAKE_BUILD_TYPE=PureRelease -D CMAKE_CXX_COMPILER=/usr/local/bin/g++-6
 	-D CMAKE_C_COMPILER=/usr/local/bin/gcc-6
 	-D CMAKE_Fortran_COMPILER=/usr/local/bin/gfortran-6
-	-D MATH_LIBS="/usr/local/flame/lib/libflame.a;-L/usr/local/openblas/0.2.19/ –lopenblas –lm"
-	–D ELEM_EXAMPLES=ON –D ELEM_TESTS=ON  ..
+	-D MATH_LIBS="/usr/local/flame/lib/libflame.a;-L/usr/local/openblas/0.2.19/ -lopenblas -lm"
+	-D ELEM_EXAMPLES=ON -D ELEM_TESTS=ON  ..
 
 If this command does not work on your system, you may need to define the ``BLAS_LIBS`` and/or ``GFORTRAN_LIB`` config options.
 

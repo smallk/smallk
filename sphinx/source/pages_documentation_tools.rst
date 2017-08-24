@@ -89,12 +89,12 @@ The meanings of the various options are as follows::
 
 	1. --indir: path to the folder containing the files ‘matrix.mtx’, ‘dictionary.txt’, 
 		and ‘documents.txt’; may be in small_data for example
-	2. –-outdir: path to the folder to into which results should be written
-	3. –-docs_per_term: any rows whose entries sum to less than this value will be pruned
-	4. –-terms_per_doc: any columns whose entries sum to less than this value will be pruned
-	5. –-maxiter: perform no more than this many iterations
-	6. –-precision: the number of digits of precision with which to write the output matrix
-	7. –-boolean_mode:  all nonzero matrix elements will be treated as if they had the 
+	2. --outdir: path to the folder to into which results should be written
+	3. --docs_per_term: any rows whose entries sum to less than this value will be pruned
+	4. --terms_per_doc: any columns whose entries sum to less than this value will be pruned
+	5. --maxiter: perform no more than this many iterations
+	6. --precision: the number of digits of precision with which to write the output matrix
+	7. --boolean_mode:  all nonzero matrix elements will be treated as if they had the 
 		value 1.0.  In other words, the preprocessor will ignore the actual frequency 
 		counts and treat all nonzero entries as if they were 1.0.
 
@@ -166,20 +166,20 @@ Running the matrixgen binary with no options generates the following output::
         	[--precision   6]     digits of precision
         	[--nz_per_col  1]     (SPARSE only) nonzeros per column
 
-The --height, --width, and –-filename options are required.  All others are optional and have the default values indicated.
+The --height, --width, and --filename options are required.  All others are optional and have the default values indicated.
 
 The meanings of the various options are as follows::
 
 	1. --height: number of rows in the generated matrix
-	2. –-width: number of columns in the generated matrix
-	3. –-filename: name of the output file
-	4. –-type: the type of matrix to be generated; the default is a uniformly-distributed 
+	2. --width: number of columns in the generated matrix
+	3. --filename: name of the output file
+	4. --type: the type of matrix to be generated; the default is a uniformly-distributed 
 		random matrix
-	5. –-rng_center: random number distribution will be centered on this value
-	6. –-rng_radius: random numbers will span this distance to either side of the center 
+	5. --rng_center: random number distribution will be centered on this value
+	6. --rng_radius: random numbers will span this distance to either side of the center 
 		value
-	7. –-precision: the number of digits of precision with which to write the output matrix
-	8. –-nz_per_col:  number of nonzero entries per sparse matrix column; valid only for 
+	7. --precision: the number of digits of precision with which to write the output matrix
+	8. --nz_per_col:  number of nonzero entries per sparse matrix column; valid only for 
 		SPARSE type
 
 Sample Runs
@@ -187,7 +187,7 @@ Sample Runs
 
 Suppose we want to generate a matrix of uniformly-distributed random numbers.  The matrix should have a height of 100 and a width of 16, and should be written to a file called ‘w_init.csv’.  Use the matrix generator as follows::
 
-	matrixgen –-height 100 –-width 16 –-filename w_init.csv
+	matrixgen --height 100 --width 16 --filename w_init.csv
 
 **************************************
 Nonnegative Matrix Factorization (NMF)
@@ -236,39 +236,39 @@ Running the nmf application with no command line parameters will cause the appli
         [--verbose  1]           Whether to print updates to the screen. 
                                      1 == print updates, 0 == silent
 
-The –-matrixfile and –-k options are required; all others are optional and have the default values indicated.  The meanings of the various options are as follows::
+The --matrixfile and --k options are required; all others are optional and have the default values indicated.  The meanings of the various options are as follows::
 
 	1.  --matrixfile: Filename of the matrix to be factored.  CSV files are supported for 
 		dense 
 		matrices and MTX files for sparse matrices.
-	2.  –-k: the width of the W matrix (inner dimension of the matrix factors)
-	3.  –-algorithm: identifier for the factorization algorithm
-	4.  –-stopping: the method used to terminate the iterations; use PG_RATIO unless you 
+	2.  --k: the width of the W matrix (inner dimension of the matrix factors)
+	3.  --algorithm: identifier for the factorization algorithm
+	4.  --stopping: the method used to terminate the iterations; use PG_RATIO unless you 
 		have a specific reason not to
-	5.  –-tol: tolerance value used to terminate iterations; when the progress metric falls 
+	5.  --tol: tolerance value used to terminate iterations; when the progress metric falls 
 		below this 
 		value iterations will stop; typical values are in the 1.0e-3 or 1.0e-4 range
-	6.  –-tolcount: a positive integer representing the number of successive iterations 
+	6.  --tolcount: a positive integer representing the number of successive iterations 
 		for which the progress metric must have a value <= tolerance; default is 1, which 
 		means the iterations will terminate on the first iteration with: 
 		progress_metric <= tolerance 
-	7.  –-infile_W: CSV file containing the mxk initial values for matrix W; if omitted, 
+	7.  --infile_W: CSV file containing the mxk initial values for matrix W; if omitted, 
 		W is randomly initialized
-	8.  –-infile_H:  CSV file containing the kxn initial values for matrix H; if omitted, 
+	8.  --infile_H:  CSV file containing the kxn initial values for matrix H; if omitted, 
 		H is randomly initialized
-	9.  –-outfile_W: filename for the computed W factor; default is w.csv
-	10. –-outfile_H: filename for the computed H factor; default is h.csv
-	11. –-miniter: the minimum number of iterations to perform before checking progress; 
+	9.  --outfile_W: filename for the computed W factor; default is w.csv
+	10. --outfile_H: filename for the computed H factor; default is h.csv
+	11. --miniter: the minimum number of iterations to perform before checking progress; 
 		for smaller tolerance values, you may want to increase this number to avoid 
 		needless progress checks
-	12. –-maxiter: the maximum number of iterations to perform
-	13. –-outprecision: matrices W and H will be written to disk using this many digits of 
+	12. --maxiter: the maximum number of iterations to perform
+	13. --outprecision: matrices W and H will be written to disk using this many digits of 
 		precision
-	14. –-maxthreads: the maximum number of threads to use; the default is to use as many 
+	14. --maxthreads: the maximum number of threads to use; the default is to use as many 
 		threads as the hardware can support (your number may differ from that shown) 
-	15. –-normalize: whether to normalize the columns of the W matrix and correspondingly 
+	15. --normalize: whether to normalize the columns of the W matrix and correspondingly 
 		scale the rows of H after convergence
-	16. –-verbose: whether to display updates to the screen as the iterations progress 
+	16. --verbose: whether to display updates to the screen as the iterations progress 
 
 Sample Runs
 ===========
@@ -277,20 +277,20 @@ The smallk distribution utilizes another repository `smallk_data <https://github
 
 Suppose we want to factor the Reuters matrix using a k value of 8.  We would do that as follows, assuming that we are in the top-level smallk folder after building the code and that the smallk_data repository was cloned into ‘data’::
 
-		nmf/bin/nmf –-matrixfile data/reuters.mtx  --k 8
+		nmf/bin/nmf --matrixfile data/reuters.mtx  --k 8
 
 Note that if `make install` was run during installation and the $PATH variable or environment variable was set as above, this could also be called with::
 
-		usr/local/bin/nmf –-matrixfile data/reuters.mtx  --k 8
+		usr/local/bin/nmf --matrixfile data/reuters.mtx  --k 8
 
 If we want to instead use the HALS algorithm with k=16, a tolerance of 1.0e-4, and also perform 10 iterations prior to checking progress, we would use this command line::
 
-		nmf/bin/nmf –-matrixfile data/reuters.mtx –-k 16 –-algorithm HALS –-tol 1.0e-4 –-miniter 10
+		nmf/bin/nmf --matrixfile data/reuters.mtx --k 16 --algorithm HALS --tol 1.0e-4 --miniter 10
 
 To repeat the previous experiment but with new names for the output files, we would do this::
 
-		nmf/bin/nmf –-matrixfile data/reuters.mtx –-k 16 –-algorithm HALS –-tol 1.0e-4 
-			–-miniter 10 –-outfile_W w_hals.csv –outfile_H h_hals.csv
+		nmf/bin/nmf --matrixfile data/reuters.mtx --k 16 --algorithm HALS --tol 1.0e-4 
+			--miniter 10 --outfile_W w_hals.csv -outfile_H h_hals.csv
 
 *********
 Hierclust
@@ -379,13 +379,13 @@ Running the hierclust application with no command line parameters will cause the
                                           N is the number of clusters for this run.
                                           This filename is relative to the outdir.
 
-The –-matrixfile, --dictfile, and –-clusters options are required; all others are optional and have the default values indicated.  The meanings of the various options are as follows::
+The --matrixfile, --dictfile, and --clusters options are required; all others are optional and have the default values indicated.  The meanings of the various options are as follows::
 
 	1.  --matrixfile: Filename of the matrix to be factored.  CSV files are supported for 
 		dense matrices and MTX files for sparse matrices.
-	2.  –-dictfile: absolute or relative path to the dictionary file
-	3.  –-clusters: the number of leaf nodes (clusters) to generate
-	4.  –-initdir:  Initializer matrices for W and H are loaded from the initdir 
+	2.  --dictfile: absolute or relative path to the dictionary file
+	3.  --clusters: the number of leaf nodes (clusters) to generate
+	4.  --initdir:  Initializer matrices for W and H are loaded from the initdir 
 		directory. The matrices are assumed to have the names Winit_1.csv, Hinit_1.csv, 
 		Winit_2.csv, Hinit_2.csv, etc. It is up to the user to ensure that enough matrices 
 		are present in this dir to run the HierNMF2 code to completion.  The number of 
@@ -394,28 +394,28 @@ The –-matrixfile, --dictfile, and –-clusters options are required; all other
 		comparisons with Matlab), in which each factorization problem has to proceed 
 		from a known initializer. The W initializer matrices must be of shape m x 2,
 		and the H initializer matrices must be of shape 2 x n.
-	5.  –-tol: tolerance value for each internal NMF-RANK2 factorization; the stopping 
+	5.  --tol: tolerance value for each internal NMF-RANK2 factorization; the stopping 
 		criterion is the ratio of projected gradient method
-	6.  –-outdir: path to the folder into which to write the output files; if omitted 
+	6.  --outdir: path to the folder into which to write the output files; if omitted 
 		results will be written to the current directory
-	7.  –-miniter: minimum number of iterations to perform before checking progress on 
+	7.  --miniter: minimum number of iterations to perform before checking progress on 
 		each NMF-RANK2 factorization
-	8.  –-maxiter: the maximum number of iterations to perform on each NMF-RANK2 
+	8.  --maxiter: the maximum number of iterations to perform on each NMF-RANK2 
 		factorization
-	9. –-maxterms: the number of dictionary keywords to include in each node
-	10. –-maxthreads: the maximum number of threads to use; the default is to use as many 
+	9. --maxterms: the number of dictionary keywords to include in each node
+	10. --maxthreads: the maximum number of threads to use; the default is to use as many 
 		threads as the hardware can support (your number may differ from that shown) 
-	11. –-unbalanced: threshold value for declaring leaf node imbalance 
+	11. --unbalanced: threshold value for declaring leaf node imbalance 
 		(see explanation above)
-	12. –-trial_allowance: maximum number of split attempts for any node 
+	12. --trial_allowance: maximum number of split attempts for any node 
 		(see explanation above)
-	13. –-flat: whether to generate a flat clustering result in addition to the hierarchical 
+	13. --flat: whether to generate a flat clustering result in addition to the hierarchical 
 		clustering result
-	14. –-verbose: whether to display updates to the screen as the iterations progress
-	15. –-format: file format to use for the clustering results
-	16. –-treefile: name of the output file for the factorization tree; uses the format 
+	14. --verbose: whether to display updates to the screen as the iterations progress
+	15. --format: file format to use for the clustering results
+	16. --treefile: name of the output file for the factorization tree; uses the format 
 		specified by the format parameter
-	17. –-assignfile: name of the output file for the cluster assignments
+	17. --assignfile: name of the output file for the cluster assignments
 
 Sample Runs
 ===========
@@ -426,19 +426,19 @@ As above, it is assumed that the `smallk_data <https://github.com/smallk/smallk_
 
 Suppose we want to perform hierarchical clustering on this data set and generate 10 leaf nodes.  We would do that as follows, assuming that we are in the top-level smallk folder after building the code::
 
-		hierclust/bin/hierclust –-matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10
+		hierclust/bin/hierclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10
 
 This will generate two result files in the current directory: tree_10.xml and assignments_10.csv.
 
 If we want to instead generate 10 clusters, each with 8 terms, using JSON output format, we would use this command line::
 
-		hierclust/bin/hierclust –-matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 –-maxterms 8 –-format JSON
+		hierclust/bin/hierclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 --maxterms 8 --format JSON
 
 Two files will be generated: tree_10.json and assignments_10.csv.  The json file will have 8 keywords per node, whereas the tree_10.xml file will have only 5.
 
 To generate a flat clustering result (in addition to the hierarchical clustering result), use this command line::
 
-		hierclust/bin/hierclust –-matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 –-maxterms 8 –-format JSON –-flat 1
+		hierclust/bin/hierclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 --maxterms 8 --format JSON --flat 1
 
 Two additional files will be generated this time (along with tree_10.json and assignments_10.csv): ‘clusters_10.json’, which contains the flat clustering results, and ‘assignments_flat_10.csv’, which contains the flat clustering assignments.
 
@@ -449,7 +449,7 @@ Flatclust
 Overview
 ========
 
-The flatclust command line application factors the input matrix using either NMF-HALS or NMF-BPP and generates a flat clustering result.  A flatclust run generating k clusters will generally run more slowly than a hierclust run, of the same number of clusters, with the –-flat option enabled.  The reason for this is that the hierclust application uses the NMF-RANK2 algorithm and always generates factor matrices with two rows or columns.  The runtime of NMF scales superlinearly with k in this case, and thus runs fastest for the smallest k value. 
+The flatclust command line application factors the input matrix using either NMF-HALS or NMF-BPP and generates a flat clustering result.  A flatclust run generating k clusters will generally run more slowly than a hierclust run, of the same number of clusters, with the --flat option enabled.  The reason for this is that the hierclust application uses the NMF-RANK2 algorithm and always generates factor matrices with two rows or columns.  The runtime of NMF scales superlinearly with k in this case, and thus runs fastest for the smallest k value. 
 
 The flatclust application generates two output files.  The first file contains the assignments of documents to clusters and is interpreted identically to that of the hierclust application, with the exception that there are no outliers generated by flatclust.
 
@@ -500,31 +500,31 @@ Running the flatclust application with no command line parameters will cause the
                                           N is the number of clusters for this run.
                                           This filename is relative to the outdir.
 
-The –-matrixfile, --dictfile, and –-clusters options are required; all others are optional and have the default values indicated.  The meanings of the various options are as follows::
+The --matrixfile, --dictfile, and --clusters options are required; all others are optional and have the default values indicated.  The meanings of the various options are as follows::
 
 	1.  --matrixfile: Filename of the matrix to be factored.  CSV files are supported 
 		for dense matrices and MTX (matrix market) files for sparse matrices.
-	2.  –-dictfile: absolute or relative path to the dictionary file
-	3.  –-clusters: the number of clusters to generate (equivalent to the NMF ‘k’ value)
-	4.  –-algorithm: the factorization algorithm to use 
-	5.  –-infile_W: CSV file containing the m x ‘clusters’ initial values for matrix W; 
+	2.  --dictfile: absolute or relative path to the dictionary file
+	3.  --clusters: the number of clusters to generate (equivalent to the NMF ‘k’ value)
+	4.  --algorithm: the factorization algorithm to use 
+	5.  --infile_W: CSV file containing the m x ‘clusters’ initial values for matrix W; 
 		if omitted, W is randomly initialized
-	6.  –-infile_H:  CSV file containing the ‘clusters’ x n initial values for matrix H; 
+	6.  --infile_H:  CSV file containing the ‘clusters’ x n initial values for matrix H; 
 		if omitted, H is randomly initialized
-	7.  –-tol: tolerance value for the factorization; the stopping criterion is the ratio of 
+	7.  --tol: tolerance value for the factorization; the stopping criterion is the ratio of 
 		projected gradient method
-	8.  –-outdir: path to the folder into which to write the output files; if omitted 
+	8.  --outdir: path to the folder into which to write the output files; if omitted 
 		results will be written to the current directory
-	9.  –-miniter: minimum number of iterations to perform before checking progress 
-	10. –-maxiter: the maximum number of iterations to perform 
-	11. –-maxterms: the number of dictionary keywords to include in each node
-	12. –-maxthreads: the maximum number of threads to use; the default is to use as many 
+	9.  --miniter: minimum number of iterations to perform before checking progress 
+	10. --maxiter: the maximum number of iterations to perform 
+	11. --maxterms: the number of dictionary keywords to include in each node
+	12. --maxthreads: the maximum number of threads to use; the default is to use as many 
 		threads as the hardware can support (your number may differ from that shown) 
-	13. –-verbose: whether to display updates to the screen as the iterations progress
-	14. –-format: file format to use for the clustering results
-	15. –-clustfile: name of the output file for the nodes; uses the format specified 
+	13. --verbose: whether to display updates to the screen as the iterations progress
+	14. --format: file format to use for the clustering results
+	15. --clustfile: name of the output file for the nodes; uses the format specified 
 		by the format parameter
-	16. –-assignfile: name of the output file for the cluster assignments
+	16. --assignfile: name of the output file for the cluster assignments
 
 Sample Runs
 ===========
@@ -535,13 +535,13 @@ As above, it is assumed that the `smallk_data <https://github.com/smallk/smallk_
 
 Suppose we want to perform flat clustering on this data set and generate 10 clusters.  We would do that as follows, assuming that we are in the top-level smallk folder after building the code::
 
-		flatclust/bin/flatclust –-matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10
+		flatclust/bin/flatclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10
 
 This will generate two result files in the current directory: clusters_10.xml and assignments_10.csv.
 
 If we want to instead generate 10 clusters, each with 8 terms, using JSON output format, we would use this command line::
 
-		flatclust/bin/flatclust –-matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 –-maxterms 8 –-format JSON
+		flatclust/bin/flatclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 --maxterms 8 --format JSON
 
 Two files will be generated: clusters_10.json and assignments_10.csv.  The json file will have 8 keywords per node, whereas the clusters_10.xml file will have only 5.
 
