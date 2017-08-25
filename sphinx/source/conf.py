@@ -236,6 +236,7 @@ latex_elements = {
 
 # Latex figure (float) alignment
 #'figure_align': 'htbp',
+'maxlistdepth': '22',
 }
 
 #-- define preamble for latex --------------------------------------------
@@ -257,7 +258,8 @@ if 'preamble' not in latex_elements:
 with open('latex_preamble.sty','r') as f_preamble:
     for macro in f_preamble:
         # used when building latex and pdf versions
-        latex_elements['preamble'] += macro + '\n'
+        if '\usepackage[active]{preview}' != macro.strip():
+            latex_elements['preamble'] += macro + '\n'
         # used when building html version
         pngmath_latex_preamble += macro + '\n'
         imgmath_latex_preamble += macro + '\n'
