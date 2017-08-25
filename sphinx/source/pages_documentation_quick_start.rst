@@ -2,7 +2,12 @@
 Quick Start
 ###########
 
-.. contents:: :local:
+.. only:: html
+   
+   .. contents:: :local:
+
+..
+   :backlinks: entry
 
 ************
 Introduction

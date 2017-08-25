@@ -2,7 +2,12 @@
 SmallkAPI
 #########
 
-.. contents:: :local:
+.. only:: html
+   
+   .. contents:: :local:
+
+..
+   :backlinks: entry
 
 *********************
 Examples of API Usage

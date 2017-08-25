@@ -2,7 +2,12 @@
 Pysmallk
 ########
 
-.. contents:: :local:
+.. only:: html
+   
+   .. contents:: :local:
+
+..
+   :backlinks: entry
 
 ************
 Introduction

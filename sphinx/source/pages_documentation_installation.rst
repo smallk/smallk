@@ -2,8 +2,12 @@
 Installation
 ############
 
-.. toctree::
-   :maxdepth: 8
+.. only:: html
+   
+   .. contents:: :local:
+
+..
+   :backlinks: entry
 
 **********
 Quickstart
@@ -272,7 +276,7 @@ The Apple-provided gcc and g++ will not be overwritten by this installation. The
 OSX:Install MPI Tools
 ^^^^^^^^^^^^^^^^^^^^^
 
-Install the latest version of `mpich <http://www.mpich.org/>`_ with Homebrew as follows:
+Install the latest version of `mpich <http://www.mpich.org/>`_ with Homebrew as follows::
 
 		brew install mpich
 
