@@ -402,7 +402,7 @@ This will symlink the required Elemental libraries.
 
 The two builds of Elemental are now complete.
 
-To test the installation, follow Elemental’s `test instructions <http://libelemental.org/documentation/0.85/build.html>`_  for the SVD test to verify that Elemental is working correctly.
+To test the installation, follow `Elemental’s test instructions`_  for the SVD test to verify that Elemental is working correctly.
 
 
 How to Install Elemental on Linux
@@ -640,7 +640,7 @@ Note: set this variable to point to either the HybridRelease or the PureRelease 
 
 This completes the two builds of Elemental.
 
-To test the installation, follow Elemental’s `test instructions <http://libelemental.org/documentation/VERSION/build.html>`_ for the SVD test to verify that Elemental is working correctly.
+To test the installation, follow `Elemental’s test instructions`_ for the SVD test to verify that Elemental is working correctly.
 
 
 Installation of Python libraries
@@ -886,6 +886,4 @@ For comments, questions, bug reports, suggestions, etc., contact:
 
 .. include:: contact.inc
 
-
-
-
+.. _Elemental’s test instructions: http://libelemental.org/documentation/0.85/build.html
