@@ -24,6 +24,7 @@ SmallK
    self
    pages_about
    pages_introduction
+   pages_quickstart
    pages_documentation
    pages_publications
    pages_software_repo
