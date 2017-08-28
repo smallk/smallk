@@ -1,12 +1,13 @@
-#######
-General
-#######
+############
+Introduction
+############
 
 .. toctree::
    :maxdepth: 2
 
-Introduction
-============
+**********
+Background
+**********
 
 High-dimensional data sets are ubiquitous in data science, and they often present serious problems for researchers. Our work in dimensionality reduction focuses on, but is not limited to, low rank approximations via nonnegative matrix factorization (NMF) [see `Publications [1,2] <http://smallk.github.io/publications/>`_]. NMF is a non-convex optimization problem with important applications in data and interactive visual analytics of high-dimensional data. 
 
@@ -14,8 +15,9 @@ The impetus for this documentation is to provide a step-by-step procedure for th
 
 Below is a brief description of our fundamental research on NMF algorithms. Following the brief motivational introduction to the NMF are detailed installation instructions for the SmallK software library.
 
+*******************************
 Low rank approximations and NMF
-===============================
+*******************************
 
 Algorithms that enable dimension reduction and clustering are two critical areas in data analytics and interactive visual analysis of high-dimensional data. A low rank approximation framework has the ability to facilitate faster processing times and utilize fewer resources. These approximations provide a natural way to compute only what we need for significant dimension reduction, and are analogous to singular value decomposition (SVD) and principal component analysis (PCA). Our algorithm framework also works efficiently for clustering since clustering can be viewed as a specific way of achieving a low rank approximation so that the cluster structure of the data is well represented in a few basis vectors. 
 
@@ -23,8 +25,9 @@ Matrix low rank approximations such as the SVD have played a key role as a funda
 
 Our algorithm framework utilizes various constraints on the non-convex optimization problem that gives rise to the nonnegative factors. With these various constraints NMF is a versatile tool for a large variety of data analytics problems. NMF algorithms have been an active area of research for several years. Since much of the data for many important problems in numerous domains is nonnegative NMF is the correct computational model for mining and/or integrating information from such data. NMF also offers enhanced interpretation of results since nonnegativity of the data is preserved.
 
+***************
 SmallK Overview
-===============
+***************
 
 The SmallK library provides routines for low rank matrix approximation via nonnegative matrix factorization (NMF). The term “nonnegative matrices” means that for a given matrix all of it's elements are greater than or equal to zero, which we express as :math:`\geq 0`.
 
@@ -52,8 +55,10 @@ The suite of SmallK implementations of NMF algorithms are suitable in many appli
 
 The SmallK library requires either MacOSX or Linux. A Windows version via a Vagrant installation is also available.
 
+*************
 Prerequisites
-=============
+*************
+
 The following list is the software packages/libraries required to build the SmallK NMF library code:
 
 - A modern, C++11-compliant compiler, such as g++ 4.9 or later
