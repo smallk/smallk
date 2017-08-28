@@ -26,6 +26,11 @@ SmallK
    pages_introduction
    pages_quickstart
    pages_documentation
+   pages_commandLineTools
+   pages_smallkAPI
+   pages_pysmallk
+   pages_tests
+   pages_benchmarks_results
    pages_publications
    pages_software_repo
 

@@ -1,6 +1,6 @@
-#########
-SmallkAPI
-#########
+##########
+Smallk API
+##########
 
 .. only:: html
    
@@ -13,9 +13,9 @@ SmallkAPI
 Examples of API Usage
 *********************
 
-In the examples folder you will find a file called smallk_example.cpp. This file contains several examples of how to use the SmallK library.  Also included in the examples folder is a makefile that you can customize for your use.  Note that the SmallK library must first be installed before the example project can be built.
+In the examples folder you will find a file called ``smallk_example.cpp``. This file contains several examples of how to use the SmallK library.  Also included in the examples folder is a makefile that you can customize for your use.  Note that the SmallK library must first be installed before the example project can be built.
 
-As an example of how to use the sample project, assume the smallk software has been installed into /usr/local/smallk.  Also assume that the user chose to create the recommended environment variable SMALLK_INSTALL_DIR that stores the location of the top-level install folder, i.e. the user’s .bashrc file contains this statement::
+As an example of how to use the sample project, assume the smallk software has been installed into ``/usr/local/smallk``.  Also assume that the user chose to create the recommended environment variable ``SMALLK_INSTALL_DIR`` that stores the location of the top-level install folder, i.e. the user’s ``.bashrc`` file contains this statement::
 
 		export SMALLK_INSTALL_DIR=/usr/local/smallk 
 
@@ -554,7 +554,7 @@ Returns the tolerance value used by the NMF-RANK2 algorithm for hierarchical clu
 
 	void SetHierNmf2Tolerance(const double tol=1.0e-4)
 
-Sets the tolerance value used by the NMF-RANK2 algorithm for hierarchical clustering.  The tolerance value should satisfy 0.0 < tolerance < 1.0.  Any inputs outside this range will cause a `std::logic_error` exception to be thrown.
+Sets the tolerance value used by the NMF-RANK2 algorithm for hierarchical clustering.  The tolerance value should satisfy 0.0 < tolerance < 1.0.  Any inputs outside this range will cause a ``std::logic_error`` exception to be thrown.
 :: 
 
 	void HierNmf2(const unsigned int num_clusters)
@@ -568,5 +568,5 @@ The content of the files is described below in the section on the hierclust comm
 
 	void HierNmf2WithFlat(const unsigned int num_clusters)
 
-This function performs hierarchical clustering on the loaded matrix, exactly as described for HierNmf2. In addition, it also computes a flat clustering result.  Thus four output files are generated.  The flat clustering result files are ‘assignments_flat_N.csv’ and ‘clusters_N.{json, xml}’.  The cluster file contents are documented below in the section on the flatclust command line application.
+This function performs hierarchical clustering on the loaded matrix, exactly as described for HierNmf2. In addition, it also computes a flat clustering result.  Thus four output files are generated.  The flat clustering result files are ``assignments_flat_N.csv`` and ``clusters_N.{json, xml}``.  The cluster file contents are documented below in the section on the flatclust command line application.
 

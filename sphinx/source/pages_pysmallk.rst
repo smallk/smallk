@@ -23,9 +23,9 @@ Anaconda also includes the Cython package, which is used by SmallK to integrate 
 Examples of Pysmallk Usage
 **************************
 
-Pysmallk has five classes, each of which represents one of the SmallK tools: SmallkAPI (the simplistic Smallk API), Flatclust, Hierclust, Matrixgen, and Preprocessor. These tools can be strung together into various kind of applications. Examples of such applications can be found in `examples/pysmallk_example.py` and in the `pysmallk/tests/` subdirectory.
+Pysmallk has five classes, each of which represents one of the SmallK tools: SmallkAPI (the simplistic Smallk API), Flatclust, Hierclust, Matrixgen, and Preprocessor. These tools can be strung together into various kind of applications. Examples of such applications can be found in ``examples/pysmallk_example.py`` and in the ``pysmallk/tests/`` subdirectory.
 
-The smallk_data repository contains several files (articles_matrix.mtx, articles_documents.txt, articles_dictionary.txt) that contain the matrix and associated text files created from 2,424 news articles. 
+The smallk_data repository contains several files (``articles_matrix.mtx``, ``articles_documents.txt``, ``articles_dictionary.txt``) that contain the matrix and associated text files created from 2,424 news articles. 
 
 First, we will need to import numpy and the shared libary::
 
@@ -358,7 +358,8 @@ Load an input matrix.
 	* matrix:        The numpy matrix
 	* column_major:  Boolean for whether or not the matrix is column major (optional)
 
-**Note: Internal to SmallK, the matrix is stored in column-major order. When you are loading a numpy matrix, the assumption is that your matrix is in row-major order. If this is not the case, you can pass column_major=True in as a keyword argument. When directly loading a dense matrix, the assumption is that your buffer holds the data in column-major order as well.**
+.. note::
+   Internal to SmallK, the matrix is stored in column-major order. When you are loading a numpy matrix, the assumption is that your matrix is in row-major order. If this is not the case, you can pass ``column_major=True`` in as a keyword argument. When directly loading a dense matrix, the assumption is that your buffer holds the data in column-major order as well.
 
 :: 
 
@@ -463,7 +464,8 @@ Load an input matrix.
 	* matrix:        The numpy matrix
 	* column_major:  Boolean for whether or not the matrix is column major (optional)
 
-**Note: Internal to SmallK, the matrix is stored in column-major order. When you are loading a numpy matrix, the assumption is that your matrix is in row-major order. If this is not the case, you can pass column_major=True in as a keyword argument. When directly loading a dense matrix, the assumption is that your buffer holds the data in column-major order as well.**
+.. note::
+   Internal to SmallK, the matrix is stored in column-major order. When you are loading a numpy matrix, the assumption is that your matrix is in row-major order. If this is not the case, you can pass ``column_major=True`` in as a keyword argument. When directly loading a dense matrix, the assumption is that your buffer holds the data in column-major order as well.
 
 ::
 
@@ -549,20 +551,24 @@ Load an input matrix.
 	* col_offsets:   List of integers representing the column offsets of the sparse matrix
 
 3. To load a sparse matrix from Matrixgen:
+
   	* height:        The height of the sparse matrix
   	* width:         The width of the sparse matrix
   	* sparse_matrix: The sparse matrix returned from Matrixgen
 
 4. To load a dense matrix from python:
+
 	* height: The height of the dense matrix	
 	* width:         The width of the dense matrix
 	* buffer: List of doubles containing the elements of the dense matrix
 
 5. To load a numpy matrix from python:
+
 	* matrix:        The numpy matrix
 	* column_major:  Boolean for whether or not the matrix is column major (optional)
 
-**Note: Internal to SmallK, the matrix is stored in column-major order. When you are loading a numpy matrix, the assumption is that your matrix is in row-major order. If this is not the case, you can pass column_major=True in as a keyword argument. When directly loading a dense matrix, the assumption is that your buffer holds the data in column-major order as well.**
+.. note::
+   Internal to SmallK, the matrix is stored in column-major order. When you are loading a numpy matrix, the assumption is that your matrix is in row-major order. If this is not the case, you can pass ``column_major=True`` in as a keyword argument. When directly loading a dense matrix, the assumption is that your buffer holds the data in column-major order as well.
 
 ::
 
