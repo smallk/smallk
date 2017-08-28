@@ -259,10 +259,10 @@ with open('latex_preamble.sty','r') as f_preamble:
     for macro in f_preamble:
         # used when building latex and pdf versions
         if '\usepackage[active]{preview}' != macro.strip():
-            latex_elements['preamble'] += macro + '\n'
+            latex_elements['preamble'] += macro 
         # used when building html version
-        pngmath_latex_preamble += macro + '\n'
-        imgmath_latex_preamble += macro + '\n'
+        pngmath_latex_preamble += macro 
+        imgmath_latex_preamble += macro 
 #f_preamble.close()
 
 print(latex_elements['preamble'])
@@ -273,7 +273,7 @@ print(latex_elements['preamble'])
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'SmallK.tex', u'SmallK Documentation',
+    (master_doc, 'SmallK.tex', u'SmallK: A Library for Nonnegative Matrix Factorization, Topic Modeling, and Clustering of Large-Scale Data',
      u'Barry Drake', 'manual'),
 ]
 
@@ -289,7 +289,7 @@ latex_documents = [
 #latex_show_pagerefs = False
 
 # If true, show URL addresses after external links.
-#latex_show_urls = False
+latex_show_urls = 'footnote'
 
 # Documents to append as an appendix to all manuals.
 #latex_appendices = []
