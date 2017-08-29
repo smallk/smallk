@@ -1,0 +1,64 @@
+% https://tex.stackexchange.com/questions/60598/math-notation-and-fonts
+% isomath defines \vectorsym, \matrixsym and \tensorsym
+\usepackage{enumitem}
+\setlistdepth{99}
+\usepackage[active]{preview}
+\usepackage{bm}
+\newcommand{\matr}[1]{\bm{#1}}
+\usepackage[blocks,auth-sc]{authblk}
+
+%TITLE PAGE CUSTOMIZATION
+
+% Change the title page to look a bit better, and fit in with the fncychap
+% ``Bjarne'' style a bit better.
+%
+\makeatletter
+\renewcommand{\maketitle}{%
+  \let\spx@tempa\relax
+  \ifHy@pageanchor\def\spx@tempa{\Hy@pageanchortrue}\fi
+  \hypersetup{pageanchor=false}% avoid duplicate destination warnings
+  \begin{titlepage}%
+    \let\footnotesize\small
+    \let\footnoterule\relax
+    \noindent\rule{\textwidth}{1pt}\par
+      \begingroup % for PDF information dictionary
+       \def\endgraf{ }\def\and{\& }%
+       \pdfstringdefDisableCommands{\def\\{, }}% overwrite hyperref setup
+       \hypersetup{pdfauthor={\@author}, pdftitle={\@title}}%
+      \endgroup
+    \begin{flushright}%
+      \sphinxlogo
+      \py@HeaderFamily
+      {\Huge \@title \par}
+      {\itshape\LARGE \py@release\releaseinfo \par}
+      \vfill
+    \end{flushright}%\par
+    \begin{center}%
+      {\normalsize
+        \lineskip .5em
+        \begin{tabular}[t]{c}
+          \@author
+        \end{tabular}
+        \par}
+      \vfill\vfill
+      {\large
+       \@date \par
+       \vfill
+       \py@authoraddress \par
+      }%
+    \end{center}%\par
+    \@thanks
+  \end{titlepage}%
+  \setcounter{footnote}{0}%
+  \let\thanks\relax\let\maketitle\relax
+  %\gdef\@thanks{}\gdef\@author{}\gdef\@title{}
+  \if@openright\cleardoublepage\else\clearpage\fi
+  \spx@tempa
+}
+
+\author{Barry Drake \thanks{Electronic address: \texttt{bldrake@cc.gatech.edu}; Corresponding author}}
+\author{Stephen Lee-Urban \thanks{Electronic address: \texttt{stephen.urban@cc.gatech.edu}}}
+\affil{Information and Communications Laboratory\\ Georgia Tech Research Institute\\ 250 14th St. NW.\\ Atlanta, GA 30318}
+
+\author{Haesun Park \thanks{Electronic address: \texttt{hpark@cc.gatech.edu}}}
+\affil{School of Computational Science and Engineering\\ Georgia Institute of Technology\\ Atlanta, GA 30332}
