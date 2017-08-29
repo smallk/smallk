@@ -24,11 +24,12 @@ SmallK
    self
    pages_about
    pages_introduction
-   pages_quickstart
+   pages_quickstartInstall
+   pages_quickstartSmallkAPI
    pages_documentation
    pages_commandLineTools
    pages_smallkAPI
-   pages_pysmallk
+   pages_pysmallkAPI
    pages_tests
    pages_benchmarks_results
    pages_publications

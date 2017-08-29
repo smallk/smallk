@@ -11,7 +11,7 @@ Introduction
 
 The SmallK library provides a number of algorithm implementations for low rank approximation of a matrix. These can be used for performing various data analytics tasks such as topic modeling, clustering, and dimension reduction. This section will provide more in-depth description of the tools available with examples that can be expanded/modified for other application domains.
 
-Before diving into the various tools, it will be helpful to set up the command line environment to easily run the various executables that comprise the SmallK library. First the command line needs to know where to find the executable files to run the tools. Since while installing SmallK  ‘make_install’ was run, the executables are located in ``/usr/local/smallk/bin``. Thus, this should be added to the ``$PATH`` system variable or added to the environment. The following command line performs the task of modifying the path avoiding the need to cd into directories were the tools are located::
+Before diving into the various tools, it will be helpful to set up the command line environment to easily run the various executables that comprise the SmallK library. First the command line needs to know where to find the executable files to run the tools. Since while installing SmallK  ``make_install`` was run, the executables are located in ``/usr/local/smallk/bin``. Thus, this should be added to the ``$PATH`` system variable or added to the environment. The following command line performs the task of modifying the path avoiding the need to cd into directories were the tools are located::
 
 		export PATH=/usr/local/smallk/bin:$PATH
 
@@ -46,9 +46,9 @@ If the preprocessor should prune all rows or columns, it writes an error message
 Input Files
 ===========
 
-The preprocessor requires three input files: a matrix file, a dictionary file, and a document file.  The matrix file contains a sparse matrix in MatrixMarket format (.mtx).  This is a term-frequency matrix, and all entries should be positive integers. The preprocessor can also read in matrices containing floating-point inputs, but only if ‘boolean mode’ is enabled; this will be described below. The preprocessor does not support dense matrices, since the typical matrices encountered in topic modeling problems are extremely sparse, with occupancies generally less than 1%.
+The preprocessor requires three input files: a matrix file, a dictionary file, and a document file.  The matrix file contains a sparse matrix in MatrixMarket format (.mtx).  This is a term-frequency matrix, and all entries should be positive integers. The preprocessor can also read in matrices containing floating-point inputs, but only if ``boolean mode`` is enabled; this will be described below. The preprocessor does not support dense matrices, since the typical matrices encountered in topic modeling problems are extremely sparse, with occupancies generally less than 1%.
 
-The second file required by the preprocessor is a ‘dictionary file’.  This is a simple ASCII text file containing one entry per line.  Entries represent keywords, bigrams, or other general text strings the user is interested in.  Each line of the file is treated as a ‘keyword’, so multi-word keywords are supported as well.  The smallk/data folder contains a sample dictionary file called ``dictionary.txt``.  The first few entries are::
+The second file required by the preprocessor is a ``dictionary file``.  This is a simple ASCII text file containing one entry per line.  Entries represent keywords, bigrams, or other general text strings the user is interested in.  Each line of the file is treated as a ``keyword``, so multi-word keywords are supported as well.  The smallk/data folder contains a sample dictionary file called ``dictionary.txt``.  The first few entries are::
 
 	triumph
 	dey
@@ -57,7 +57,7 @@ The second file required by the preprocessor is a ‘dictionary file’.  This i
 	circuit
 	...
 
-The third file required by the preprocessor is a ‘documents file’.  This is another simple ASCII text file containing one entry per line.  Entries represent document names or other unique identifiers.  The smallk/data folder also contains a sample documents file called ‘documents.txt’.  The first few entries of this file are::
+The third file required by the preprocessor is a ``documents file``.  This is another simple ASCII text file containing one entry per line.  Entries represent document names or other unique identifiers.  The smallk/data folder also contains a sample documents file called ``documents.txt``.  The first few entries of this file are::
 
 	52828-11101.txt
 	51820-10202.txt
@@ -179,7 +179,7 @@ The meanings of the various options are as follows:
 Sample Runs
 ===========
 
-Suppose we want to generate a matrix of uniformly-distributed random numbers.  The matrix should have a height of 100 and a width of 16, and should be written to a file called ‘w_init.csv’.  Use the matrix generator as follows::
+Suppose we want to generate a matrix of uniformly-distributed random numbers.  The matrix should have a height of 100 and a width of 16, and should be written to a file called ``w_init.csv``.  Use the matrix generator as follows::
 
 	matrixgen --height 100 --width 16 --filename w_init.csv
 
@@ -459,10 +459,10 @@ The ``--matrixfile``, ``--dictfile``, and ``--clusters`` options are required; a
 
 	1.  ``--matrixfile``: Filename of the matrix to be factored.  CSV files are supported for dense matrices and MTX (matrix market) files for sparse matrices.
 	2.  ``--dictfile``: absolute or relative path to the dictionary file
-	3.  ``--clusters``: the number of clusters to generate (equivalent to the NMF ‘k’ value)
+	3.  ``--clusters``: the number of clusters to generate (equivalent to the NMF ``k`` value)
 	4.  ``--algorithm``: the factorization algorithm to use 
-	5.  ``--infile_W``: CSV file containing the m x ‘clusters’ initial values for matrix W; if omitted, W is randomly initialized
-	6.  ``--infile_H``:  CSV file containing the ‘clusters’ x n initial values for matrix H; if omitted, H is randomly initialized
+	5.  ``--infile_W``: CSV file containing the m x ``clusters`` initial values for matrix W; if omitted, W is randomly initialized
+	6.  ``--infile_H``:  CSV file containing the ``clusters`` x n initial values for matrix H; if omitted, H is randomly initialized
 	7.  ``--tol``: tolerance value for the factorization; the stopping criterion is the ratio of projected gradient method
 	8.  ``--outdir``: path to the folder into which to write the output files; if omitted results will be written to the current directory
 	9.  ``--miniter``: minimum number of iterations to perform before checking progress 

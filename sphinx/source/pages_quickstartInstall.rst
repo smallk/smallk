@@ -1,9 +1,10 @@
-**********
-Quickstart
-**********
+#########################
+Quickstart - Installation
+#########################
 
+***********************
 Vagrant Virtual Machine
-=======================
+***********************
 
 Installing SmallK into a virtual machine (OSX, Linux, Windows) is intended for those who are not doing development and/or do not have a reason to do the full installation on Linux or OSX outlined in the sections to follow.
 
@@ -112,8 +113,9 @@ If you want to work with the VM again, from any of the above states you can run:
 		
 again and the VM will be resumed or recreated.
 
+*******************
 Docker Instructions
-===================
+*******************
 
 Running SmallK in a Docker container is intended for those who would like a fast, simple install that keeps their environment unmodified, in exchange for a loss in runtime performance. The basic process is to first build the Docker image, then run the Docker container to execute the desired command.
 

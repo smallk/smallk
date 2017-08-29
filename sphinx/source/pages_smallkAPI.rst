@@ -1,6 +1,6 @@
-##########
-Smallk API
-##########
+################
+Smallk API (C++)
+################
 
 .. only:: html
    
@@ -8,6 +8,8 @@ Smallk API
 
 ..
    :backlinks: entry
+.. 
+   .. include:: pages_quickstartSmallkAPI.rst
 
 *********************
 Examples of API Usage
@@ -15,7 +17,7 @@ Examples of API Usage
 
 In the examples folder you will find a file called ``smallk_example.cpp``. This file contains several examples of how to use the SmallK library.  Also included in the examples folder is a makefile that you can customize for your use.  Note that the SmallK library must first be installed before the example project can be built.
 
-As an example of how to use the sample project, assume the smallk software has been installed into ``/usr/local/smallk``.  Also assume that the user chose to create the recommended environment variable ``SMALLK_INSTALL_DIR`` that stores the location of the top-level install folder, i.e. the user’s ``.bashrc`` file contains this statement::
+As an example of how to use the sample project, assume the smallk software has been installed into ``/usr/local/smallk``.  Also assume that the user chose to create the recommended environment variable ``SMALLK_INSTALL_DIR`` that stores the location of the top-level install folder, i.e. the user's ``.bashrc`` file contains this statement::
 
 		export SMALLK_INSTALL_DIR=/usr/local/smallk 
 
@@ -458,7 +460,7 @@ Resets all state variables to their default values.
 
 	void SeedRNG(const int seed)
 
-Seeds the random number generator (RNG) within the smallk library. Normally this RNG is seeded from the system time whenever the library is initialized.  The RNG is the ‘19937’ Mersenne Twister implementation provided by the C++ standard library.
+Seeds the random number generator (RNG) within the smallk library. Normally this RNG is seeded from the system time whenever the library is initialized.  The RNG is the ``19937`` Mersenne Twister implementation provided by the C++ standard library.
 :: 
 
 	void LoadMatrix(const std::string& filepath)
@@ -478,7 +480,7 @@ Returns a string indicating the directory into which output files will be writte
 
 	void SetOutputDir(const std::string& outdir)
 
-Sets the directory into which output files should be written. The ‘outdir’ argument can either be an absolute or relative path.  The default is the current directory.
+Sets the directory into which output files should be written. The ``outdir`` argument can either be an absolute or relative path.  The default is the current directory.
 
 NMF functions
 -------------
@@ -489,20 +491,20 @@ NMF functions
 		const std::string& initfile_w = std::string(“”),
 		const std::string& initfile_h = std::string(“”))
 
-This function factors the input matrix A of nonnegative elements into nonnegative factors such that: A &cong; WH.  If a matrix is not currently loaded a std::logic_error exception will be thrown.  The default algorithm is NMF-BPP; provide one of the enumerated algorithm values to use a different algorithm.
+This function factors the input matrix A of nonnegative elements into nonnegative factors such that: :math:`\matr{A} \cong \matr{W} \matr{H}`.  If a matrix is not currently loaded a std::logic_error exception will be thrown.  The default algorithm is NMF-BPP; provide one of the enumerated algorithm values to use a different algorithm.
 
 Where A is mxn, W is mxk, and H is kxn.  The value of k a user defined argument, e.g., for clustering applications, k is the number of clusters.
 
-Optional initializer matrices can be provided for the W and H factors via the ‘initfile_w’ and ‘initfile_h’ arguments. These files must contain fully dense matrices in .CSV format.  The W matrix initializer must have dimension mxk, and the H matrix initializer must have dimension kxn. If the initializer matrices do not match these dimensions exactly a std::logic_error exception is thrown.  If initializers are not provided, matrices W and H will be randomly initialized.
+Optional initializer matrices can be provided for the W and H factors via the ``initfile_w`` and ``initfile_h`` arguments. These files must contain fully dense matrices in .CSV format.  The W matrix initializer must have dimension mxk, and the H matrix initializer must have dimension kxn. If the initializer matrices do not match these dimensions exactly a std::logic_error exception is thrown.  If initializers are not provided, matrices W and H will be randomly initialized.
 
-The computed factors W and H will be written to the output directory in the files ‘w.csv’ and ‘h.csv’.
+The computed factors W and H will be written to the output directory in the files ``w.csv`` and ``h.csv``.
     
 Exceptions will be thrown (either from Elemental or smallk) in case of error.
 :: 
 
 	const double* LockedBufferW(unsigned int& ldim, unsigned int& height, unsigned int& width)
 
-This function returns a READONLY pointer to the buffer containing the W factor computed by the Nmf routine, along with buffer and matrix dimensions.  The ‘ldim’, ‘height’, and ‘width’ arguments are all out parameters.  The buffer has a height of ‘ldim’ and a width of ‘width’.  The matrix W has the same width but a height of ‘height’, which may differ from ldim.  The W matrix is stored in the buffer in column-major order.  See the examples/smallk_example.cpp file for an illustration of how to use this function. 
+This function returns a READONLY pointer to the buffer containing the W factor computed by the Nmf routine, along with buffer and matrix dimensions.  The ``ldim``, ``height``, and ``width`` arguments are all out parameters.  The buffer has a height of ``ldim`` and a width of ``width``.  The matrix W has the same width but a height of ``height``, which may differ from ldim.  The W matrix is stored in the buffer in column-major order.  See the examples/smallk_example.cpp file for an illustration of how to use this function. 
 :: 
 
 	const double* LockedBufferH(unsigned int& ldim, unsigned int& height, unsigned int& width)
@@ -559,7 +561,7 @@ Sets the tolerance value used by the NMF-RANK2 algorithm for hierarchical cluste
 
 	void HierNmf2(const unsigned int num_clusters)
 
-This function performs hierarchical clustering on the loaded matrix, generating the number of clusters specified by the ‘num_clusters’ argument.  For an overview of the hierarchical clustering process, see the description below for the hierclust command line application.
+This function performs hierarchical clustering on the loaded matrix, generating the number of clusters specified by the ``num_clusters`` argument.  For an overview of the hierarchical clustering process, see the description below for the hierclust command line application.
 
 This function generates two output files in the output directory: `assignments_N.csv` and `tree_N.{json, xml}`.  Here N is the number of clusters specified as an argument, and the tree file can be in either JSON XML format.
 

@@ -7,5 +7,4 @@ Documentation
    :name: installationtoc
 
    pages_documentation_installation
-   pages_documentation_quick_start
 

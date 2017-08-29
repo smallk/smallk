@@ -36,7 +36,7 @@ We **strongly** recommend that users install both the HybridRelease and PureRele
 
 We also recommend that users clearly separate the different build types as well as the versions of Elemental on their systems. Elemental is under active development, and new releases can introduce changes to the API that are not backwards-compatible with previous releases. To minimize build problems and overall hassle, we recommend that Elemental be installed so that the different versions and build types are cleanly separated.
 
-Thus, two versions of Elemental need to be built. One is a hybrid release build with OpenMP parallelization, and the other is the pure release build without OpenMP parallelization. A separate build folder will be created for each build. The build that uses internal OpenMP parallelization is called a ‘HybridRelease’ build; the build that doesn’t is called a ‘PureRelease’ build. The debug build is called a ‘PureDebug’ build. The HybridRelease build is best for large problems, where the problem size is large enough to overcome the OpenMP parallel overhead. The following is for the 0.84 version of elemental. Set the version to that specified in the README.html file. Note that the files will be installed in ``/usr/local/elemental/[version]/[build type]``.
+Thus, two versions of Elemental need to be built. One is a hybrid release build with OpenMP parallelization, and the other is the pure release build without OpenMP parallelization. A separate build folder will be created for each build. The build that uses internal OpenMP parallelization is called a ``HybridRelease`` build; the build that doesn't is called a ``PureRelease`` build. The debug build is called a ``PureDebug`` build. The HybridRelease build is best for large problems, where the problem size is large enough to overcome the OpenMP parallel overhead. The following is for the 0.84 version of elemental. Set the version to that specified in the README.html file. Note that the files will be installed in ``/usr/local/elemental/[version]/[build type]``.
 
 **The SmallK software supports the latest stable release of Elemental, version 0.85 and above.**
 
@@ -57,7 +57,7 @@ To revert back to hiding hidden files, set the Boolean flag to NO::
 
 	defaults write com.apple.finder AppleShowAllFiles -bool NO
 
-If you use Homebrew, ensure that your PATH is configured to search Homebrew’s installation directory first. Homebrew’s default installation location is ``/usr/local/bin``, so that location needs to be first on your path. To check, run this command from a terminal window::
+If you use Homebrew, ensure that your PATH is configured to search Homebrew's installation directory first. Homebrew's default installation location is ``/usr/local/bin``, so that location needs to be first on your path. To check, run this command from a terminal window::
 
 	cat /etc/paths
 
@@ -119,7 +119,7 @@ OSX:Install libFlame
 
 Next we detail the installation of the high performance numerical library libflame. The library can be gotten from the libflame git repository on github.
 
-It’s important to perform the git clone into a subdirectory NOT called ``flame`` since this can cause name conflicts with the installation. Typically, a git clone is performed into a directory called ``libflame``. However, other directory names will work as well. **Please do not use the directory name `flame`**.
+It's important to perform the git clone into a subdirectory NOT called ``flame`` since this can cause name conflicts with the installation. Typically, a git clone is performed into a directory called ``libflame``. However, other directory names will work as well. **Please do not use the directory name `flame`**.
 
 To obtain the latest version of the FLAME library, clone the FLAME git repository with this command::
 
@@ -191,7 +191,7 @@ For Elemental version 0.85 and later, you need to setup your system to find the 
 		export DYLD_LIBRARY_PATH=
 			$DYLD_LIBRARY_PATH:/usr/local/elemental/VERSION_STRING/HybridRelease/lib/
 
-2. If your Mac OSX is Sierra or higher Apple’s System Integrity Protection (SIP) will prevent using the ``DYLD_LIBRARY_PATH`` variable. We highly discourage disabling SIP as a workaround. Instead, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above::
+2. If your Mac OSX is Sierra or higher Apple's System Integrity Protection (SIP) will prevent using the ``DYLD_LIBRARY_PATH`` variable. We highly discourage disabling SIP as a workaround. Instead, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above::
 
 		ln -s /usr/local/elemental/<VERSION_STRING>/HybridRelease/lib/*.dylib* /usr/local/lib
 
@@ -225,7 +225,7 @@ For Elemental version 0.85 and later, you need to setup your system to find the 
 		export DYLD_LIBRARY_PATH=
 			$DYLD_LIBRARY_PATH:/usr/local/elemental/VERSION_STRING/HybridRelease/lib/
 
-2. If your Mac OSX is Sierra or higher Apple’s System Integrity Protection (SIP) will prevent using the ``DYLD_LIBRARY_PATH`` variable. We highly discourage disabling SIP as a workaround. Instead, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above::
+2. If your Mac OSX is Sierra or higher Apple's System Integrity Protection (SIP) will prevent using the ``DYLD_LIBRARY_PATH`` variable. We highly discourage disabling SIP as a workaround. Instead, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above::
 
 		ln -s /usr/local/elemental/<VERSION_STRING>/HybridRelease/lib/*.dylib* /usr/local/lib
 
@@ -233,7 +233,7 @@ This will symlink the required Elemental libraries.
 
 The two builds of Elemental are now complete.
 
-To test the installation, follow `Elemental’s test instructions`_  for the SVD test to verify that Elemental is working correctly.
+To test the installation, follow `Elemental's test instructions`_  for the SVD test to verify that Elemental is working correctly.
 
 
 How to Install Elemental on Linux
@@ -263,7 +263,7 @@ Linux:Install libFlame
 
 Next we detail the installation of the high performance numerical library libflame. The library can be gotten from the libflame git repository on github.
 
-It’s important to perform the git clone into a subdirectory NOT called ``flame`` since this can cause name conflicts with the installation. We normally do a git clone into a directory called ``libflame``. However, other directory names will work as well, but not ``flame``.
+It's important to perform the git clone into a subdirectory NOT called ``flame`` since this can cause name conflicts with the installation. We normally do a git clone into a directory called ``libflame``. However, other directory names will work as well, but not ``flame``.
 
 To obtain the latest version of the FLAME library, clone the FLAME git repository with this command::
 
@@ -288,7 +288,7 @@ This completes the installation of the FLAME library.
 Linux:Install an accelerated BLAS library
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is essential to link Elemental with an accelerated BLAS library for maximum performance. Linking Elemental with a ‘reference’ BLAS implementation will cripple performance, since the reference implementations are designed for correctness not speed. 
+It is essential to link Elemental with an accelerated BLAS library for maximum performance. Linking Elemental with a 'reference' BLAS implementation will cripple performance, since the reference implementations are designed for correctness not speed. 
 
 If you do not have an accelerated BLAS on your system, you can download and build OpenBLAS. Download, unzip, and untar the tarball (version 0.2.19 as of this writing) and cd into the top-level folder. Build OpenBLAS with this command, assuming you have a 64-bit system::
 
@@ -471,7 +471,7 @@ Note: set this variable to point to either the HybridRelease or the PureRelease 
 
 This completes the two builds of Elemental.
 
-To test the installation, follow `Elemental’s test instructions`_ for the SVD test to verify that Elemental is working correctly.
+To test the installation, follow `Elemental's test instructions`_ for the SVD test to verify that Elemental is working correctly.
 
 
 Installation of Python libraries
@@ -515,7 +515,7 @@ You should see something similar to the following::
 
 		blas_opt_info:
 		extra_link_args = ['-Wl,-framework', '-Wl,Accelerate']
-		extra_compile_args = ['-msse3', '-I/System/Library/Frameworks/vecLib.framework/Header’]
+		extra_compile_args = ['-msse3', '-I/System/Library/Frameworks/vecLib.framework/Header']
 		define_macros = [('NO_ATLAS_INFO', 3)]
 
 If you are using OpenBLAS, you should see that indicated as well.
@@ -553,11 +553,11 @@ The Python libraries can easily be installed via pip and apt-get with the follow
 		pip uninstall cython
 		pip install cython==0.22
 
-This also ensures that cython version 0.22 is installed, which is the currently supported version. The Makefile assumes an installation path of ``/usr/local/lib/python2.7/site-packages`` for the compiled library file. If you are not using apt-get to install your packages, you will need to tell the Makefile where the appropriate site-packages directory is located on your system. Setting the ``SITE_PACKAGES_DIR`` command line variable when running make accomplishes this. If this doesn’t work, an alternative way to set this up is to add a line to the ``.bash_profile`` file (always back up first)::
+This also ensures that cython version 0.22 is installed, which is the currently supported version. The Makefile assumes an installation path of ``/usr/local/lib/python2.7/site-packages`` for the compiled library file. If you are not using apt-get to install your packages, you will need to tell the Makefile where the appropriate site-packages directory is located on your system. Setting the ``SITE_PACKAGES_DIR`` command line variable when running make accomplishes this. If this doesn't work, an alternative way to set this up is to add a line to the ``.bash_profile`` file (always back up first)::
 
 		export SITE_PACKAGES_DIR="<path to lib/python2.7>/site-packages/"
 
-This allows for special installations of Python such as Continuum Analytics’ `Anaconda <https://www.continuum.io/>`_ distribution site-packages to be accessed.
+This allows for special installations of Python such as Continuum Analytics' `Anaconda <https://www.continuum.io/>`_ distribution site-packages to be accessed.
 
 
 Build and Installation of SmallK
@@ -611,7 +611,7 @@ This will install the binary files listed above into the ``/usr/local/smallk/bin
 
 		make prefix=/path/to/smallk  install
 
-If ``PYSMALLK=1``, this will install pysmallk.so into the site-packages directory associated with the Python binary, which is determined by ``brew install python`` as discussed above or wherever the python distribution is installed on the system, e.g., `Continuum’s Anaconda Python <https://www.continuum.io/>`_ distribution is installed in the user’s home directory. To install the Python library to a different location, create an environment variable called ``SITE_PACKAGES_DIR`` and set it equal to the desired installation location prior to running the install command, or supply this as an argument for make::
+If ``PYSMALLK=1``, this will install pysmallk.so into the site-packages directory associated with the Python binary, which is determined by ``brew install python`` as discussed above or wherever the python distribution is installed on the system, e.g., `Continuum's Anaconda Python <https://www.continuum.io/>`_ distribution is installed in the user's home directory. To install the Python library to a different location, create an environment variable called ``SITE_PACKAGES_DIR`` and set it equal to the desired installation location prior to running the install command, or supply this as an argument for make::
 
 		make SITE_PACKAGES_DIR=/path/to/site-packages install
 
@@ -717,4 +717,4 @@ For comments, questions, bug reports, suggestions, etc., contact:
 
 .. include:: contact.inc
 
-.. _Elemental’s test instructions: http://libelemental.org/documentation/0.85/build.html
+.. _Elemental's test instructions: http://libelemental.org/documentation/0.85/build.html
