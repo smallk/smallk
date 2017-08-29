@@ -23,6 +23,8 @@ Community discovery is an important task for revealing structures in large netwo
 
 Please visit `dblp ground truth data <https://github.com/smallk/smallk_data/tree/master/dblp_ground_truth>`_ to obtain the data.
 
+.. include:: acknowledgements.inc
+
 ************
 Contact Info
 ************
