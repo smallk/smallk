@@ -26,7 +26,7 @@ SmallK
    pages_introduction
    pages_quickstartInstall
    pages_quickstartSmallkAPI
-   pages_documentation
+   pages_installation
    pages_commandLineTools
    pages_smallkAPI
    pages_pysmallkAPI

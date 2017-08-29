@@ -1,6 +1,6 @@
-############
-Installation
-############
+#########################
+Installation Instructions
+#########################
 
 .. only:: html
    
@@ -9,12 +9,14 @@ Installation
 ..
    :backlinks: entry
 
-***************************
-Standard Build Instructions
-***************************
+..  
+   ***************************
+   Standard Build Instructions
+   ***************************
 
+*************
 Prerequisites
-=============
+*************
 * A modern C++ compiler that supports the C++11 standard, such as the latest release of the GNU or clang compilers
 * `Elemental <http://libelemental.org/>`_, a high-performance library for dense, distributed linear algebra, which requires:
 
@@ -29,6 +31,9 @@ Prerequisites
 	* numpy
 	* scipy
 	* cython version 0.22
+
+Elemental
+=========
 
 Elemental can make use of MPI parallelization if available. This is generally advantageous for large problems. The SmallK code is also internally parallelized to take full advantage of multiple CPU cores for maximum performance. SmallK does not currently support distributed computation. However, future updates are planned that provide this capability. Please see the `About <http://smallk.github.io/about/>`_ page for information regarding distributed versions of many of the algorithms within SmallK.
 
@@ -475,15 +480,15 @@ To test the installation, follow `Elemental's test instructions`_ for the SVD te
 
 
 Installation of Python libraries
---------------------------------
+================================
 
 **Note: the following section for installing the Python libraries can be skipped if not needed.**
 
 OSX:Install Python libraries
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------
 
 Install Python scientific packages
-""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Assuming that you have used brew to install gcc, as indicated earlier, you can run the following commands to install the necessary libraries::
 
@@ -521,7 +526,7 @@ You should see something similar to the following::
 If you are using OpenBLAS, you should see that indicated as well.
 
 Install Cython: a Python interface to C/C++
-"""""""""""""""""""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 First install the Python Package Index utility, pip. Many Python packages are configured to use this package manager, Cython being one.::
 
@@ -544,7 +549,7 @@ Check the version of cython as above to ensure that Cython version 0.22 is insta
 
 
 Linux:Install Python libraries
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------
 The Python libraries can easily be installed via pip and apt-get with the following commands::
 
 		apt-get install pip
@@ -560,17 +565,18 @@ This also ensures that cython version 0.22 is installed, which is the currently 
 This allows for special installations of Python such as Continuum Analytics' `Anaconda <https://www.continuum.io/>`_ distribution site-packages to be accessed.
 
 
+********************************
 Build and Installation of SmallK
-================================
+********************************
 
 Obtain the Source Code
-----------------------
+======================
 
 The source code for the SmallK library can be downloaded from the `SmallK repository <https://github.com/smallk/smallk.github.io/tree/master/code>`_ on github.
 Once downloaded uncompress the tar ball and follow the installation instructions below.
 
 Build the SmallK library
-------------------------
+========================
 
 After downloading and unpacking the code tarball cd into the top-level ``libsmallk1_<version>`` directory, where version is ``MAJOR.MINOR.PATCH`` (for example 1.6.2). The makefiles assume that you followed our suggested installation plan for Elemental. If this is NOT the case you will need to do one of the following:
 
@@ -597,7 +603,7 @@ This will build the SmallK and pysmallk (optional; see section [Installation of 
 	7. ``pysmallk.so``, if PYSMALLK=1 (0: default), the Python-wrapped SmallK library, making SmallK available via Python
 
 Install the SmallK library
---------------------------
+==========================
 
 To install the code, run this command to install to the default location, which is ``/usr/local/smallk``::
 
@@ -620,7 +626,7 @@ Or, as a last resort, you can edit the top-level SmallK makefile to conform to t
 Before testing the installation, the test code needs to access data. The data is located in a separate github repository so that when cloning the code, the large amount of data is not included. The data repository is located on github at `smallk_data <https://github.com/smallk/smallk_data>`_:
 
 Check the build and installation
---------------------------------
+================================
 
 To test the build, run this command with ``DATA_DIR`` set to wherever the SmallK data repository was cloned::
 
@@ -649,8 +655,10 @@ This completes the SmallK NMF library installation.
 .. NOTE
    Note: Pysmallk requires builds of ``libsmallk``, ``preprocessor``, ``matrixgen``, ``hierclust``, and ``flatclust``.
 
+
+*************************************************
 Build and Installation of pysmallk shared library
-=================================================
+*************************************************
 
 Before building pysmallk, you must ensure that you have already built the standard SmallK library and applications: ``libsmallk``, ``preprocessor``, ``matrixgen``, ``hierclust``, and ``flatclust``.
 
