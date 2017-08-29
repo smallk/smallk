@@ -1,0 +1,17 @@
+@import url("theme.css");
+
+/* https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs */
+
+.wy-side-nav-search>a img.logo, .wy-side-nav-search .wy-dropdown>a img.logo {
+    display: block;
+    margin: 0 auto;
+    height: auto;
+    width: auto;
+    border-radius: 0;
+    max-width: 100%;
+    background: transparent;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+}

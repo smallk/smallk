@@ -40,6 +40,35 @@ SmallK
    
    .. include:: index_splash.rst
 
+Partners
+--------
+
+----------------------------------------------------------------------
+
+.. raw:: html
+
+   <center>
+
+|gtri|_
+
+.. raw:: html
+
+   </center>
+
+
+.. raw:: html
+
+   <center>
+
+|gt|_
+|darpa|_
+
+.. raw:: html
+
+   </center>
+
+----------------------------------------------------------------------
+
 ..
    Indices and tables
    ==================
@@ -47,4 +76,28 @@ SmallK
    * :ref:`genindex`
    * :ref:`modindex`
    * :ref:`search`
+
+.. |darpa| image:: _static/darpa.png
+   :height: 588 px
+   :width: 1096 px
+   :scale: 15 %
+.. _darpa: http://www.darpa.mil/
+
+.. |darpa_orig| image:: _static/darpa_original.png
+   :height: 300 px
+   :width: 600 px
+   :scale: 70 %
+.. _darpa_orig: http://www.darpa.mil/
+
+.. |gtri| image:: _static/gtri.png
+   :height: 300 px
+   :width: 1418 px
+   :scale: 20 %
+.. _gtri: https://gtri.gatech.edu/
+
+.. |gt| image:: _static/georgiatech.png
+   :height: 235 px
+   :width: 532 px
+   :scale: 40 %
+.. _gt: http://www.gatech.edu/
 

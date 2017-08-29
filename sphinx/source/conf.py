@@ -140,6 +140,7 @@ html_theme_options = {
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 #html_logo = None
+html_logo = '_static/darpa.png'
 
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -150,6 +151,13 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+#The style sheet to use for HTML pages. A file of that name must exist either in 
+#Sphinx’s static/ path, or in one of the custom paths given in html_static_path. 
+#Default is the stylesheet given by the selected theme. If you only want to add or 
+#override a few things compared to the theme’s stylesheet, use CSS @import to import 
+#the theme’s stylesheet.
+html_style = 'css/my_theme.css'
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
