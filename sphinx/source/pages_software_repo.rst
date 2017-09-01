@@ -15,7 +15,7 @@ These are the ways to obtain the code:
 Installation and build instructions can be found at:
 
 1. Online `installation instructions <http://smallk.github.io/index.html>`_.
-2. A `pdf of the installation instructions <http://smallk.github.io/doc/smallk_readme.pdf>` is also included at these sites.
+2. A `pdf of the installation instructions <http://smallk.github.io/doc/smallk_readme.pdf>`_ is also included at these sites.
 
 ************
 Contact Info
