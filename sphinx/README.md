@@ -4,11 +4,11 @@ documentation repo = https://github.com/smallk/smallk.github.io
 
 # Setting up the documentation build environment
 
-Clone the main smallk repo and enter the sphinx directory.
+Clone the main smallk repo and enter the sphinx directory. From there, install the python requirements:
 
     sudo -H pip install -r requirements.txt	#install the theme, and so on
 
-The html documentation and the pdf documentation both rely on Latex -- the html for generating svg images of math equations, and the pdf for compiling auto generated tex files into a pdf. It is necessary to install latex if not already present. If the html or pdf build fails, one potential fix is to install the extended/full latex, which is over a Gigabyte:
+The html documentation and the pdf documentation both rely on Latex -- the html for generating svg images of math equations, and the pdf for compiling auto generated tex files into a pdf. It is necessary to install latex if not already present. If the html or pdf build fails, one potential fix is to install the extended/full latex, which is over a gigabyte:
 
     sudo apt-get install texlive-latex-base  	#latex for math
     sudo apt-get install texlive-latex-extra	#fix a utf8x error
@@ -30,11 +30,11 @@ Change the working directory to `<main smallk repo>/sphinx` and run three `make`
     make latex
     make latexpdf
 
-The generated html and pdf documentation will be found in `sphinx/build/html/*` and 'sphinx/build/latex/SmallK.pdf`. 
+The generated html and pdf documentation will be found in `sphinx/build/html/*` and `sphinx/build/latex/SmallK.pdf`. 
 
 # Updating online documentation
 	
-After building the html and pdf, change the working directory to <documentation repo>. You may choose to delete all current html files:
+After building the html and pdf, change the working directory to `<documentation repo>`. You may choose to delete all current html files:
 
 **caution! this assumes all html and related files (js, css, images, etc) are obsolete; it does not clean up the `doc`, `papers` nor `code` directories**
 
