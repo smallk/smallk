@@ -19,41 +19,55 @@ To deploy the SmallK VM:
 .. tip::
    Note: For Windows, ensure that you have a VirtualBox version >= 4.3.12. After installing Vagrant, you may need to log out and log back in to ensure that you can run vagrant commands in the command prompt.
 
-**Optional:** ``git clone`` the `smallk_data <https://github.com/smallk/smallk_data>`_ repository so that it is parallel with the smallk repository. This is an alternate way to test the installation and begin to work with SmallK. This directory can be synced with a directory of the same name in the VM by adding or uncommenting the following line in ``smallk/vagrant/Vagrantfile``::
+**Optional:** ``git clone`` the `smallk_data <https://github.com/smallk/smallk_data>`_ repository so that it is parallel with the smallk repository. This is an alternate way to test the installation and begin to work with SmallK. This directory can be synced with a directory of the same name in the VM by adding or uncommenting the following line in ``smallk/vagrant/Vagrantfile``:
 
-		config.vm.synced_folder "../../smallk_data", "/home/vagrant/smallk_data"	
+.. code-block:: none
 
-**2.** From within the ``smallk/vagrant`` directory, run::
+   config.vm.synced_folder "../../smallk_data", "/home/vagrant/smallk_data"	
+
+**2.** From within the ``smallk/vagrant`` directory, run:
 		
-		vagrant up
-		
-This can take as long as an hour to build the VM, which will be based on a minimal Ubuntu 16.04 installation. The ``smallk/vagrant/Vagrantfile`` can be customized in many ways to change the specifications for the VM that is built. See more information `here <http://docs.vagrantup.com/v2/>`_. The default configuration provides the VM with 4 GB of memory and 3 CPUs. Increasing these allocations will improve the performance of the application. This can be done by modifying these lines in the Vagrantfile::
+.. code-block:: none
 
-		vb.memory = 4096
-		vb.cpus = 3
+   vagrant up
+		
+This can take as long as an hour to build the VM, which will be based on a minimal Ubuntu 16.04 installation. The ``smallk/vagrant/Vagrantfile`` can be customized in many ways to change the specifications for the VM that is built. See more information `here <http://docs.vagrantup.com/v2/>`_. The default configuration provides the VM with 4 GB of memory and 3 CPUs. Increasing these allocations will improve the performance of the application. This can be done by modifying these lines in the Vagrantfile:
+
+.. code-block:: none
+
+   vb.memory = 4096
+   vb.cpus = 3
 
 After ``vagrant up`` has completed, the SmallK and pysmallk libraries will have been built and tested. Additionally, the smallk_data directory, if cloned as in the optional step above, will have been synced into the VM. For more details regarding what is being built and executed while provisioning the VM, please inspect ``smallk/vagrant/bootstrap.sh``.
 
-**3.** Once the VM has been built, run::
+**3.** Once the VM has been built, run:
 
-		vagrant ssh
+.. code-block:: none
+
+   vagrant ssh
 
 .. tip::
    Note: For Windows, you will need an ssh client in order to run the above command. This can be obtained via `CygWin <https://www.cygwin.com/>`_ `MinGW <http://sourceforge.net/projects/mingw/files/>`_, or `Git <http://git-scm.com/downloads>`_. If you would like to use PuTTY to connect to your virtual machine, follow `these <https://github.com/Varying-Vagrant-Vagrants/VVV/wiki/Connect-to-Your-Vagrant-Virtual-Machine-with-PuTTY>`_ instructions.
 
 In case you need it, the username/password for the VM created will be vagrant/vagrant.
 
-This will drop you into the command line of the VM that was just created, in a working directory at ``/home/vagrant``. From there, you can navigate to ``/home/vagrant/libsmallk-<version>``, (e.g., libsmallk-1.6.2), and run::
+This will drop you into the command line of the VM that was just created, in a working directory at ``/home/vagrant``. From there, you can navigate to ``/home/vagrant/libsmallk-<version>``, (e.g., libsmallk-1.6.2), and run:
 
-		make check PYSMALLK=1 ELEMVER=0.85 DATA_DIR=../smallk_data		
+.. code-block:: none
+
+   make check PYSMALLK=1 ELEMVER=0.85 DATA_DIR=../smallk_data		
 		
 to verify your installation was successful. 
 
-**4.** To test the installation at the command line, run::
+**4.** To test the installation at the command line, run:
 
-		nmf
+.. code-block:: none
 
-This will produce the help output for the nmf library function::
+   nmf
+
+This will produce the help output for the nmf library function:
+
+.. code-block:: none
 
 	Usage: nmf
 	        --matrixfile <filename>  Filename of the matrix to be factored.
@@ -86,30 +100,40 @@ This will produce the help output for the nmf library function::
 	        [--verbose  1]           Whether to print updates to the screen.
 	                                     1 == print updates, 0 == silent
 
-**5.** To test the installation of pysmallk, attempt to import numpy and pysmallk; numpy must be imported BEFORE pysmallk is imported. Running the following command from the command line should produce no output::
+**5.** To test the installation of pysmallk, attempt to import numpy and pysmallk; numpy must be imported BEFORE pysmallk is imported. Running the following command from the command line should produce no output:
 
-		python -c "import numpy; import pysmallk"
+.. code-block:: none
+
+   python -c "import numpy; import pysmallk"
 		
 If there is no import error, pysmallk was installed correctly and is globally available.
 
 
 **6.** When you are ready to shut down the VM, run ``exit`` from within the vagrant machine, then run one of the following from the command line of your host machine (wherever ``vagrant up`` was executed):
 
-Save the current running state::
+Save the current running state:
 
-		vagrant suspend
+.. code-block:: none
 
-Gracefully shut down the machine::
+   vagrant suspend
 
-		vagrant halt
+Gracefully shut down the machine:
 
-Remove the VM from your machine (this will require rebuilding the VM to restart it)::
+.. code-block:: none
 
-		vagrant destroy
+   vagrant halt
 
-If you want to work with the VM again, from any of the above states you can run::
+Remove the VM from your machine (this will require rebuilding the VM to restart it):
 
-		vagrant up
+.. code-block:: none
+
+   vagrant destroy
+
+If you want to work with the VM again, from any of the above states you can run:
+
+.. code-block:: none
+
+   vagrant up
 		
 again and the VM will be resumed or recreated.
 
@@ -123,15 +147,21 @@ Running SmallK in a Docker container is intended for those who would like a fast
 
 **2.** Build the smallk Docker image.
 
-First, make sure you have all submodules and their own submodules. From within the root of the smallk directory, run::
+First, make sure you have all submodules and their own submodules. From within the root of the smallk directory, run:
 
-    	git submodule update --init --recursive
+.. code-block:: none
 
-Now we can build the image. In the same (project root) directory, run this::
+   git submodule update --init --recursive
 
-    	docker build -t smallk .
+Now we can build the image. In the same (project root) directory, run this:
 
-This will download all dependencies from the Ubuntu repositories, PyPI, GitHub, etc. Everything will be built including smallk itself. You will end up with a Docker image tagged "smallk". At the end of the build process you should see the following::
+.. code-block:: none
+
+   docker build -t smallk .
+
+This will download all dependencies from the Ubuntu repositories, PyPI, GitHub, etc. Everything will be built including smallk itself. You will end up with a Docker image tagged "smallk". At the end of the build process you should see the following:
+
+.. code-block:: none
 
 		Step 40/40 : CMD /bin/bash
 		 ---> Running in 3fdb5e73afdc
@@ -144,11 +174,13 @@ This can take as long as an hour to build the image, which is based on a minimal
 
 **3.** Run the Docker container.
 
-The Docker container may be executed from any directory. Regardless of where you run it, you will need a volume for any input/output data. As an example, you may run the built-in PySmallk tests. The instructions below assume that your work directory is named ``/home/ubuntu``. Replace it with the appropriate name. (The Docker daemon requires an absolute path for the local volume reference.)::
+The Docker container may be executed from any directory. Regardless of where you run it, you will need a volume for any input/output data. As an example, you may run the built-in PySmallk tests. The instructions below assume that your work directory is named ``/home/ubuntu``. Replace it with the appropriate name. (The Docker daemon requires an absolute path for the local volume reference.):
 
-	    cd /home/ubuntu
-	    git clone https://github.com/smallk/smallk_data.git smallk_data
-	    docker run --volume /home/ubuntu/smallk_data:/data smallk make check PYSMALLK=1 ELEMVER=0.85 DATA_DIR=/data
+.. code-block:: bash
+
+		cd /home/ubuntu
+		git clone https://github.com/smallk/smallk_data.git smallk_data
+		docker run --volume /home/ubuntu/smallk_data:/data smallk make check PYSMALLK=1 ELEMVER=0.85 DATA_DIR=/data
 
 Here is a breakdown of that Docker command to explain each part:
 
@@ -164,7 +196,9 @@ Here is a breakdown of that Docker command to explain each part:
 
      - ``DATA_DIR=/data``: Tell the test suite where the local data is stored (from the perspective of the container)
 
-If your execution of the PySmallk tests is successful, you should see a lot of output, ending with the following lines::
+If your execution of the PySmallk tests is successful, you should see a lot of output, ending with the following lines:
+
+.. code-block:: none
 
 		assignment file test passed
 		***** PysmallK: All tests passed. *****

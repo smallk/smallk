@@ -21,11 +21,15 @@ C++ Project Setup
 
 The SmallK distribution includes an ``examples`` folder containing two files: ``smallk_examples.cpp`` and a ``Makefile``. To build the example CPP file, open a terminal window, ``cd`` to the ``smallk/examples`` folder, and run the command ``make``.
 
-If the SmallK library has been installed properly and the `smallk_data <https://github.com/smallk/smallk_data>`_ repository has been cloned at the same directory level as the SmallK library repository, the project should build and the binary file bin/example will be created.  To run the example, run this command from the smallk/examples folder::
+If the SmallK library has been installed properly and the `smallk_data <https://github.com/smallk/smallk_data>`_ repository has been cloned at the same directory level as the SmallK library repository, the project should build and the binary file bin/example will be created.  To run the example, run this command from the smallk/examples folder:
 
-	./bin/example ../../smallk_data
+.. code-block:: none
 
-Results will appear for the following algorthms::
+   ./bin/example ../../smallk_data
+
+Results will appear for the following algorthms:
+
+.. code-block:: none
 
 	Running NMF-BPP using k=32
 	Running NMF-HALS using k=16
@@ -37,9 +41,11 @@ Results will appear for the following algorthms::
 		
 The output files will be written to the directory where the binary ``example`` is run. In the above, the outputs will be written to the ``<SmallK dir>/examples``.
 
-To experiment with the SmallK library, make a backup copy of ``smallk_examples.cpp`` as follows::
+To experiment with the SmallK library, make a backup copy of ``smallk_examples.cpp`` as follows:
 
-	cp smallk_examples.cpp smallk_examples.cpp.bak
+.. code-block:: none
+
+   cp smallk_examples.cpp smallk_examples.cpp.bak
 
 The file ``smallk_examples.cpp`` can now be used for experimentation. The original file can be restored from the backup at the user's discretion.
 
@@ -53,14 +59,18 @@ The SmallK documentation contains complete descriptions of all SmallK functions 
 Load a Matrix
 *************
 
-Suppose you want to perform NMF or clustering on a matrix. The first action to take is to load the matrix into SmallK using the ``LoadMatrix`` function. This function accepts either dense matrices in CSV format or sparse matrices in MatrixMarket format.  Since we want to perform NMF and clustering on the Reuters matrix, we need to supply the path to the Reuters matrix file (``reuters.mtx``) as an argument to LoadMatrix.  This path has already been setup in the code; the appropriate string variable is called ``filepath_matrix``.  Enter the following line after the opening brace of the try block after line 61::
+Suppose you want to perform NMF or clustering on a matrix. The first action to take is to load the matrix into SmallK using the ``LoadMatrix`` function. This function accepts either dense matrices in CSV format or sparse matrices in MatrixMarket format.  Since we want to perform NMF and clustering on the Reuters matrix, we need to supply the path to the Reuters matrix file (``reuters.mtx``) as an argument to LoadMatrix.  This path has already been setup in the code; the appropriate string variable is called ``filepath_matrix``.  Enter the following line after the opening brace of the try block after line 61:
 
-	smallk::LoadMatrix(filepath_matrix);
+.. code-block:: cpp
 
-Save the file and run the following commands, which should complete without error::
+   smallk::LoadMatrix(filepath_matrix);
 
-	make clean
-	make
+Save the file and run the following commands, which should complete without error:
+
+.. code-block:: none
+
+   make clean
+   make
 
 Once a matrix is loaded into SmallK it remains loaded until it is replaced with a new call to LoadMatrix. Thus, SmallK makes it easy to experiment with different factorization or clustering parameters, without having to reload a matrix each time.
 
@@ -73,34 +83,42 @@ Having loaded the Reuters matrix, we can now run different NMF algorithms and fa
 NMF-BPP
 =======
 
-Let's use the default NMF-BPP algorithm to factor the 12411 x 7984 Reuters matrix into W and H with a k value of 32.  Add the following lines to the code::
+Let's use the default NMF-BPP algorithm to factor the 12411 x 7984 Reuters matrix into W and H with a k value of 32.  Add the following lines to the code:
 
-	MsgBox(“Running NMF-BPP using k=32”);
-	smallk::Nmf(32);
+.. code-block:: cpp
 
-Build the code as described above; then run it with this command::
+   MsgBox("Running NMF-BPP using k=32");
+   smallk::Nmf(32);
 
-	./bin/example ../smallk_data
+Build the code as described above; then run it with this command:
+
+.. code-block:: none
+
+   ./bin/example ../smallk_data
 
 The MsgBox function prints the string supplied as argument to the screen; this function is purely for annotating the output.  The Nmf function performs the factorization and generates two output files, ``w.csv`` and ``h.csv``, which contain the matrix factors.  The files are written to the current directory.  SmallK can write these files to a specified output directory via the SetOutputDir function, but we will use the current directory for the examples in this guide.
 
 NMF-HALS
 ========
 
-Now suppose we want to repeat the factorization, this time using the NMF-HALS algorithm with a k value of 16.  Since the BPP algorithm is the default, we need to explicitly specify the algorithm as an argument to the Nmf function.  Add these lines to the code::
+Now suppose we want to repeat the factorization, this time using the NMF-HALS algorithm with a k value of 16.  Since the BPP algorithm is the default, we need to explicitly specify the algorithm as an argument to the Nmf function.  Add these lines to the code:
 
-	MsgBox(“Running NMF-HALS using k=16”)
-	smallk::Nmf(16, smallk::Algorithm::HALS);
+.. code-block:: cpp
+
+   MsgBox("Running NMF-HALS using k=16")
+   smallk::Nmf(16, smallk::Algorithm::HALS);
 
 Build and run the code again; you should observe that the code now performs two separate factorizations.
 
 NMF Initialization
 ==================
 
-The SmallK library provides the capability to explicitly initialize the W and H factors.  For the previous two examples, these matrices were randomly initialized, since no initializers were provided in the call to the Nmf function. The data directory contains initializer matrices for the W and H factors of the Reuters matrix, assuming that k has a value of 2. To illustrate the use of initializers, we will use the RANK2 algorithm to factor the Reuters matrix again, using a k-value of 2, but with explicit initializers.  Add these lines to the code::
+The SmallK library provides the capability to explicitly initialize the W and H factors.  For the previous two examples, these matrices were randomly initialized, since no initializers were provided in the call to the Nmf function. The data directory contains initializer matrices for the W and H factors of the Reuters matrix, assuming that k has a value of 2. To illustrate the use of initializers, we will use the RANK2 algorithm to factor the Reuters matrix again, using a k-value of 2, but with explicit initializers.  Add these lines to the code:
 
-	MsgBox("Running NMF-RANK2 with W and H initializers");
-	smallk::Nmf(2, smallk::Algorithm::RANK2, filepath_w, filepath_h);
+.. code-block:: cpp
+
+   MsgBox("Running NMF-RANK2 with W and H initializers");
+   smallk::Nmf(2, smallk::Algorithm::RANK2, filepath_w, filepath_h);
 
 Build and run the code again, and observe that the code performs three separate factorizations.
 
@@ -114,16 +132,20 @@ Typically the use of initializers is not required.
 Hierarchical Clustering
 ***********************
 
-Now let's perform hierarchical clustering on the Reuters matrix. To do this, we must first load the dictionary (or vocabulary) file associated with the Reuters data (a file called ``reuters_dictionary.txt``).  A string variable containing the full path to this file is provided in the ``filepath_dict`` variable.  Add the following line to the code to load the Reuters dictionary::
+Now let's perform hierarchical clustering on the Reuters matrix. To do this, we must first load the dictionary (or vocabulary) file associated with the Reuters data (a file called ``reuters_dictionary.txt``).  A string variable containing the full path to this file is provided in the ``filepath_dict`` variable.  Add the following line to the code to load the Reuters dictionary:
 
-	smallk::LoadDictionary(filepath_dict);
+.. code-block:: cpp
+
+   smallk::LoadDictionary(filepath_dict);
 
 As with the matrix file, the dictionary file remains loaded until it is replaced by another call to LoadDictionary.
 
-With the matrix file and the dictionary file both loaded, we can perform hierarchical clustering on the Reuters data. For the first attempt we will generate a factorization tree containing five clusters.  The number of clusters is specified as an argument to the clustering function.   Add these lines to the code::
+With the matrix file and the dictionary file both loaded, we can perform hierarchical clustering on the Reuters data. For the first attempt we will generate a factorization tree containing five clusters.  The number of clusters is specified as an argument to the clustering function.   Add these lines to the code:
 
-	MsgBox("Running HierNMF2 with 5 clusters, JSON format");
-	smallk::HierNmf2(5);
+.. code-block:: cpp
+
+   MsgBox("Running HierNMF2 with 5 clusters, JSON format");
+   smallk::HierNmf2(5);
 
 Build and run the code.
 
@@ -135,11 +157,13 @@ The other output file will be called ``tree_5.json``, a JSON file containing the
 Flat Clustering
 ***************
 
-For the final example, let's generate a flat clustering result in addition to the hierarchical clustering result. We will also increase the number of terms per node to 8 and the number of clusters to 18.  Add the following lines to the code::
+For the final example, let's generate a flat clustering result in addition to the hierarchical clustering result. We will also increase the number of terms per node to 8 and the number of clusters to 18.  Add the following lines to the code:
 
-	MsgBox("Running HierNmf2 with 18 clusters, 8 terms, with flat");
-	smallk::SetMaxTerms(8);
-	smallk::HierNmf2WithFlat(18);
+.. code-block:: cpp
+
+   MsgBox("Running HierNmf2 with 18 clusters, 8 terms, with flat");
+   smallk::SetMaxTerms(8);
+   smallk::HierNmf2WithFlat(18);
 
 Build and run the code.
 
@@ -152,7 +176,7 @@ The call to SetMaxTerms increases the number of top terms per node. The next lin
  
 These examples demonstrate how easy it is to use SmallK for NMF and clustering. There are additional functions in the SmallK interface, described in the documentation, installation section, which allows users to set various parameters that affect the NMF-based algorithms of SmallK.  The default values for all such parameters are very reasonable, and most users will likely not ever need to change these parameters.
 
-The smallk_examples.cpp file and the associated makefile can be used as a starting point for your own NMF and clustering projects.
+The ``smallk_examples.cpp`` file and the associated makefile can be used as a starting point for your own NMF and clustering projects.
 
 **********
 Disclaimer

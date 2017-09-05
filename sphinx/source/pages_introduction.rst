@@ -29,7 +29,7 @@ Our algorithm framework utilizes various constraints on the non-convex optimizat
 SmallK Overview
 ***************
 
-The SmallK library provides routines for low rank matrix approximation via nonnegative matrix factorization (NMF). The term “nonnegative matrices” means that for a given matrix all of it's elements are greater than or equal to zero, which we express as :math:`\geq 0`.
+The SmallK library provides routines for low rank matrix approximation via nonnegative matrix factorization (NMF). The term "nonnegative matrices" means that for a given matrix all of it's elements are greater than or equal to zero, which we express as :math:`\geq 0`.
 
 Given a nonnegative matrix :math:`\matr{A}`, the SmallK software computes nonnegative matrices :math:`\matr{W}` and :math:`\matr{H}` such that :math:`\matr{A} \cong \matr{W} \matr{H}`
 

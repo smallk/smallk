@@ -47,26 +47,34 @@ Thus, two versions of Elemental need to be built. One is a hybrid release build 
 
 
 .. CAUTION
-   A note of caution: copying the command lines from this website and pasting them into a terminal may result in the commands not properly executing due to how characters are interpreted: the double dash --, “double quotes”, etc. For pasting the commands to a terminal, first copy the command lines to a text editor and copy/paste from there.
+   A note of caution: copying the command lines from this website and pasting them into a terminal may result in the commands not properly executing due to how characters are interpreted: the double dash --, "double quotes", etc. For pasting the commands to a terminal, first copy the command lines to a text editor and copy/paste from there.
 
 How to Install Elemental on MacOSX
 ----------------------------------
 
 On MacOSX we recommend using `Homebrew <http://mxcl.github.io/homebrew/>`_ as the package manager. Homebrew does not require sudo privileges for package installation, unlike other package managers such as MacPorts. Thus the chances of corrupting vital system files are greatly reduced using Homebrew.
 
-It is convenient to be able to view hidden files (like .file) in the MacOSX Finder. To do so run the following at the command line::
+It is convenient to be able to view hidden files (like .file) in the MacOSX Finder. To do so run the following at the command line:
 
-	defaults write com.apple.finder AppleShowAllFiles -bool YES
+.. code-block:: none
 
-To revert back to hiding hidden files, set the Boolean flag to NO::
+   defaults write com.apple.finder AppleShowAllFiles -bool YES
 
-	defaults write com.apple.finder AppleShowAllFiles -bool NO
+To revert back to hiding hidden files, set the Boolean flag to NO:
 
-If you use Homebrew, ensure that your PATH is configured to search Homebrew's installation directory first. Homebrew's default installation location is ``/usr/local/bin``, so that location needs to be first on your path. To check, run this command from a terminal window::
+.. code-block:: none
 
-	cat /etc/paths
+   defaults write com.apple.finder AppleShowAllFiles -bool NO
 
-We also recommend running the following commands on a daily basis to refresh your brewed installations::
+If you use Homebrew, ensure that your PATH is configured to search Homebrew's installation directory first. Homebrew's default installation location is ``/usr/local/bin``, so that location needs to be first on your path. To check, run this command from a terminal window:
+
+.. code-block:: none
+
+   cat /etc/paths
+
+We also recommend running the following commands on a daily basis to refresh your brewed installations:
+
+.. code-block:: none
 
 	brew update
 	brew upgrade
@@ -80,15 +88,21 @@ If the first entry is not ``/usr/local/bin``, you will need to edit the ``/etc/p
 OSX:Install the latest GNU compilers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Elemental and SmallK both require a modern C++ compiler compliant with the C++11 standard. We recommend that you install the latest stable version of the clang and GNU C++ compilers. To do this, first install the XCode command line tools with this command::
+Elemental and SmallK both require a modern C++ compiler compliant with the C++11 standard. We recommend that you install the latest stable version of the clang and GNU C++ compilers. To do this, first install the XCode command line tools with this command:
 
-		xcode-select --install
+.. code-block:: none
 
-If this command produces an error, download and install XCode from the AppStore, then repeat the command. If that should still fail, install the command line tools from the XCode preferences menu. After the installation completes, run this command from a terminal window::
+   xcode-select --install
 
-		clang++ --version
+If this command produces an error, download and install XCode from the AppStore, then repeat the command. If that should still fail, install the command line tools from the XCode preferences menu. After the installation completes, run this command from a terminal window:
 
-You should see output similar to this::
+.. code-block:: none
+
+   clang++ --version
+
+You should see output similar to this:
+
+.. code-block:: none
 
 		Apple LLVM version 8.1.0 (clang-802.0.42)
 		Target: x86_64-apple-darwin16.7.0
@@ -97,13 +111,17 @@ You should see output similar to this::
 
 The latest version of the GNU compiler at the time of writing is g++-7 (gcc 7.1.0), which is provided by the ``gcc`` homebrew package. In addition to the gcc package, homebrew also provides a gcc49 package from the homebrew/versions tap. If this alternative gcc49 package is installed on your system it will prevent homebrew from symlinking the gcc package correctly. We recommend uninstalling the gcc49 versioned package and just using the gcc package instead. The Fortran compiler provided with the gcc package will also be configured to properly build numpy, which is required for the python interface to SmallK.
 
-If you need to uninstall the gcc49 package, run the following commands::
+If you need to uninstall the gcc49 package, run the following commands:
+
+.. code-block:: none
 
 		brew uninstall gcc49
 		brew cleanup
 		brew doctor
 
-Then install the gcc package as follows::
+Then install the gcc package as follows:
+
+.. code-block:: none
 
 		brew install gcc
 
@@ -112,9 +130,11 @@ The Apple-provided gcc and g++ will not be overwritten by this installation. The
 OSX:Install MPI Tools
 ^^^^^^^^^^^^^^^^^^^^^
 
-Install the latest version of `mpich <http://www.mpich.org/>`_ with Homebrew as follows::
+Install the latest version of `mpich <http://www.mpich.org/>`_ with Homebrew as follows:
 
-		brew install mpich
+.. code-block:: none
+
+   brew install mpich
 
 We recommend installing mpich rather than openMPI due to some superior features of mpich (prior versions of Elemental use openMPI, which can be installed using Homebrew as well). Also, Elemental 0.85 (discussed below) now uses mpich. Please see some discussion regarding openMPI vs mpich at:
 http://stackoverflow.com/questions/2427399/mpich-vs-openmpi
@@ -126,23 +146,31 @@ Next we detail the installation of the high performance numerical library libfla
 
 It's important to perform the git clone into a subdirectory NOT called ``flame`` since this can cause name conflicts with the installation. Typically, a git clone is performed into a directory called ``libflame``. However, other directory names will work as well. **Please do not use the directory name `flame`**.
 
-To obtain the latest version of the FLAME library, clone the FLAME git repository with this command::
+To obtain the latest version of the FLAME library, clone the FLAME git repository with this command:
 
-		git clone https://github.com/flame/libflame.git
+.. code-block:: none
 
-Run the configure script in the top-level FLAME directory as follows (assuming the install path is ``/usr/local/flame``)::
+   git clone https://github.com/flame/libflame.git
 
-	./configure --prefix=/usr/local/flame --with-cc=/usr/local/bin/gcc-6 --with-ranlib=/usr/local/bin/gcc-ranlib-6
+Run the configure script in the top-level FLAME directory as follows (assuming the install path is ``/usr/local/flame``):
+
+.. code-block:: none
+
+   ./configure --prefix=/usr/local/flame --with-cc=/usr/local/bin/gcc-6 --with-ranlib=/usr/local/bin/gcc-ranlib-6
 
 A complete list of configuration options can be obtained by running ``./configure --help``.
 
-After the configuration process completes, build the FLAME library as follows::
+After the configuration process completes, build the FLAME library as follows:
 
-		make -j4
+.. code-block:: none
 
-The ``-j4`` option tells Make to use four processes to perform the build.  This number can be increased if you have a more capable system. Libflame will be installed with the following command::
+   make -j4
 
-		make install
+The ``-j4`` option tells Make to use four processes to perform the build.  This number can be increased if you have a more capable system. Libflame will be installed with the following command:
+
+.. code-block:: none
+
+   make install
 
 The FLAME library is now installed.
 
@@ -151,9 +179,11 @@ OSX:Install Elemental
 
 ### Here is a recommended installation scheme for Elemental: ###
 
-Choose a directory for the root of the Elemental installation.  For example, this may be::
+Choose a directory for the root of the Elemental installation.  For example, this may be:
 
-		/usr/local/elemental
+.. code-block:: none
+
+   /usr/local/elemental
 
 Download one of the SmallK-supported releases of Elemental, unzip and untar the distribution, and cd to the top-level directory of the unzipped distribution. This directory will be denoted by UNZIP_DIR in the following instructions.
 
@@ -162,12 +192,16 @@ Download one of the SmallK-supported releases of Elemental, unzip and untar the 
 HybridRelease Build
 """""""""""""""""""
 
-From the Elemental-0.85 directory, run the following command to create a local build directory for the HybridRelease build::
+From the Elemental-0.85 directory, run the following command to create a local build directory for the HybridRelease build:
 
-		mkdir build_hybrid
-		cd build_hybrid
+.. code-block:: none
 
-Use the following CMake command for the HybridRelease build, substituting 0.85 for <VERSION_STRING>::
+   mkdir build_hybrid
+   cd build_hybrid
+
+Use the following CMake command for the HybridRelease build, substituting 0.85 for <VERSION_STRING>:
+
+.. code-block:: none
 
 	cmake -D CMAKE_INSTALL_PREFIX=/usr/local/elemental/<VERSION_STRING>/HybridRelease
 	-D CMAKE_BUILD_TYPE=HybridRelease 
@@ -179,26 +213,34 @@ Use the following CMake command for the HybridRelease build, substituting 0.85 f
 
 Note that we have installed g++-7 into ``/usr/local/bin`` and libFLAME into ``/usr/local/flame``. Alter these paths, if necessary, to match the installation location on your system.
 
-Once the CMake configuration step completes, you can build Elemental from the generated Makefiles with the following command::
+Once the CMake configuration step completes, you can build Elemental from the generated Makefiles with the following command:
 
-		make -j4
+.. code-block:: none
+
+   make -j4
 
 The -j4 option tells Make to use four processes to perform the build. This number can be increased if you have a more capable system.
 
-After the build completes, install elemental as follows::
+After the build completes, install elemental as follows:
 
-		make install
+.. code-block:: none
+
+   make install
 
 For Elemental version 0.85 and later, you need to setup your system to find the Elemental dynamic libraries. Method 2 below is preferred:
 
-1. If your Mac OSX is earlier than Sierra, then, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing VERSION_STRING as above::
+1. If your Mac OSX is earlier than Sierra, then, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing VERSION_STRING as above:
+
+.. code-block:: none
 
 		export DYLD_LIBRARY_PATH=
 			$DYLD_LIBRARY_PATH:/usr/local/elemental/VERSION_STRING/HybridRelease/lib/
 
-2. If your Mac OSX is Sierra or higher Apple's System Integrity Protection (SIP) will prevent using the ``DYLD_LIBRARY_PATH`` variable. We highly discourage disabling SIP as a workaround. Instead, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above::
+2. If your Mac OSX is Sierra or higher Apple's System Integrity Protection (SIP) will prevent using the ``DYLD_LIBRARY_PATH`` variable. We highly discourage disabling SIP as a workaround. Instead, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above:
 
-		ln -s /usr/local/elemental/<VERSION_STRING>/HybridRelease/lib/*.dylib* /usr/local/lib
+.. code-block:: none
+
+   ln -s /usr/local/elemental/<VERSION_STRING>/HybridRelease/lib/*.dylib* /usr/local/lib
 
 This will symlink the required Elemental libraries.
 
@@ -206,13 +248,17 @@ This will symlink the required Elemental libraries.
 PureRelease Build
 """""""""""""""""
 
-Run these commands to create a build directory for the PureRelease build::
+Run these commands to create a build directory for the PureRelease build:
+
+.. code-block:: none
 
 		cd ..
 		mkdir build_pure
 		cd build_pure 
 
-Then repeat the CMake configuration process, this time with the following command for the PureRelease build::
+Then repeat the CMake configuration process, this time with the following command for the PureRelease build:
+
+.. code-block:: none
 
 	cmake -D CMAKE_INSTALL_PREFIX=/usr/local/elemental/<VERSION_STRING>/PureRelease 
 	-D CMAKE_BUILD_TYPE=PureRelease -D CMAKE_CXX_COMPILER=/usr/local/bin/g++-7 
@@ -225,14 +271,18 @@ Repeat the build commands and install this build of Elemental.
 
 For Elemental version 0.85 and later, you need to setup your system to find the Elemental dynamic libraries. Method 2 below is preferred:
 
-1. If your Mac OSX is earlier than Sierra, then, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above::
+1. If your Mac OSX is earlier than Sierra, then, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above:
+
+.. code-block:: none
 
 		export DYLD_LIBRARY_PATH=
 			$DYLD_LIBRARY_PATH:/usr/local/elemental/VERSION_STRING/HybridRelease/lib/
 
-2. If your Mac OSX is Sierra or higher Apple's System Integrity Protection (SIP) will prevent using the ``DYLD_LIBRARY_PATH`` variable. We highly discourage disabling SIP as a workaround. Instead, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above::
+2. If your Mac OSX is Sierra or higher Apple's System Integrity Protection (SIP) will prevent using the ``DYLD_LIBRARY_PATH`` variable. We highly discourage disabling SIP as a workaround. Instead, in your startup script (``~/.bash_profile``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above:
 
-		ln -s /usr/local/elemental/<VERSION_STRING>/HybridRelease/lib/*.dylib* /usr/local/lib
+.. code-block:: none
+
+   ln -s /usr/local/elemental/<VERSION_STRING>/HybridRelease/lib/*.dylib* /usr/local/lib
 
 This will symlink the required Elemental libraries.
 
@@ -256,10 +306,12 @@ Also, install the latest version of GNU Fortran, which is needed for the install
 Linux:Install MPI Tools
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Elemental version 0.85 and higher uses `mpich <http://www.mpich.org/>`_ for its MPI implementation.::
+Elemental version 0.85 and higher uses `mpich <http://www.mpich.org/>`_ for its MPI implementation.:
 
-		sudo apt-get update
-		sudo apt-get install mpich
+.. code-block:: none
+
+   sudo apt-get update
+   sudo apt-get install mpich
 
 This completes the installation of the MPI tools. It should also be noted that the Open MP implementation of the MPI tools could also be used for the following installations.
 
@@ -270,23 +322,30 @@ Next we detail the installation of the high performance numerical library libfla
 
 It's important to perform the git clone into a subdirectory NOT called ``flame`` since this can cause name conflicts with the installation. We normally do a git clone into a directory called ``libflame``. However, other directory names will work as well, but not ``flame``.
 
-To obtain the latest version of the FLAME library, clone the FLAME git repository with this command::
+To obtain the latest version of the FLAME library, clone the FLAME git repository with this command:
 
-		git clone https://github.com/flame/libflame.git
+.. code-block:: none
 
-Run the configure script in the top-level FLAME folder as follows (assuming you want to install to ``/usr/local/flame``; if not, change the prefix path)::
+   git clone https://github.com/flame/libflame.git
 
-		./configure --prefix=/usr/local/flame --with-cc=/usr/local/bin/gcc-6
-			--with-ranlib=/usr/local/bin/gcc-ranlib-6
+Run the configure script in the top-level FLAME folder as follows (assuming you want to install to ``/usr/local/flame``; if not, change the prefix path):
 
-A complete list of configuration options can be obtained by running::
+.. code-block:: none
 
-		./configure --help
+   ./configure --prefix=/usr/local/flame --with-cc=/usr/local/bin/gcc-6 --with-ranlib=/usr/local/bin/gcc-ranlib-6
 
-Then build and install the code as follows::
+A complete list of configuration options can be obtained by running:
 
-		make -j4
-		make install
+.. code-block:: none
+
+   ./configure --help
+
+Then build and install the code as follows:
+
+.. code-block:: none
+
+   make -j4
+   make install
 
 This completes the installation of the FLAME library.
 
@@ -295,13 +354,17 @@ Linux:Install an accelerated BLAS library
 
 It is essential to link Elemental with an accelerated BLAS library for maximum performance. Linking Elemental with a 'reference' BLAS implementation will cripple performance, since the reference implementations are designed for correctness not speed. 
 
-If you do not have an accelerated BLAS on your system, you can download and build OpenBLAS. Download, unzip, and untar the tarball (version 0.2.19 as of this writing) and cd into the top-level folder. Build OpenBLAS with this command, assuming you have a 64-bit system::
+If you do not have an accelerated BLAS on your system, you can download and build OpenBLAS. Download, unzip, and untar the tarball (version 0.2.19 as of this writing) and cd into the top-level folder. Build OpenBLAS with this command, assuming you have a 64-bit system:
 
-		make BINARY=64 USE_OPENMP=1
+.. code-block:: none
 
-Install with this command, assuming the installation directory is ``/usr/local/openblas/0.2.19/``::
+   make BINARY=64 USE_OPENMP=1
 
-		make PREFIX=/usr/local/openblas/0.2.19/ install
+Install with this command, assuming the installation directory is ``/usr/local/openblas/0.2.19/``:
+
+.. code-block:: none
+
+   make PREFIX=/usr/local/openblas/0.2.19/ install
 
 This completes the installation of OpenBLAS.
 
@@ -314,84 +377,118 @@ We strongly recommend that users install both the HybridRelease and PureRelease 
 
 Another strong recommendation is that users clearly separate the different build types as well as the versions of Elemental on their systems. Elemental is under active development, and new releases can introduce changes to the API that are not backwards compatible with previous releases. To minimize build problems and overall hassle, we recommend that Elemental be installed so that the different versions and build types are cleanly separated.
 
-Choose a directory for the root of the Elemental installation. A good choice is::
+Choose a directory for the root of the Elemental installation. A good choice is:
 
-		/usr/local/elemental
+.. code-block:: none
+
+   /usr/local/elemental
 
 Download one of the SmallK-supported releases of Elemental (see above), unzip and untar the distribution, and cd to the top-level folder of the unzipped distribution.  This directory will be denoted by ``UNZIP_DIR`` in the following instructions.
 
 Note that Elemental version 0.85 or later is the version currently supported; earlier versions are not supported. If an earlier version is needed for Linux, use the following instructions.
 
 
-For the first step of the installation, for Elemental versions prior to 0.85, we need to fix a few problems with the CMake configuration files.  Open the following file in a text editor::
+For the first step of the installation, for Elemental versions prior to 0.85, we need to fix a few problems with the CMake configuration files.  Open the following file in a text editor:
 
-		UNZIP_DIR/cmake/tests/OpenMP.cmake
+.. code-block:: none
 
-On the first line of the file, change::
+   UNZIP_DIR/cmake/tests/OpenMP.cmake
 
-		if(HYBRID)
+On the first line of the file, change:
 
-to this::
+.. code-block:: none
 
-		if(ELEM_HYBRID)
+   if(HYBRID)
 
-Next, open this file in a text editor::
+to this:
 
-		UNZIP_DIR/cmake/tests/Math.cmake
+.. code-block:: none
 
-Near the first line of the file, change::
+   if(ELEM_HYBRID)
 
-		if(PURE)
+Next, open this file in a text editor:
 
-to this::
+.. code-block:: none
 
-		if(ELEM_PURE)
+   UNZIP_DIR/cmake/tests/Math.cmake
+
+Near the first line of the file, change:
+
+.. code-block:: none
+
+   if(PURE)
+
+to this:
+
+.. code-block:: none
+
+   if(ELEM_PURE)
 
 Save both files.
 
-Run these commands to create the required directories for the build types::
+Run these commands to create the required directories for the build types:
 
-		mkdir build_hybrid
-		mkdir build_pure
+.. code-block:: none
+
+   mkdir build_hybrid
+   mkdir build_pure
 
 HybridRelease build
 """""""""""""""""""
 
-From the ``Elemental-<VERSION>`` folder, run the following command to change to the local build folder for the HybridRelease build::
+From the ``Elemental-<VERSION>`` folder, run the following command to change to the local build folder for the HybridRelease build:
 
-		cd build_hybrid
+.. code-block:: none
 
-For the first step of the installation, we need to fix a few problems with the CMake configuration files. Open the following file in a text editor::
+   cd build_hybrid
 
-		Elemental-<VERSION>/cmake/tests/OpenMP.cmake
+For the first step of the installation, we need to fix a few problems with the CMake configuration files. Open the following file in a text editor:
 
-On the first line of the file, change::
+.. code-block:: none
 
-		if(HYBRID)
+   Elemental-<VERSION>/cmake/tests/OpenMP.cmake
 
-to this::
+On the first line of the file, change:
 
-		if(ELEM_HYBRID)
+.. code-block:: none
 
-Next, open this file in a text editor::
+   if(HYBRID)
 
-		Elemental-<version>/cmake/tests/Math.cmake
+to this:
 
-Near the first line of the file, change::
+.. code-block:: none
 
-		if(PURE)
+   if(ELEM_HYBRID)
 
-to this::
+Next, open this file in a text editor:
 
-		if(ELEM_PURE)
+.. code-block:: none
+
+   Elemental-<version>/cmake/tests/Math.cmake
+
+Near the first line of the file, change:
+
+.. code-block:: none
+
+   if(PURE)
+
+to this:
+
+.. code-block:: none
+
+   if(ELEM_PURE)
 
 Save both files.
 
-Run the following command to create a local build folder for the HybridRelease build::
+Run the following command to create a local build folder for the HybridRelease build:
 
-		cd build_hybrid
+.. code-block:: none
 
-Use the following CMake command for the HybridRelease build::
+   cd build_hybrid
+
+Use the following CMake command for the HybridRelease build:
+
+.. code-block:: none
 
 	cmake -D CMAKE_INSTALL_PREFIX=/usr/local/elemental/<VERSION>/HybridRelease
 	-D CMAKE_BUILD_TYPE=HybridRelease -D CMAKE_CXX_COMPILER=/usr/local/bin/g++-6
@@ -404,44 +501,60 @@ Note that we have installed g++-6 into ``/usr/local/bin`` and libFLAME into ``/u
 
 If this command does not work on your system, you may need to define the ``BLAS_LIBS`` and/or ``GFORTRAN_LIB`` config options.
 
-Version 0.85 of Elemental has an error in one of its cmake files. The file is::
+Version 0.85 of Elemental has an error in one of its cmake files. The file is:
 
-		Elemental-0.85/cmake/tests/CXX.cmake
+.. code-block:: none
 
-Modify the first line of this file from::
+   Elemental-0.85/cmake/tests/CXX.cmake
 
-		include(FindCXXFeatures)
+Modify the first line of this file from:
 
-to::
+.. code-block:: none
 
-		include_directories(FindCXXFeatures)
+   include(FindCXXFeatures)
+
+to:
+
+.. code-block:: none
+
+   include_directories(FindCXXFeatures)
 
 since FindCXXFeatures is now a directory. After this change, Elemental should Make without errors.
 
-Once the CMake configuration step completes, you can build Elemental from the generated Makefiles with the following command::
+Once the CMake configuration step completes, you can build Elemental from the generated Makefiles with the following command:
 
-		make -j4
+.. code-block:: none
+
+   make -j4
 
 The -j4 option tells Make to use four processes to perform the build. This number can be increased if you have a more capable system.
 
-After the build completes, install elemental as follows::
+After the build completes, install elemental as follows:
 
-		make install
+.. code-block:: none
 
-After installing Elemental version 0.85, setup the system to find the Elemental shared library.  Either in the startup script (``~/.bashrc``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above::
+   make install
 
-		export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/elemental/VERSION_STRING/HybridRelease/lib/
+After installing Elemental version 0.85, setup the system to find the Elemental shared library.  Either in the startup script (``~/.bashrc``) or in a terminal window, enter the following command on a single line, replacing ``VERSION_STRING`` as above:
+
+.. code-block:: bash
+
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/elemental/VERSION_STRING/HybridRelease/lib/
 
 
 PureRelease build
 """""""""""""""""
 
-After this, run these commands to create a build folder for the PureRelease build::
+After this, run these commands to create a build folder for the PureRelease build:
 
-		cd ..
-		cd build_pure
+.. code-block:: none
 
-Then repeat the CMake configuration process, this time with the following command for the PureRelease build::
+   cd ..
+   cd build_pure
+
+Then repeat the CMake configuration process, this time with the following command for the PureRelease build:
+
+.. code-block:: none
 
 	cmake -D CMAKE_INSTALL_PREFIX=/usr/local/elemental/0.84-p1/PureRelease
 	-D CMAKE_BUILD_TYPE=PureRelease -D CMAKE_CXX_COMPILER=/usr/local/bin/g++-6
@@ -454,23 +567,31 @@ If this command does not work on your system, you may need to define the ``BLAS_
 
 Repeat the build commands and install this build of Elemental. Then, if you installed a version of Elemental **prior** to the 0.84 release, edit the ``/usr/local/elemental/<version>/PureRelease/conf/ElemVars`` file and replace the CXX line as indicated above.
 
-Version 0.85 of Elemental has an error in one of its cmake files. The file is::
+Version 0.85 of Elemental has an error in one of its cmake files. The file is:
 
-		Elemental-0.85/cmake/tests/CXX.cmake
+.. code-block:: none
 
-Modify the first line of this file from::
+   Elemental-0.85/cmake/tests/CXX.cmake
 
-		include(FindCXXFeatures)
+Modify the first line of this file from:
 
-to::
+.. code-block:: none
 
-		include_directories(FindCXXFeatures)
+   include(FindCXXFeatures)
+
+to:
+
+.. code-block:: none
+
+   include_directories(FindCXXFeatures)
 
 since FindCXXFeatures is now a directory. After this change, Elemental should Make without errors.
 
-If Elemental version 0.85 or later was installed, setup the system to find the Elemental shared library for the PureRelease build. Enter the following command in a terminal window on a single line, replacing ``VERSION_STRING`` as above::
+If Elemental version 0.85 or later was installed, setup the system to find the Elemental shared library for the PureRelease build. Enter the following command in a terminal window on a single line, replacing ``VERSION_STRING`` as above:
 
-	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/elemental/VERSION_STRING/PureRelease/lib/
+.. code-block:: bash
+
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/elemental/VERSION_STRING/PureRelease/lib/
 
 Note: set this variable to point to either the HybridRelease or the PureRelease build of the Elemental shared library whenever you want to use SmallK.
 
@@ -490,28 +611,39 @@ OSX:Install Python libraries
 Install Python scientific packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Assuming that you have used brew to install gcc, as indicated earlier, you can run the following commands to install the necessary libraries::
+Assuming that you have used brew to install gcc, as indicated earlier, you can run the following commands to install the necessary libraries:
 
-		brew install python
-		brew install numpy
-		brew install scipy
+.. code-block:: none
 
-To check your installation, run::
+   brew install python
+   brew install numpy
+   brew install scipy
 
-		brew test numpy
+To check your installation, run:
+
+.. code-block:: none
+
+   brew test numpy
 
 IMPORTANT: Check to see that your numpy installation has correctly linked to the needed BLAS libraries.
 
-Ensure that you are running the correct python::
+Ensure that you are running the correct python:
 
-		which python
+.. code-block:: none
 
-This should print out ``/usr/local/bin/python``. Open a python terminal by typing ``python`` at the command line and run the following::
+   which python
 
-		import numpy as np
-		np.__config__.show()
+This should print out ``/usr/local/bin/python``. Open a python terminal by typing ``python`` at the command line and run the following:
 
-You should see something similar to the following::
+.. code-block:: python
+
+   import numpy as np
+   np.__config__.show()
+
+You should see something similar to the following:
+
+
+.. code-block:: none
 
 		lapack_opt_info:
 		extra_link_args = ['-Wl,-framework', '-Wl,Accelerate']
@@ -528,29 +660,37 @@ If you are using OpenBLAS, you should see that indicated as well.
 Install Cython: a Python interface to C/C++
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-First install the Python Package Index utility, pip. Many Python packages are configured to use this package manager, Cython being one.::
+First install the Python Package Index utility, pip. Many Python packages are configured to use this package manager, Cython being one.:
 
-		brew install pip
+.. code-block:: none
 
-Only Cython 0.22 is supported at this time. To check which version is installed on your system use this commands::
+   brew install pip
 
-		$ python
-		>> import Cython
-		>> Cython.__version__
-		'0.22'
-		>> 
+Only Cython 0.22 is supported at this time. To check which version is installed on your system use this commands:
 
-To install Cython version 0.22 (if not already installed)::
+.. code-block:: pycon
 
-		pip uninstall cython
-		pip install cython==0.22
+   $ python
+   >> import Cython
+   >> Cython.__version__
+   '0.22'
+   >> 
+
+To install Cython version 0.22 (if not already installed):
+
+.. code-block:: none
+
+   pip uninstall cython
+   pip install cython==0.22
 
 Check the version of cython as above to ensure that Cython version 0.22 is installed.
 
 
 Linux:Install Python libraries
 ------------------------------
-The Python libraries can easily be installed via pip and apt-get with the following commands::
+The Python libraries can easily be installed via pip and apt-get with the following commands:
+
+.. code-block:: none
 
 		apt-get install pip
 		pip install numpy
@@ -558,9 +698,11 @@ The Python libraries can easily be installed via pip and apt-get with the follow
 		pip uninstall cython
 		pip install cython==0.22
 
-This also ensures that cython version 0.22 is installed, which is the currently supported version. The Makefile assumes an installation path of ``/usr/local/lib/python2.7/site-packages`` for the compiled library file. If you are not using apt-get to install your packages, you will need to tell the Makefile where the appropriate site-packages directory is located on your system. Setting the ``SITE_PACKAGES_DIR`` command line variable when running make accomplishes this. If this doesn't work, an alternative way to set this up is to add a line to the ``.bash_profile`` file (always back up first)::
+This also ensures that cython version 0.22 is installed, which is the currently supported version. The Makefile assumes an installation path of ``/usr/local/lib/python2.7/site-packages`` for the compiled library file. If you are not using apt-get to install your packages, you will need to tell the Makefile where the appropriate site-packages directory is located on your system. Setting the ``SITE_PACKAGES_DIR`` command line variable when running make accomplishes this. If this doesn't work, an alternative way to set this up is to add a line to the ``.bash_profile`` file (always back up first):
 
-		export SITE_PACKAGES_DIR="<path to lib/python2.7>/site-packages/"
+.. code-block:: none
+
+   export SITE_PACKAGES_DIR="<path to lib/python2.7>/site-packages/"
 
 This allows for special installations of Python such as Continuum Analytics' `Anaconda <https://www.continuum.io/>`_ distribution site-packages to be accessed.
 
@@ -584,13 +726,17 @@ After downloading and unpacking the code tarball cd into the top-level ``libsmal
 	2. Define the variable ``ELEMENTAL_INSTALL_DIR`` on the make command line
 	3. Edit the SmallK makefile so that it can find your Elemental installation
 
-Assuming that the default install locations are acceptable, build the SmallK code by running this command from the root directory of the distribution::
+Assuming that the default install locations are acceptable, build the SmallK code by running this command from the root directory of the distribution:
 
-		make all PYSMALLK=1 ELEMVER=0.85
+.. code-block:: none
 
-or::
+   make all PYSMALLK=1 ELEMVER=0.85
 
-		make all PYSMALLK=0 ELEMVER=0.85
+or:
+
+.. code-block:: none
+
+   make all PYSMALLK=0 ELEMVER=0.85
 
 This will build the SmallK and pysmallk (optional; see section [Installation of Python libraries]) below for setup of the Python libraries) libraries and several command-line applications. These are:
 
@@ -605,21 +751,29 @@ This will build the SmallK and pysmallk (optional; see section [Installation of 
 Install the SmallK library
 ==========================
 
-To install the code, run this command to install to the default location, which is ``/usr/local/smallk``::
+To install the code, run this command to install to the default location, which is ``/usr/local/smallk``:
 
-		make install PYSMALLK=1 ELEMVER=0.85
+.. code-block:: none
 
-or::
+   make install PYSMALLK=1 ELEMVER=0.85
 
-		make install PYSMALLK=0 ELEMVER=0.85
+or:
 
-This will install the binary files listed above into the ``/usr/local/smallk/bin`` directory, which needs to be on your path to run the executables from anywhere on your system and avoid prepending with the entire path. To install the binary code to a different location, either create an environment variable called ``SMALLK_INSTALL_DIR`` and set it equal to the desired installation location prior to running the install command, or supply a prefix argument::
+.. code-block:: none
 
-		make prefix=/path/to/smallk  install
+   make install PYSMALLK=0 ELEMVER=0.85
 
-If ``PYSMALLK=1``, this will install pysmallk.so into the site-packages directory associated with the Python binary, which is determined by ``brew install python`` as discussed above or wherever the python distribution is installed on the system, e.g., `Continuum's Anaconda Python <https://www.continuum.io/>`_ distribution is installed in the user's home directory. To install the Python library to a different location, create an environment variable called ``SITE_PACKAGES_DIR`` and set it equal to the desired installation location prior to running the install command, or supply this as an argument for make::
+This will install the binary files listed above into the ``/usr/local/smallk/bin`` directory, which needs to be on your path to run the executables from anywhere on your system and avoid prepending with the entire path. To install the binary code to a different location, either create an environment variable called ``SMALLK_INSTALL_DIR`` and set it equal to the desired installation location prior to running the install command, or supply a prefix argument:
 
-		make SITE_PACKAGES_DIR=/path/to/site-packages install
+.. code-block:: none
+
+   make prefix=/path/to/smallk  install
+
+If ``PYSMALLK=1``, this will install pysmallk.so into the site-packages directory associated with the Python binary, which is determined by ``brew install python`` as discussed above or wherever the python distribution is installed on the system, e.g., `Continuum's Anaconda Python <https://www.continuum.io/>`_ distribution is installed in the user's home directory. To install the Python library to a different location, create an environment variable called ``SITE_PACKAGES_DIR`` and set it equal to the desired installation location prior to running the install command, or supply this as an argument for make:
+
+.. code-block:: none
+
+   make SITE_PACKAGES_DIR=/path/to/site-packages install
 
 Or, as a last resort, you can edit the top-level SmallK makefile to conform to the installation scheme of your system.  You may need root privileges to do the installation, depending on where you choose to install it.
 
@@ -628,21 +782,27 @@ Before testing the installation, the test code needs to access data. The data is
 Check the build and installation
 ================================
 
-To test the build, run this command with ``DATA_DIR`` set to wherever the SmallK data repository was cloned::
+To test the build, run this command with ``DATA_DIR`` set to wherever the SmallK data repository was cloned:
 
-		make check PYSMALLK=1 ELEMVER=0.85 DATA_DIR=../smallk_data
+.. code-block:: none
 
-or::
+   make check PYSMALLK=1 ELEMVER=0.85 DATA_DIR=../smallk_data
 
-		make check PYSMALLK=0 ELEMVER=0.85 DATA_DIR=../smallk_data
+or:
+
+.. code-block:: none
+
+   make check PYSMALLK=0 ELEMVER=0.85 DATA_DIR=../smallk_data
 
 This will run a series of tests, none of which should report a failure.  Sample output from a run of these tests can be found in section `SmallK Test Results <http://smallk.github.io/documentation/tests/#smalk_tests>`_.
 
 Note: if you installed Elemental version 0.85, you will need to configure your system to find the Elemental shared library.  See the Elemental installation instructions above for information on how to do this.
 
-The command-line applications can be built individually by running the appropriate make command from the top-level SmallK directory.  These commands are::
+The command-line applications can be built individually by running the appropriate make command from the top-level SmallK directory.  These commands are:
 
-		To build the smallk library only: 		``make libsmallk``
+.. code-block:: none
+
+   		To build the smallk library only: 		``make libsmallk``
 		To build the preprocessor only:			``make preprocessor``
 		To build the matrix generator only:		``make matrixgen``
 		To build the nmf only:				``make nmf``
@@ -662,29 +822,39 @@ Build and Installation of pysmallk shared library
 
 Before building pysmallk, you must ensure that you have already built the standard SmallK library and applications: ``libsmallk``, ``preprocessor``, ``matrixgen``, ``hierclust``, and ``flatclust``.
 
-All C++ and python libraries and applications can be built simultaneously by setting the ``PYSMALLK`` command line variable::
+All C++ and python libraries and applications can be built simultaneously by setting the ``PYSMALLK`` command line variable:
 
-		make PYSMALLK=1
+.. code-block:: none
 
-To build pysmallk individually from the pysmallk subdirectory (``<path to SmallK>/libsmallk-<version>/pysmallk``)::
+   make PYSMALLK=1
+
+To build pysmallk individually from the pysmallk subdirectory (``<path to SmallK>/libsmallk-<version>/pysmallk``):
 		
-		make pysmallk
-		
-To check the library installation::
+.. code-block:: none
 
-		make pysmallk_check DATA_DIR=../smallk_data
+   make pysmallk
+		
+To check the library installation:
+
+.. code-block:: none
+
+   make pysmallk_check DATA_DIR=../smallk_data
 
 This will run a series of tests, none of which should report a failure.
 
 To install the shared library in a globally accessible location, enable the ``PYSMALLK`` command line variable and, if needed, specify an ``INSTALLATION_DIR``.
 
-The Makefile assumes an installation path of ``/usr/local/lib/python2.7/site-packages`` for the compiled library file. If you are not using brew to install your packages, you will need to tell the Makefile where the appropriate site-packages directory is located on your system. Setting the ``INSTALLATION_DIR`` command line variable when running make accomplishes this. Also, make sure that there is not another site-packages directory in your PATH before the site-packages you intend to use since ``make install`` will copy pysmallk.so to ``/usr/local/lib/python2.7/site-packages`` by default. Other Python distributions will probably interfere with the pysmallk installation.::
+The Makefile assumes an installation path of ``/usr/local/lib/python2.7/site-packages`` for the compiled library file. If you are not using brew to install your packages, you will need to tell the Makefile where the appropriate site-packages directory is located on your system. Setting the ``INSTALLATION_DIR`` command line variable when running make accomplishes this. Also, make sure that there is not another site-packages directory in your PATH before the site-packages you intend to use since ``make install`` will copy pysmallk.so to ``/usr/local/lib/python2.7/site-packages`` by default. Other Python distributions will probably interfere with the pysmallk installation.:
 
-		make install PYSMALLK=1	INSTALLATION_DIR=/usr/local/lib/python2.7/site-packages/
+.. code-block:: none
+
+   make install PYSMALLK=1	INSTALLATION_DIR=/usr/local/lib/python2.7/site-packages/
 
 To uninstall the libraries::
 
-		make uninstall PYSMALLK=1	INSTALLATION_DIR=/usr/local/lib/python2.7/site-packages/
+.. code-block:: none
+
+   make uninstall PYSMALLK=1	INSTALLATION_DIR=/usr/local/lib/python2.7/site-packages/
 
 *******************
 Matrix file formats
@@ -692,7 +862,9 @@ Matrix file formats
 
 The SmallK software supports comma-separated value (CSV) files for dense matrices and `Matrix Market <http://math.nist.gov/MatrixMarket/formats.html>`_ files for sparse matrices.
 
-For example, the 5x3 dense matrix::
+For example, the 5x3 dense matrix:
+
+.. code-block:: none
 
 		42	47	52
 		43	48	53
@@ -700,8 +872,10 @@ For example, the 5x3 dense matrix::
 		45	50	55
 		46	51	56
 
-would be stored in a CSV file as follows::
+would be stored in a CSV file as follows:
 	
+.. code-block:: none
+
 		42,47,52
 		43,48,53
 		44,49,54

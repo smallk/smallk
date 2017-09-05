@@ -11,19 +11,25 @@ Introduction
 
 The SmallK library provides a number of algorithm implementations for low rank approximation of a matrix. These can be used for performing various data analytics tasks such as topic modeling, clustering, and dimension reduction. This section will provide more in-depth description of the tools available with examples that can be expanded/modified for other application domains.
 
-Before diving into the various tools, it will be helpful to set up the command line environment to easily run the various executables that comprise the SmallK library. First the command line needs to know where to find the executable files to run the tools. Since while installing SmallK  ``make_install`` was run, the executables are located in ``/usr/local/smallk/bin``. Thus, this should be added to the ``$PATH`` system variable or added to the environment. The following command line performs the task of modifying the path avoiding the need to cd into directories were the tools are located::
+Before diving into the various tools, it will be helpful to set up the command line environment to easily run the various executables that comprise the SmallK library. First the command line needs to know where to find the executable files to run the tools. Since while installing SmallK  ``make_install`` was run, the executables are located in ``/usr/local/smallk/bin``. Thus, this should be added to the ``$PATH`` system variable or added to the environment. The following command line performs the task of modifying the path avoiding the need to cd into directories were the tools are located:
 
-		export PATH=/usr/local/smallk/bin:$PATH
+.. code-block:: bash
+
+   export PATH=/usr/local/smallk/bin:$PATH
 
 This allows the tools to be executed from any directory.
 
-A subset of these tools are also available from the pysmallk library: smallkapi (mirrors the NMF command line application), matrixgen, preprocessor, flatclust, and hierclust. The command line arguments are the same as those documented below. These tools are available within the /pysmallk/tests/ directory and can be executed as follows::
+A subset of these tools are also available from the pysmallk library: smallkapi (mirrors the NMF command line application), matrixgen, preprocessor, flatclust, and hierclust. The command line arguments are the same as those documented below. These tools are available within the ``/pysmallk/tests/ directory`` and can be executed as follows:
 
-		[python binary] [tool].py [command line arguments]
+.. code-block:: none
 
-For example::
+   [python binary] [tool].py [command line arguments]
 
-		python preprocessor.py --indir smallk_data
+For example:
+
+.. code-block:: bash
+
+   python preprocessor.py --indir smallk_data
 
 ************
 Preprocessor
@@ -48,22 +54,26 @@ Input Files
 
 The preprocessor requires three input files: a matrix file, a dictionary file, and a document file.  The matrix file contains a sparse matrix in MatrixMarket format (.mtx).  This is a term-frequency matrix, and all entries should be positive integers. The preprocessor can also read in matrices containing floating-point inputs, but only if ``boolean mode`` is enabled; this will be described below. The preprocessor does not support dense matrices, since the typical matrices encountered in topic modeling problems are extremely sparse, with occupancies generally less than 1%.
 
-The second file required by the preprocessor is a ``dictionary file``.  This is a simple ASCII text file containing one entry per line.  Entries represent keywords, bigrams, or other general text strings the user is interested in.  Each line of the file is treated as a ``keyword``, so multi-word keywords are supported as well.  The smallk/data folder contains a sample dictionary file called ``dictionary.txt``.  The first few entries are::
+The second file required by the preprocessor is a ``dictionary file``.  This is a simple ASCII text file containing one entry per line.  Entries represent keywords, bigrams, or other general text strings the user is interested in.  Each line of the file is treated as a ``keyword``, so multi-word keywords are supported as well.  The smallk/data folder contains a sample dictionary file called ``dictionary.txt``.  The first few entries are:
 
-	triumph
-	dey
-	canada
-	finger
-	circuit
-	...
+.. code-block:: none
 
-The third file required by the preprocessor is a ``documents file``.  This is another simple ASCII text file containing one entry per line.  Entries represent document names or other unique identifiers.  The smallk/data folder also contains a sample documents file called ``documents.txt``.  The first few entries of this file are::
+   triumph
+   dey
+   canada
+   finger
+   circuit
+   ...
 
-	52828-11101.txt
-	51820-10202.txt
-	104595-959.txt
-	60259-3040.txt
-	...
+The third file required by the preprocessor is a ``documents file``.  This is another simple ASCII text file containing one entry per line.  Entries represent document names or other unique identifiers.  The smallk/data folder also contains a sample documents file called ``documents.txt``.  The first few entries of this file are:
+
+.. code-block:: none
+
+   52828-11101.txt
+   51820-10202.txt
+   104595-959.txt
+   60259-3040.txt
+   ...
 
 These are the unique document identifiers for the user who generated the file.  Your identifiers will likely have a different format.
 
@@ -72,16 +82,18 @@ Finally, the preprocessor requires these files to have the following names: matr
 Command Line Options
 ====================
 
-The preprocessor binary is called ``preprocess_tf``, to emphasize the fact that it operates on term-frequency matrices.  If the binary is run with no arguments, it prints out the following information::
+The preprocessor binary is called ``preprocess_tf``, to emphasize the fact that it operates on term-frequency matrices.  If the binary is run with no arguments, it prints out the following information:
 
-	preprocess_tf
-		--indir <path>
-		[--outdir (defaults to current directory)]
-		[--docs_per_term 3]
-		[--terms_per_doc 5]
-		[--maxiter 1000]
-		[--precision 4]
-		[--boolean_mode 0]
+.. code-block:: none
+
+   preprocess_tf
+   	--indir <path>
+   	[--outdir (defaults to current directory)]
+   	[--docs_per_term 3]
+   	[--terms_per_doc 5]
+   	[--maxiter 1000]
+   	[--precision 4]
+   	[--boolean_mode 0]
 
 Only the first parameter, ``--indir``, is required.  All remaining params are optional and have the default values indicated.
 
@@ -98,12 +110,14 @@ The meanings of the various options are as follows:
 Sample Runs
 ===========
 
-Here is a sample run of the preprocessor using the data provided in the smallk distribution.  This run was performed from the top-level smallk folder after building the code::
+Here is a sample run of the preprocessor using the data provided in the smallk distribution.  This run was performed from the top-level smallk folder after building the code:
 
-	preprocessor/bin/preprocess_tf --indir data
+.. code-block:: none
 
-      Command line options: 
-
+   preprocessor/bin/preprocess_tf --indir data
+   
+     Command line options: 
+   
                  indir: data/
                 outdir: current directory
          docs_per_term: 3
@@ -141,7 +155,9 @@ The matrix generator application is a simple tool for generating simple matrices
 Command Line Options
 ====================
 
-Running the matrixgen binary with no options generates the following output::
+Running the matrixgen binary with no options generates the following output:
+
+.. code-block:: none
 
 	matrixgen 
 
@@ -179,9 +195,11 @@ The meanings of the various options are as follows:
 Sample Runs
 ===========
 
-Suppose we want to generate a matrix of uniformly-distributed random numbers.  The matrix should have a height of 100 and a width of 16, and should be written to a file called ``w_init.csv``.  Use the matrix generator as follows::
+Suppose we want to generate a matrix of uniformly-distributed random numbers.  The matrix should have a height of 100 and a width of 16, and should be written to a file called ``w_init.csv``.  Use the matrix generator as follows:
 
-	matrixgen --height 100 --width 16 --filename w_init.csv
+.. code-block:: none
+
+   matrixgen --height 100 --width 16 --filename w_init.csv
 
 **************************************
 Nonnegative Matrix Factorization (NMF)
@@ -197,7 +215,9 @@ Matrix :math:`\matr{A}` can be either dense or sparse; matrices :math:`\matr{W}`
 Command Line Options
 ====================
 
-Running the nmf application with no command line parameters will cause the application to display all params that it supports. These are::
+Running the nmf application with no command line parameters will cause the application to display all params that it supports. These are:
+
+.. code-block:: none
 
 	Usage: nmf
         --matrixfile <filename>  Filename of the matrix to be factored.
@@ -254,19 +274,27 @@ Sample Runs
 
 The smallk distribution utilizes another repository `smallk_data <https://github.com/smallk/smallk_data>`_ (clone this repository from github) with a matrix file ``reuters.mtx``.  This is a tf-idf weighted matrix derived from the popular Reuters data set used in machine learning experiments.  
 
-Suppose we want to factor the Reuters matrix using a k value of 8.  We would do that as follows, assuming that we are in the top-level smallk folder after building the code and that the ``smallk_data`` repository was cloned into `data`::
+Suppose we want to factor the Reuters matrix using a k value of 8.  We would do that as follows, assuming that we are in the top-level smallk folder after building the code and that the ``smallk_data`` repository was cloned into `data`:
+
+.. code-block:: none
 
 		nmf/bin/nmf --matrixfile data/reuters.mtx  --k 8
 
-Note that if ``make install`` was run during installation and the $PATH variable or environment variable was set as above, this could also be called with::
+Note that if ``make install`` was run during installation and the $PATH variable or environment variable was set as above, this could also be called with:
+
+.. code-block:: none
 
 		usr/local/bin/nmf --matrixfile data/reuters.mtx  --k 8
 
-If we want to instead use the HALS algorithm with k=16, a tolerance of 1.0e-4, and also perform 10 iterations prior to checking progress, we would use this command line::
+If we want to instead use the HALS algorithm with k=16, a tolerance of 1.0e-4, and also perform 10 iterations prior to checking progress, we would use this command line:
+
+.. code-block:: none
 
 		nmf/bin/nmf --matrixfile data/reuters.mtx --k 16 --algorithm HALS --tol 1.0e-4 --miniter 10
 
-To repeat the previous experiment but with new names for the output files, we would do this::
+To repeat the previous experiment but with new names for the output files, we would do this:
+
+.. code-block:: none
 
 		nmf/bin/nmf --matrixfile data/reuters.mtx --k 16 --algorithm HALS --tol 1.0e-4 
 			--miniter 10 --outfile_W w_hals.csv -outfile_H h_hals.csv
@@ -287,7 +315,7 @@ First, we briefly describe the algorithm and the references section provides poi
 
 Step 2 implements the details of the node splitting into child nodes. Outlier detection plays a crucial role in hierarchical clustering to generate a tree with well-balanced and meaningful clusters. To implement this, we have two additional parameters in step 2: *trial_allowance* and *unbalanced*.
 
-The parameter *trial_allowance* is the number of times that the program will try to split a node into two meaningful clusters. In each trial, the program will check if one of the two generated leaf nodes is an outlier set. If the outlier set is detected, the program will delete the items in the outlier set from the node being split and continue to the next trial. If all the trials are finished and the program still cannot find two meaningful clusters for this node, all the deleted items are “recycled” and placed into this node again, and this node will be labeled as a “permanent leaf node” that cannot be picked in step 1 in later iterations.
+The parameter *trial_allowance* is the number of times that the program will try to split a node into two meaningful clusters. In each trial, the program will check if one of the two generated leaf nodes is an outlier set. If the outlier set is detected, the program will delete the items in the outlier set from the node being split and continue to the next trial. If all the trials are finished and the program still cannot find two meaningful clusters for this node, all the deleted items are "recycled" and placed into this node again, and this node will be labeled as a "permanent leaf node" that cannot be picked in step 1 in later iterations.
 
 The parameter *unbalanced* is a threshold parameter to determine whether two generated leaf nodes are unbalanced. Suppose two potential leaf nodes L and R are generated from the selected node and L has fewer items than R. Let us denote the number of items in a node N as :math:`\left | N \right |`. L and R are called *unbalanced* if 
 
@@ -319,7 +347,9 @@ The node id values and the left or right child indicators can be used to unambig
 Command Line Options
 ====================
 
-Running the hierclust application with no command line parameters will cause the application to display all params that it supports.  These are::
+Running the hierclust application with no command line parameters will cause the application to display all params that it supports.  These are:
+
+.. code-block:: none
 
 	Usage: hierclust/bin/hierclust
         --matrixfile <filename>     Filename of the matrix to be factored.
@@ -379,21 +409,27 @@ The smallk distribution has available a ``smallk_data`` repository on github wit
 
 As above, it is assumed that the `smallk_data <https://github.com/smallk/smallk_data>`_ repository was cloned into ``data`` and that the commands can be run as below or from ``/usr/local/bin``.
 
-Suppose we want to perform hierarchical clustering on this data set and generate 10 leaf nodes.  We would do that as follows, assuming that we are in the top-level smallk folder after building the code::
+Suppose we want to perform hierarchical clustering on this data set and generate 10 leaf nodes.  We would do that as follows, assuming that we are in the top-level smallk folder after building the code:
 
-		hierclust/bin/hierclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10
+.. code-block:: none
+
+   hierclust/bin/hierclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10
 
 This will generate two result files in the current directory: ``tree_10.xml`` and ``assignments_10.csv``.
 
-If we want to instead generate 10 clusters, each with 8 terms, using JSON output format, we would use this command line::
+If we want to instead generate 10 clusters, each with 8 terms, using JSON output format, we would use this command line:
 
-		hierclust/bin/hierclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 --maxterms 8 --format JSON
+.. code-block:: none
+
+   hierclust/bin/hierclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 --maxterms 8 --format JSON
 
 Two files will be generated: ``tree_10.json`` and ``assignments_10.csv``.  The json file will have 8 keywords per node, whereas the ``tree_10.xml`` file will have only 5.
 
-To generate a flat clustering result (in addition to the hierarchical clustering result), use this command line::
+To generate a flat clustering result (in addition to the hierarchical clustering result), use this command line:
 
-		hierclust/bin/hierclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 --maxterms 8 --format JSON --flat 1
+.. code-block:: none
+
+   hierclust/bin/hierclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 --maxterms 8 --format JSON --flat 1
 
 Two additional files will be generated this time (along with ``tree_10.json`` and ``assignments_10.csv``): ``clusters_10.json``, which contains the flat clustering results, and ``assignments_flat_10.csv``, which contains the flat clustering assignments.
 
@@ -417,7 +453,9 @@ The second file contains the node information.  This file is much simpler than t
 Command Line Options
 ====================
 
-Running the flatclust application with no command line parameters will cause the application to display all params that it supports.  These are::
+Running the flatclust application with no command line parameters will cause the application to display all params that it supports.  These are:
+
+.. code-block:: none
 
 	Usage: flatclust
         --matrixfile <filename>      Filename of the matrix to be factored.
@@ -481,15 +519,19 @@ The smallk distribution has available a ``smallk_data`` repository on github wit
 
 As above, it is assumed that the `smallk_data <https://github.com/smallk/smallk_data>`_ repository was cloned into ``data`` and that the commands can be run as below or from ``/usr/local/bin``.
 
-Suppose we want to perform flat clustering on this data set and generate 10 clusters.  We would do that as follows, assuming that we are in the top-level smallk folder after building the code::
+Suppose we want to perform flat clustering on this data set and generate 10 clusters.  We would do that as follows, assuming that we are in the top-level smallk folder after building the code:
 
-		flatclust/bin/flatclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10
+.. code-block:: none
+
+   flatclust/bin/flatclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10
 
 This will generate two result files in the current directory: ``clusters_10.xml`` and ``assignments_10.csv``.
 
-If we want to instead generate 10 clusters, each with 8 terms, using JSON output format, we would use this command line::
+If we want to instead generate 10 clusters, each with 8 terms, using JSON output format, we would use this command line:
 
-		flatclust/bin/flatclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 --maxterms 8 --format JSON
+.. code-block:: none
+
+   flatclust/bin/flatclust --matrixfile data/reuters.mtx  --dictfile data/reuters_dictionary.txt --clusters 10 --maxterms 8 --format JSON
 
 Two files will be generated: ``clusters_10.json`` and ``assignments_10.csv``.  The json file will have 8 keywords per node, whereas the ``clusters_10.xml`` file will have only 5.
 

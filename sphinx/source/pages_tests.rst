@@ -8,7 +8,9 @@ Below we provide example output for many of the tests that can be run in the Sma
 SmallK Test Results
 *******************
 
-After building the smallk library, the `make check` command will run a bash script that performs a series of tests on the code.  This is a sample output of those tests::
+After building the smallk library, the `make check` command will run a bash script that performs a series of tests on the code.  This is a sample output of those tests:
+
+.. code-block:: cpp
 
 	Build configuration: release
 	sh tests/scripts/test_smallk.sh ../xdata_github/smallk_data/ | tee smallk_test_results.txt 
