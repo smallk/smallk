@@ -34,7 +34,7 @@ Publications
 		title        = {SmallK is a {C++}{/}{P}ython high-performance software
 						library for nonnegative matrix factorization
 						(NMF) and hierarchical and flat clustering using 
-						the NMF; current version 1.6.0},
+						the NMF; current version 1.6.2},
 		howpublished = {\url{http://smallk.github.io/}},
 		month        = {June},
 		year         = {2017}
