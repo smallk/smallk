@@ -10,7 +10,7 @@ Publications
 
 #. `Da Kuang and Haesun Park, "Fast Rank-2 Nonnegative Matrix Factorization for Hierarchical Document Clustering", Proceedings 19th ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD '13), 2013. <https://smallk.github.io/papers/hierNMF2.pdf>`_
 
-#. `Nicolas Gillis, Da Kuang and Haesun Park, "Hierarchical clustering of hyperspectral images using rank-two nonnegative matrix factorization", IEEE Transactions on Geoscience and Remote Sensing, 2014. <https://smallk.github.io/papers/HierNMFImage.pdf>`_ 
+#. `Nicolas Gillis, Da Kuang and Haesun Park, "Hierarchical clustering of hyperspectral images using rank-two nonnegative matrix factorization", IEEE Transactions on Geoscience and Remote Sensing, 2014. <https://smallk.github.io/papers/HierNMFImage.pdf>`_
 
 #. `Jaegul Choo, Barry Drake, and Haesun Park, "Visual analytics for interactive exploration of large-scale document data via Nonnegative Matrix Factorization", Proceedings for BigData Innovators Gathering (BIG) 2014, co-located with WWW2014, Seoul, Korea, 2014. <https://smallk.github.io/papers/big_vanmf.pdf>`_
 
@@ -33,11 +33,9 @@ Publications
 		author       = {Barry Drake and Stephen Lee-Urban and Haesun Park},
 		title        = {SmallK is a {C++}{/}{P}ython high-performance software
 						library for nonnegative matrix factorization
-						(NMF) and hierarchical and flat clustering using 
-						the NMF; current version 1.6.0},
+						(NMF) and hierarchical and flat clustering using
+						the NMF; current version 1.6.2},
 		howpublished = {\url{http://smallk.github.io/}},
 		month        = {June},
 		year         = {2017}
 	}
-
-
