@@ -33,7 +33,11 @@ Publications
 		author       = {Barry Drake and Stephen Lee-Urban and Haesun Park},
 		title        = {SmallK is a {C++}{/}{P}ython high-performance software
 						library for nonnegative matrix factorization
+<<<<<<< HEAD
 						(NMF) and hierarchical and flat clustering using
+=======
+						(NMF) and hierarchical and flat clustering using 
+>>>>>>> 9f944fe7803ae6edca5adadcb675d1315ae6b404
 						the NMF; current version 1.6.2},
 		howpublished = {\url{http://smallk.github.io/}},
 		month        = {June},
