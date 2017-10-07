@@ -9,17 +9,17 @@ Introduction
 Background
 **********
 
-High-dimensional data sets are ubiquitous in data science, and they often present serious problems for researchers. Our work in dimensionality reduction focuses on, but is not limited to, low rank approximations via nonnegative matrix factorization (NMF) [see `Publications [1,2] <http://smallk.github.io/publications/>`_]. NMF is a non-convex optimization problem with important applications in data and interactive visual analytics of high-dimensional data. 
+High-dimensional data sets are ubiquitous in data science, and they often present serious problems for researchers. Our work in dimensionality reduction focuses on, but is not limited to, low rank approximations via nonnegative matrix factorization (NMF) [see `Publications [1,2] <http://smallk.github.io/publications/>`_]. NMF is a non-convex optimization problem with important applications in data and interactive visual analytics of high-dimensional data.
 
 The impetus for this documentation is to provide a step-by-step procedure for the application of the theory to real-world large-scale data analytics problems. We have instantiated our research efforts in a software framework that includes high-level driver code via Python and a simple command line interface, SmallK, which hides most of the details of the input parameters. Our low-level code, also usable from the command line, is written in C++, which provides efficient NMF algorithms. The algorithms discussed herein have numerous practical applications; this document and the `tutorials <http://smallk.github.io/documentation/tutorials/>`_ will provide the information required to quickly begin real work.
 
 Below is a brief description of our fundamental research on NMF algorithms. Following the brief motivational introduction to the NMF are detailed installation instructions for the SmallK software library.
 
 *******************************
-Low rank approximations and NMF
+Constrained low rank approximations and NMF
 *******************************
 
-Algorithms that enable dimension reduction and clustering are two critical areas in data analytics and interactive visual analysis of high-dimensional data. A low rank approximation framework has the ability to facilitate faster processing times and utilize fewer resources. These approximations provide a natural way to compute only what we need for significant dimension reduction, and are analogous to singular value decomposition (SVD) and principal component analysis (PCA). Our algorithm framework also works efficiently for clustering since clustering can be viewed as a specific way of achieving a low rank approximation so that the cluster structure of the data is well represented in a few basis vectors. 
+Algorithms that enable dimension reduction and clustering are two critical areas in data analytics and interactive visual analysis of high-dimensional data. A low rank approximation framework has the ability to facilitate faster processing times and utilize fewer resources. These approximations provide a natural way to compute only what we need for significant dimension reduction, and are analogous to singular value decomposition (SVD) and principal component analysis (PCA). Our algorithm framework also works efficiently for clustering since clustering can be viewed as a specific way of achieving a low rank approximation so that the cluster structure of the data is well represented in a few basis vectors.
 
 Matrix low rank approximations such as the SVD have played a key role as a fundamental tool in machine learning, data mining, and other areas of computational science and engineering. The NMF has recently emerged as an important constrained low rank approximation  method as well. A distinguishing feature of the NMF is the requirement of nonnegativity: NMF is considered for high-dimensional and large scale data in which the representation of each element is inherently nonnegative, and it seeks low rank factor matrices that are constrained to have only nonnegative elements. There are many examples of data with a nonnegative representation. In a standard term-frequency encoding, a text document is represented as a vector of nonnegative numbers since each element represents the number of appearances of each term in each document. In image processing, digital images are represented by pixel intensities, which are nonnegative. In the life sciences, chemical concentrations or gene expression levels are naturally represented as nonnegative data.
 
@@ -80,4 +80,3 @@ Elemental can make use of OpenMP or mpich  parallelization if available, which i
 **The SmallK software supports the latest stable release of Elemental, version 0.85**
 
 Check the documentation links on this page for additional detailed instructions for installation of the SmallK library software and dependencies. If desired, please see also the `installation instructions for Elemental <http://libelemental.org/documentation/>`_.
-
