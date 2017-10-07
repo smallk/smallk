@@ -19,9 +19,10 @@ Please visit `MPI-FAUN text <https://github.com/ramkikannan/nmflibrary>`_ for mo
 Ground truth data for graph clustering and community detection
 **************************************************************
 
-Community discovery is an important task for revealing structures in large networks. The massive size of contemporary social networks poses a tremendous challenge to the scalability of traditional graph clustering algorithms and the evaluation of discovered communities. 
+Community discovery is an important task for revealing structures in large networks. The massive size of contemporary social networks poses a tremendous challenge to the scalability of traditional graph clustering algorithms and the evaluation of discovered communities.
 
 Please visit `dblp ground truth data <https://github.com/smallk/smallk_data/tree/master/dblp_ground_truth>`_ to obtain the data.
+For U.S. Patent data go test hybrid clustering of content and connection structure using joint NMF go to `patent data <https://github.com/smallk/smallk_data/tree/master/patent>`_
 
 .. include:: acknowledgements.inc
 
@@ -32,4 +33,3 @@ Contact Info
 For comments, questions, bug reports, suggestions, etc., contact:
 
 .. include:: contact.inc
-
