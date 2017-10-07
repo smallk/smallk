@@ -1,6 +1,6 @@
 This data set contains 13 subsets of the US Patent data set obtained from http://www.patentsview.org in August 2016, corresponding to 13 Cooperative Patent Classification (CPC) classes: A22 A42 B06 B09 B68 C06 C13 C14 C40 D02 D10 F22 Y04.
 
-In each sub-folder, there are following files:
+In each sub-folder, there are the following files:
 
 * term_frequency.mtx     The term-document matrix of the patent claims, where the (i,j) entry is the frequency of term i appeared in the claims of patent j;
 * graph_directed.mtx     The adjacency matrix of the citation network, where the (i,j) entry equals one if and only if patent i cites patent j;
