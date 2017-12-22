@@ -34,7 +34,7 @@ echo "----------------------------- libflame -----------------------------"
 git clone https://github.com/flame/libflame.git /home/vagrant/libflame
 cd /home/vagrant/libflame
 ./configure --prefix=/usr/local/flame --with-cc=/usr/bin/gcc-5 --with-ranlib=/usr/bin/gcc-ranlib-5 CFLAGS=-fPIC CXXFLAGS=-fPIC --enable-shared
-make -j4
+make -j`nproc`
 make install
 chown -R vagrant.vagrant /home/vagrant/libflame
 
@@ -63,12 +63,12 @@ mkdir build_pure
 
 cd build_hybrid
 cmake -D CMAKE_INSTALL_PREFIX=/usr/local/elemental/0.85/HybridRelease -D CMAKE_BUILD_TYPE=HybridRelease -D CMAKE_CXX_COMPILER=/usr/bin/g++-5 -D CMAKE_CXX_FLAGS="-std=c++11 -fPIC" -D CMAKE_C_COMPILER=/usr/bin/gcc-5 -D CMAKE_C_FLAGS=-fPIC -D CXX_FLAGS="-std=c++11 -fPIC" -D CMAKE_Fortran_COMPILER=/usr/bin/gfortran-5 -D MATH_LIBS="/usr/local/flame/lib/libflame.a;-L/usr/local/lib/ -lopenblas;/lib/x86_64-linux-gnu/libm.so.6" –D ELEM_EXAMPLES=ON –D ELEM_TESTS=ON  ..
-make -j4
+make -j`nproc`
 make install
 
 cd ../build_pure
 cmake -D CMAKE_INSTALL_PREFIX=/usr/local/elemental/0.85/PureRelease -D CMAKE_BUILD_TYPE=PureRelease -D CMAKE_CXX_COMPILER=/usr/bin/g++-5 -D CMAKE_CXX_FLAGS="-std=c++11 -fPIC" -D CMAKE_C_COMPILER=/usr/bin/gcc-5 -D CMAKE_C_FLAGS=-fPIC -D CXX_FLAGS="-std=c++11 -fPIC" -D CMAKE_Fortran_COMPILER=/usr/bin/gfortran-5 -D MATH_LIBS="/usr/local/flame/lib/libflame.a;-L/usr/local/lib/ -lopenblas;/lib/x86_64-linux-gnu/libm.so.6" –D ELEM_EXAMPLES=ON –D ELEM_TESTS=ON  ..
-make -j4
+make -j`nproc`
 make install
 
 chown -R vagrant.vagrant /home/vagrant/Elemental-0.85
