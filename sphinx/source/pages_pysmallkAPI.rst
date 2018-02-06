@@ -420,8 +420,7 @@ Runs NMF on the loaded matrix using the supplied algorithm and implementation de
 
 *    k:           The desired number of clusters
 *    algorithm:   The desired NMF algorithm
-* infile_W:    Initialization for W (optional)
-* infile_H:    Initialization for H (optional)
+* initdir:     Initialization for W and H for each leaf (optional)
 * precision:   Precision for calcuations (optional)
 * min_iter:    Minimum number of iterations (optional)
 * max_iter:    Maximum number of iterations (optional)
@@ -577,7 +576,7 @@ Writes the flatclust results to files.
 
 Cleans up the elemental and smallk environment.
 
-Heirclust
+Hierclust
 =========
 
 .. code-block:: python
@@ -633,13 +632,12 @@ Loads a dictionary from either a filepath or a list of dictionary strings.
 
 .. code-block:: python
 
-	def cluster(k, infile_W='', infile_H='', maxterms=5, unbalanced=0.1, trial_allowance=3,  verbose=True, flat=0, min_iter=5, max_iter=5000, max_threads=8, tol=0.0001)
+	def cluster(k, indir_W='', indir_H='', maxterms=5, unbalanced=0.1, trial_allowance=3,  verbose=True, flat=0, min_iter=5, max_iter=5000, max_threads=8, tol=0.0001)
 
 Runs NMF on the loaded matrix using the supplied algorithm and implementation details.
 
 * k:           The desired number of clusters
-* infile_W:    Initialization for W (optional)
-* infile_H:    Initialization for H (optional)
+* initdir_W:    Initialization for W (optional)
 * maxterms:    Maximum number of terms per cluster (optional)
 * unbalanced:      Unbalanced parameter (optional)
 * trial_allowance: Number of trials to use (optional)
