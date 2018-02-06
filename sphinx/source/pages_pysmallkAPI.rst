@@ -632,12 +632,12 @@ Loads a dictionary from either a filepath or a list of dictionary strings.
 
 .. code-block:: python
 
-	def cluster(k, indir_W='', indir_H='', maxterms=5, unbalanced=0.1, trial_allowance=3,  verbose=True, flat=0, min_iter=5, max_iter=5000, max_threads=8, tol=0.0001)
+	def cluster(k, initdir='', maxterms=5, unbalanced=0.1, trial_allowance=3,  verbose=True, flat=0, min_iter=5, max_iter=5000, max_threads=8, tol=0.0001)
 
 Runs NMF on the loaded matrix using the supplied algorithm and implementation details.
 
 * k:           The desired number of clusters
-* initdir_W:    Initialization for W (optional)
+* initdir:    Initialization for W,H for each k (optional)
 * maxterms:    Maximum number of terms per cluster (optional)
 * unbalanced:      Unbalanced parameter (optional)
 * trial_allowance: Number of trials to use (optional)
