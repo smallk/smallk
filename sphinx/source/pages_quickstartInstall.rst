@@ -143,7 +143,7 @@ Docker Instructions
 
 Running SmallK in a Docker container is intended for those who would like a fast, simple install that keeps their environment unmodified, in exchange for a loss in runtime performance. The basic process is to first build the Docker image, then run the Docker container to execute the desired command.
 
-**1.** Install `Docker <https://docs.docker.com/engine/installation/>`_. If you are new to Docker, it may be worth exploring a `quick introduction <https://docs.docker.com/get-started/)>`_, or at least a `cheat-sheet <https://github.com/wsargent/docker-cheat-sheet>`_. There are `platform specific <https://docs.docker.com/manuals/>`_ installation, configuiration, and execution instructions for Mac, Windows, and Linux. The following instructions were tested on Ubuntu 16.04 with Docker version 17.06.0-ce.
+**1.** Install `Docker <https://docs.docker.com/engine/installation/>`_. If you are new to Docker, it may be worth exploring a `quick introduction <https://docs.docker.com/get-started/>`_, or at least a `cheat-sheet <https://github.com/wsargent/docker-cheat-sheet>`_. There are `platform specific <https://docs.docker.com/manuals/>`_ installation, configuiration, and execution instructions for Mac, Windows, and Linux. The following instructions were tested on Ubuntu 16.04 with Docker version 17.06.0-ce.
 
 **2.** Build the smallk Docker image.
 
