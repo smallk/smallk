@@ -22,7 +22,7 @@ Publications
 
 #. `Barry Drake, Tiffany Huang, Ashley Scripka Beavers, Rundong Du, and Haesun Park. "Event Detection based on Nonnegative Matrix Factorization: Ceasefire Violation, Environmental, and Malware Events", Proceedings of the 8th International Conference on Applied Human Factors and Ergonomics (AHFE 2017), The Westin Bonaventure Hotel, Los Angeles, California, USA, AHFE, Human Factors in Cyber Warfare, (invited paper), July 17-21, DOI 10.1007/978-3-319-60585-2_16, Springer, 2017. <https://link.springer.com/chapter/10.1007/978-3-319-60585-2_16>`_
 
-#. `Rundong Du, Barry Drake, and Haesun Park. "Hybrid Clustering based on Content and Connection Structure using Joint Nonnegative Matrix Factorization". Journal of Global Optimization, 33(6), to appear, 2017. <https://arxiv.org/abs/1703.09646>`_
+#. `Rundong Du, Barry Drake, and Haesun Park. "Hybrid Clustering based on Content and Connection Structure using Joint Nonnegative Matrix Factorization". Journal of Global Optimization, October, 2017. <https://link.springer.com/article/10.1007/s10898-017-0578-x>`_
 
 #. Sungbok Shin, Minsuk Choi, Jinho Choi, Scott Langevin, Christopher Bethune, Philippe Horne, Nathan Kronenfeld, Ramakrishnan Kannan, Barry Drake, Haesun Park, and Jaegul Choo, "STExNMF: Spatio-Temporally Exclusive Topic Discovery for Anomalous Event Detection", submitted, IEEE International Conference on Data Mining, New Orleans, USA, November 18-21, 2017.
 
